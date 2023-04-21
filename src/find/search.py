@@ -17,17 +17,21 @@ def search(query: str, filename: str, path: str, max_search: int):
     videos = []
 
     for video in all_videos[0:max_search]:
-        title = video.split('{"text":"')[1].split('"}],"accessibility"')[0]
-        length = video.split('simpleText":"')[2].split('"')[0]
-        views = video.split('simpleText":"')[3].split('"')[0]
-        video_id = video.split('"videoId":"')[1].split('"')[0]
+        try:
+            title = video.split('{"text":"')[1].split('"}],"accessibility"')[0]
+            length = video.split('simpleText":"')[2].split('"')[0]
+            views = video.split('simpleText":"')[3].split('"')[0]
+            video_id = video.split('"videoId":"')[1].split('"')[0]
 
-        videos.append({
-            'id': video_id,
-            'title': title,
-            'views': views,
-            'length': length,
-        })
+            videos.append({
+                'id': video_id,
+                'title': title,
+                'views': views,
+                'length': length,
+            })
+
+        except:
+            continue
 
     video_position = get_video_pos(videos)
 
