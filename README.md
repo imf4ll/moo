@@ -7,7 +7,7 @@
 Download any music from YouTube just by searching or giving a URL, just moo.
 <br /><br/>
 
-## 📖 Changelog:
+## 📖 Changelog (v0.1.1):
 
 - Added --first to download very first result
 
@@ -40,12 +40,14 @@ make install
 
 ## ❓Arguments:
 
+<div align='center'>
 | Option | Description |
 |--------|-------------|
 | -f, --filename | Set the filename
 | -p, --path | Set the final path
 | -m, --max | Set the max number of result while search
 | -F, --first | Download very first result without needing choose
+</div>
 
 <br /><br/>
 
