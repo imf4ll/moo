@@ -5,17 +5,18 @@ from find.url import byurl
 
 parser = ArgumentParser(
     prog = "moo",
-    description = "Download musics directly from YouTube",
+    description = "Download musics directly from YouTube. \033[1;32m(v0.1.1)\033[m",
 )
 
 parser.add_argument('query', type = str)
 parser.add_argument('-f', '--filename', help = 'Set the filename', type = str)
 parser.add_argument('-p', '--path', help = 'Set the final path', type = str)
 parser.add_argument('-m', '--max', help = 'Set the max number of results while search', default = 10, type = int)
+parser.add_argument('-F', '--first', help = 'Download very first result without needing choose', action = 'store_true')
 args = parser.parse_args()
 
 if "/watch?v=" in args.query or "youtu.be" in args.query:
-    byurl(args.query, args.filename, args.path)
+    byurl(args.query, args.filename, args.path, args.first)
 
 else:
-    search(args.query, args.filename, args.path, args.max)
+    search(args.query, args.filename, args.path, args.max, args.first)

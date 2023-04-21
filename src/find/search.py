@@ -4,7 +4,17 @@ from pytube import YouTube
 from utils.position import get_audio_pos, get_video_pos
 from utils.progress import on_progress
 
-def search(query: str, filename: str, path: str, max_search: int):
+def download_audio(videos: list, filename: str, path: str, position: int, first: bool):
+    video_req = YouTube('https://www.youtube.com/watch?v=' + videos[position]['id'], on_progress_callback = on_progress)
+
+    audios = video_req.streams.filter(only_audio = True, file_extension = 'mp4')
+
+    audios[1 if first else get_audio_pos(audios)].download(
+        filename = filename if filename else videos[position]['title'] + '.mp3',
+        output_path = path if path else './',
+    )
+
+def search(query: str, filename: str, path: str, max_search: int, first: bool):
     data = get(f'https://www.youtube.com/results?search_query={ query }', headers = { "authority": "www.youtube.com" }, timeout = 30)
 
     all_videos = []
@@ -33,13 +43,13 @@ def search(query: str, filename: str, path: str, max_search: int):
         except:
             continue
 
-    video_position = get_video_pos(videos)
 
-    video_req = YouTube('https://www.youtube.com/watch?v=' + videos[video_position]['id'], on_progress_callback = on_progress)
+    if first:
+        print(f"Downloading \033[1;34m{ videos[0]['title'] }\033[m\n")
+ 
+        download_audio(videos, filename, path, 0, first)
 
-    audios = video_req.streams.filter(only_audio = True, file_extension = 'mp4')
+    else:
+        video_position = get_video_pos(videos)
 
-    audios[get_audio_pos(audios)].download(
-        filename = filename if filename else videos[video_position]['title'] + '.mp3',
-        output_path = path if path else './',
-    )
+        download_audio(videos, filename, path, video_position, first)
