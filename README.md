@@ -7,6 +7,12 @@
 Download any music from YouTube just by searching or giving a URL, just moo.
 <br /><br/>
 
+## 📖 Changelog:
+
+- Added --first to download very first result
+
+<br /><br />
+
 ## ❗️Usage (without need installation):
 ```bash
 python3 src/moo.py
@@ -29,6 +35,17 @@ make install
 2. `pyinstaller --onefile src/moo.py`
 
 3. Move to executables folder and use from console.
+
+<br /><br/>
+
+## ❓Arguments:
+
+| Option | Description |
+|--------|-------------|
+| -f, --filename | Set the filename
+| -p, --path | Set the final path
+| -m, --max | Set the max number of result while search
+| -F, --first | Download very first result without needing choose
 
 <br /><br/>
 
