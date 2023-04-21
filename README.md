@@ -3,12 +3,16 @@
     <h3>Download musics directly from YouTube</h3>
 </div>
 
+<br /><br/>
 Download any music from YouTube just by searching or giving a URL, just moo.
+<br /><br/>
 
 ## ❗️Usage (without need installation):
 ```bash
 python3 src/moo.py
 ```
+
+<br /><br/>
 
 ## ❗️ Install:
 
@@ -17,12 +21,16 @@ python3 src/moo.py
 make install
 ```
 
+<br /><br/>
+
 ### Windows
 1. `pip3 install -U pyinstaller`
 
 2. `pyinstaller --onefile src/moo.py`
 
 3. Move to executables folder and use from console.
+
+<br /><br/>
 
 ## ❓Examples:
 1. By searching:
