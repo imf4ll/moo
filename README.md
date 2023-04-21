@@ -41,12 +41,14 @@ make install
 ## ❓Arguments:
 
 <div align='center'>
+
 | Option | Description |
 |--------|-------------|
 | -f, --filename | Set the filename
 | -p, --path | Set the final path
 | -m, --max | Set the max number of result while search
 | -F, --first | Download very first result without needing choose
+
 </div>
 
 <br /><br/>
