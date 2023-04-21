@@ -43,6 +43,8 @@ moo xxxtentacion
     <img align="center" src="./assets/example1.png" />
 </div>
 
+<br /><br/>
+
 2. By giving a URL:
 
 ```bash
@@ -52,6 +54,8 @@ moo https://www.youtube.com/watch?v=mwgZalAFNhM
 <div align="center">
     <img align="center" src="./assets/example2.png" />
 </div>
+
+<br /><br/>
 
 3. Using filename and path arguments:
 
