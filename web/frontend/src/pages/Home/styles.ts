@@ -12,8 +12,15 @@ export const Container = styled.div`
 `;
 
 export const Items = styled.div`
-    width: 80%;
+    max-width: 80%;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 1rem;
+    overflow-y: auto;
+
+    @media (max-width: 800px) {
+        width: 100%;
+        margin-top: 5%;
+    }
 `;
