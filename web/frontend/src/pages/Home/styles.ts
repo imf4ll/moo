@@ -17,7 +17,6 @@ export const Items = styled.div`
     flex-wrap: wrap;
     justify-content: center;
     gap: 1rem;
-    overflow-y: auto;
 
     @media (max-width: 800px) {
         width: 100%;
