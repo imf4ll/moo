@@ -1,4 +1,4 @@
-install-cli:
+install:
 	cd cli
 
 	pip3 install -U pyinstaller

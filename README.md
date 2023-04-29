@@ -25,7 +25,7 @@ and Golang and Python on backend.
 
 <br />
 
-## ❗️ Requirements:
+## 📜 Requirements:
 - Python
 - Node.JS
 - Go
@@ -37,11 +37,15 @@ and Golang and Python on backend.
 
 <div align="center">
   <h3>CLI</h3>
+  
+  <a href="https://github.com/imf4ll/moo/tree/master/cli">View more</a>
 </div>
 
 #### 🐧 Linux
 ```bash
-$ make install-cli
+$ cd cli/
+
+$ make install
 ```
 
 <br />
@@ -49,6 +53,8 @@ $ make install-cli
 ### 🪟 Windows
 1. Setup installer:
 ```bash
+$ cd cli/
+
 $ pip3 install -r requirements.txt
 
 $ pip3 install -U pyinstaller
@@ -62,7 +68,11 @@ $ pyinstaller --onefile src/moo.py
 
 <div align="center">
   <h3>Web (UNDER DEVELOPMENT, I'll create fully automated installing when the development finish)</h3>
+
+  <a href="https://github.com/imf4ll/moo/tree/master/web">View more</a>
 </div>
+
+<br />
 
 1. Install yarn (if you don't have installed):
 ```bash
@@ -88,3 +98,4 @@ $ yarn run start # If you're on Windows, you'll need to modify 'start' script of
 ```
 
 <br />
+
