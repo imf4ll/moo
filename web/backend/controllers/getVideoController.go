@@ -13,7 +13,7 @@ func GetVideoController(ctx *gin.Context) {
     id := ctx.Query("id")
 
     if id == "" || len(id) != 11 {
-        utils.Error(ctx, errors.New("Invalid URL provided."));
+        utils.Error(ctx, errors.New("Invalid ID provided."));
 
         return;
     }
