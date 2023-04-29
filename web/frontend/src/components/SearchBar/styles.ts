@@ -11,6 +11,11 @@ export const Container = styled.div`
     margin-bottom: 3%;
     border-radius: 8px;
     padding: 0.75rem 0.85rem;
+
+    @media (max-width: 800px) {
+        width: 80%;
+        margin-top: 15%;
+    }
 `;
 
 export const Bar = styled.input.attrs({ type: 'text' })`
@@ -21,6 +26,10 @@ export const Bar = styled.input.attrs({ type: 'text' })`
     font-size: 12pt;
     width: 100%;
     background-color: transparent;
+
+    @media (max-width: 800px) {
+        font-size: 10.5pt;
+    }
 `;
 
 export const Buttons = styled.div`

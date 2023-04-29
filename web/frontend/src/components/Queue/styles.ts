@@ -66,4 +66,19 @@ export const Container = styled.div`
     *::-webkit-scrollbar-thumb {
         border-radius: 15px;
     }
+
+    @media (max-width: 800px) {
+        width: 100%;
+        border-radius: 0;
+
+        .items {
+            width: 95%;
+        }
+
+        #close {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+        }
+    }
 `;

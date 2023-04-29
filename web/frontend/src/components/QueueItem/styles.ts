@@ -59,7 +59,26 @@ export const Container = styled.div`
         }
 
         100% {
-            transform: margin-top: 0;
+            margin-top: 0;
+        }
+    }
+
+    @media (max-width: 800px) {
+        .status {
+            margin: 0;
+            width: 20px;
+        }
+
+        .details {
+            max-width: 55%;
+
+            .title {
+                font-size: 9pt;
+            }
+
+            .author-views {
+                font-size: 8pt;
+            }
         }
     }
 `;

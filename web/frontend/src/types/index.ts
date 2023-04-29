@@ -9,14 +9,6 @@ export interface ItemProps {
     queueOpened: Function;
 }
 
-export interface HistoryItemProps {
-    thumb: string;
-    title: string;
-    author: string;
-    views: number;
-    length: string;
-}
-
 export interface QueueItemProps {
     thumb: string;
     title: string;
@@ -28,9 +20,9 @@ export interface QueueItemProps {
 }
 
 export interface Settings {
-    path?: string;
-    allformats: boolean;
-    history?: boolean;
+    path: string;
+    allformats?: boolean;
+    videoplayer?: boolean;
 }
 
 export interface Empty {

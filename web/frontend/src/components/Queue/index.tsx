@@ -6,6 +6,7 @@ import { Background, Container } from './styles';
 import { QueueItemProps } from '../../types';
 
 import ClearAll from '../../assets/clear-all.svg';
+import Close from '../../assets/close.svg';
 
 import { QueueItem } from '../QueueItem';
 import { Empty } from '../Empty';
@@ -61,6 +62,16 @@ export const Queue = ({ queueOpened }: { queueOpened: Function }) => {
             <Background onClick={ () => queueOpened(false) } />
 
             <Container id="container-queue">
+                {
+                    window.innerWidth < 800 &&
+                        <img
+                            src={ Close }
+                            onClick={ () => queueOpened(false) }
+                            id="close"
+                            width={ 36 }
+                        />
+                }
+
                 <div className="title-queue">
                     <h1>Queue</h1>
 

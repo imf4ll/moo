@@ -11,4 +11,12 @@ export const Container = styled.div`
         font-weight: 500;
         margin-top: 3rem;
     }
+
+    @media (max-width: 800px) {
+        h3 {
+            font-size: 10pt;
+            width: 80%;
+            text-align: center;
+        }
+    }
 `;
