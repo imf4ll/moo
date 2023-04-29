@@ -60,6 +60,7 @@ export const Item = ({ thumb, title, author, views, length, id, downloading, que
                 
                 const queue: Array<{}> = JSON.parse(window.localStorage.getItem('queue')!);
 
+                // @ts-ignore
                 queue[pos].downloading = false;
 
                 window.localStorage.setItem('queue', JSON.stringify(queue));
@@ -75,7 +76,9 @@ export const Item = ({ thumb, title, author, views, length, id, downloading, que
 
                 const queue: Array<{}> = JSON.parse(window.localStorage.getItem('queue')!);
 
+                // @ts-ignore
                 queue[pos].downloading = false;
+                // @ts-ignore
                 queue[pos].failed = true;
 
                 window.localStorage.setItem('queue', JSON.stringify(queue));

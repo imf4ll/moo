@@ -19,6 +19,7 @@ export const Empty = ({ type }: { type: string }) => {
         }
     };
 
+    // @ts-ignore
     let empty: IEmpty = {};
 
     if (type === 'home') {

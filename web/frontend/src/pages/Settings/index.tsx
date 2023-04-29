@@ -11,6 +11,7 @@ import { Container, TextOption, SwitchOption } from './styles';
 import { Settings as SettingsProps } from '../../types';
 
 export const Settings = () => {
+    // @ts-ignore
     const [ settings, setSettings ] = useState<SettingsProps>({});
     const [ allFormatsChecked, setAllFormatsChecked ] = useState<boolean>(false);
     const [ saved, setSaved ] = useState<boolean>(true);

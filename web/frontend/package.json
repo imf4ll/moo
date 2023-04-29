@@ -1,13 +1,8 @@
 {
   "name": "frontend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
   "license": "MIT",
-  "proxy": {
-    "*": {
-      "target": "http://api.teste.com.br/v1"
-    }
-  },
   "devDependencies": {
     "@types/react": "^18.0.38",
     "@types/react-dom": "^18.0.11",

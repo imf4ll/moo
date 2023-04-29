@@ -19,6 +19,7 @@ export const Queue = ({ queueOpened }: { queueOpened: Function }) => {
 
         setQueue(JSON.parse(queue!));
 
+        // @ts-ignore
         setTimeout(() => document.querySelector('#container-queue')!.style.right = 0, 1);
     }, []);
 

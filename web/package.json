@@ -1,15 +1,18 @@
 {
-  "name": "moo-web",
+  "name": "web",
   "version": "0.1.0",
-  "main": "dist/index.js",
+  "private": true,
+  "workspaces": [
+    "./frontend"
+  ],
   "repository": "https://github.com/imf4ll/moo.git",
   "author": "z3oxs <z3ox1s@protonmail.com>",
   "license": "MIT",
   "packageManager": "yarn@2.4.3",
   "scripts": {
     "dev": "concurrently \"cd frontend; yarn run dev\"  \"cd backend; go run main.go\"",
-    "build": "yarn workspaces foreach --parallel run build",
-    "start": "yarn workspaces foreach --parallel run start"
+    "build": "yarn workspace frontend run build; cd backend && go build",
+    "start": "concurrently \"yarn workspace frontend run start\" \"cd backend; ./backend\""
   },
   "dependencies": {
     "concurrently": "^8.0.1"
