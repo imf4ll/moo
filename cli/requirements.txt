@@ -1,4 +1,0 @@
-pytube
-inquirer
-requests
-argparse
