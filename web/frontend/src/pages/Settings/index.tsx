@@ -144,7 +144,7 @@ export const Settings = () => {
                         <div>
                             <p className="name">Video Player</p>
 
-                            <p className="help">🛈 When pressing thumbnail, will open a video player free of ads. </p>
+                            <p className="help">🛈 When pressing thumbnail, will open a video player (click on details to download). </p>
                         </div>
 
                         <ToggleSwitch

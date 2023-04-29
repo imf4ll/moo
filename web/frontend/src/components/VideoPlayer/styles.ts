@@ -8,7 +8,7 @@ export const Background = styled.div`
     bottom: 0;
     width: 100%;
     height: 100%;
-    z-index: 998;
+    z-index: 999;
 `;
 
 export const Container = styled.div`
@@ -18,6 +18,4 @@ export const Container = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 320px;
-    height: 180px;
 `;
