@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { Container } from './styles';
 
@@ -10,7 +10,18 @@ import { ItemProps } from '../../types';
 import { time } from '../../utils/time';
 
 export const Item = ({ thumb, title, author, views, length, id, downloading, queueOpened }: ItemProps) => {
+    const [ videoPlayerEnabled, setVideoPlayerEnabled ] = useState<boolean>(false);
     const [ videoPlayerOpened, setVideoPlayerOpened ] = useState<boolean>(false);
+
+    useEffect(() => {
+        const { videoplayer } = JSON.parse(window.localStorage.getItem('settings')!);
+
+        if (videoplayer) {
+            setVideoPlayerEnabled(videoplayer);
+
+        }
+
+    }, []);
 
     const handleDownload = () => {
         queueOpened(true);
@@ -95,7 +106,8 @@ export const Item = ({ thumb, title, author, views, length, id, downloading, que
     return (
         <>
             {
-                videoPlayerOpened && <VideoPlayer videoPlayerOpened={ setVideoPlayerOpened } videoID={ id } />
+                videoPlayerEnabled && videoPlayerOpened &&
+                    <VideoPlayer videoPlayerOpened={ setVideoPlayerOpened } videoID={ id } />
             }
 
             <Container>
@@ -107,13 +119,17 @@ export const Item = ({ thumb, title, author, views, length, id, downloading, que
                         height: 144,
                         backgroundSize: 'cover'
                     }}
-                    title="Watch video"
-                    onClick={ () => setVideoPlayerOpened(true) }
+                    title={ videoPlayerEnabled ? "Watch video" : "Download" }
+                    onClick={ videoPlayerEnabled ? () => setVideoPlayerOpened(true) : handleDownload }
                 >
                     <p className="length">{ isNaN(Number(length)) ? length : time(Number(length)) }</p>
                 </div>
 
-                <div id="details" onClick={ handleDownload } title="Download">
+                <div
+                    id="details"
+                    onClick={ videoPlayerEnabled ? handleDownload : undefined }
+                    title="Download"
+                >
                     <p className="title" title={ title }>{ title.length > 50 ? title.substring(0, 49) + '...' : title }</p>
 
                     <p className="author-views">{ author } · {
