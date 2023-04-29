@@ -2,3 +2,4 @@ pytube
 inquirer
 requests
 argparse
+pyinstaller
