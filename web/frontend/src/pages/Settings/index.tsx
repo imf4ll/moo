@@ -14,6 +14,7 @@ export const Settings = () => {
     // @ts-ignore
     const [ settings, setSettings ] = useState<SettingsProps>({});
     const [ allFormatsChecked, setAllFormatsChecked ] = useState<boolean>(false);
+    const [ videoPlayerChecked, setVideoPlayerChecked ] = useState<boolean>(false);
     const [ saved, setSaved ] = useState<boolean>(true);
 
     useEffect(() => {
@@ -24,6 +25,11 @@ export const Settings = () => {
 
             if (settings.allformats) {
                 setAllFormatsChecked(settings.allformats);
+
+            }
+
+            if (settings.videoplayer) {
+                setVideoPlayerChecked(settings.videoplayer);
 
             }
         }
@@ -45,6 +51,7 @@ export const Settings = () => {
             setSettings({
                 path: path.value,
                 allformats: allFormatsChecked,
+                videoplayer: videoPlayerChecked,
             });
 
             setSaved(true);
@@ -52,6 +59,7 @@ export const Settings = () => {
             window.localStorage.setItem('settings', JSON.stringify({
                 path: path.value,
                 allformats: allFormatsChecked,
+                videoplayer: videoPlayerChecked,
             }));
 
             toast('Settings saved.', {
@@ -77,7 +85,8 @@ export const Settings = () => {
 
     const handleSaved = (e: any, name: string) => {
         if (name === "path" && e.target.value === settings.path
-            || name === "allformats" && e === settings.allformats)
+            || name === "allformats" && e === settings.allformats
+            || name === "videoplayer" && e === settings.videoplayer)
         {
             setSaved(true);
 
@@ -125,6 +134,25 @@ export const Settings = () => {
                                 setAllFormatsChecked(!allFormatsChecked);
 
                                 handleSaved(e, "allformats");
+                            }}
+                            onColor="#9361FF"
+                            offColor="#1A1A1A"
+                        />
+                    </SwitchOption>
+
+                    <SwitchOption>
+                        <div>
+                            <p className="name">Video Player</p>
+
+                            <p className="help">🛈 When pressing thumbnail, will open a video player free of ads. </p>
+                        </div>
+
+                        <ToggleSwitch
+                            checked={ videoPlayerChecked }
+                            onChange={ (e) => {
+                                setVideoPlayerChecked(!videoPlayerChecked);
+
+                                handleSaved(e, "videoplayer");
                             }}
                             onColor="#9361FF"
                             offColor="#1A1A1A"

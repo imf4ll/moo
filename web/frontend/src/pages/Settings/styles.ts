@@ -58,6 +58,23 @@ export const Container = styled.div`
             opacity: 0.75;
         }
     }
+
+    @media (max-width: 800px) {
+        margin-top: 10%;
+
+        .options {
+            width: 95%;
+        }
+
+        .back {
+            right: 0.5rem;
+            font-size: 14pt;
+        }
+
+        .save {
+            margin-top: 10%;
+        }
+    }
 `;
 
 export const TextOption = styled.div`
@@ -91,6 +108,25 @@ export const TextOption = styled.div`
         font-size: 11pt;
         height: 2.5rem;
     }
+
+    @media (max-width: 800px) {
+        div {
+            gap: 0;
+        }
+
+        .name {
+            font-size: 10pt;
+            width: 50%;
+        }
+
+        .help {
+            font-size: 9pt;
+        }
+
+        input {
+            font-size: 10pt;
+        }
+    }
 `;
 
 export const SwitchOption = styled.div`
@@ -111,5 +147,17 @@ export const SwitchOption = styled.div`
 
     input[type="checkbox"] {
         background-color: red;
+    }
+
+    @media (max-width: 800px) {
+        flex-direction: column;
+
+        .name {
+            font-size: 10pt;
+        }
+
+        .help {
+            font-size: 9pt;
+        }
     }
 `;

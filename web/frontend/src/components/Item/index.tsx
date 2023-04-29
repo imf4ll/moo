@@ -4,10 +4,13 @@ import { useState } from 'react';
 
 import { Container } from './styles';
 
+import { VideoPlayer } from '../../components/VideoPlayer';
+
 import { ItemProps } from '../../types';
 import { time } from '../../utils/time';
 
 export const Item = ({ thumb, title, author, views, length, id, downloading, queueOpened }: ItemProps) => {
+    const [ videoPlayerOpened, setVideoPlayerOpened ] = useState<boolean>(false);
 
     const handleDownload = () => {
         queueOpened(true);
@@ -90,27 +93,35 @@ export const Item = ({ thumb, title, author, views, length, id, downloading, que
     }
 
     return (
-        <Container onClick={ handleDownload }>
-            <div
-                id="thumbnail"
-                style={{
-                    backgroundImage: `url(${ thumb })`,
-                    width: 256,
-                    height: 144,
-                    backgroundSize: 'cover'
-                }}
-            >
-                <p className="length">{ isNaN(Number(length)) ? length : time(Number(length)) }</p>
-            </div>
+        <>
+            {
+                videoPlayerOpened && <VideoPlayer videoPlayerOpened={ setVideoPlayerOpened } videoID={ id } />
+            }
 
-            <div id="details">
-                <p className="title" title={ title }>{ title.length > 50 ? title.substring(0, 49) + '...' : title }</p>
+            <Container>
+                <div
+                    id="thumbnail"
+                    style={{
+                        backgroundImage: `url(${ thumb })`,
+                        width: 256,
+                        height: 144,
+                        backgroundSize: 'cover'
+                    }}
+                    title="Watch video"
+                    onClick={ () => setVideoPlayerOpened(true) }
+                >
+                    <p className="length">{ isNaN(Number(length)) ? length : time(Number(length)) }</p>
+                </div>
 
-                <p className="author-views">{ author } · {
-                        Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1, }).format(views)
-                    } views
-                </p>
-            </div>
-        </Container>
+                <div id="details" onClick={ handleDownload } title="Download">
+                    <p className="title" title={ title }>{ title.length > 50 ? title.substring(0, 49) + '...' : title }</p>
+
+                    <p className="author-views">{ author } · {
+                            Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1, }).format(views)
+                        } views
+                    </p>
+                </div>
+            </Container>
+        </>
     );
 }
