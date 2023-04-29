@@ -26,7 +26,7 @@ export const Home = () => {
                 theme: 'dark',
                 pauseOnHover: true,
                 delay: 3000,
-                onClose: () => window.location.href = '9/settings',
+                onClose: () => window.location.href = '/settings',
             });
         }
 
