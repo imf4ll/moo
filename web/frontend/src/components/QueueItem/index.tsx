@@ -17,7 +17,7 @@ export const QueueItem = ({ thumb, title, author, views, length, downloading, fa
                 </div>
 
                 <div className="details">
-                    <p className="title" title={ title }>{ title.length > 50 ? title.substring(0, 29) + '...' : title }</p>
+                    <p className="title" title={ title }>{ title.length > 25 ? title.substring(0, 24) + '...' : title }</p>
 
                     <p className="author-views">{ author } · {
                             Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1, }).format(views)

@@ -13,21 +13,20 @@ export const Container = styled.div`
     #thumbnail {
         display: flex;
         flex-direction: column;
-
-        img {
-            border-radius: 8px;
-        }
+        border-radius: 8px;
 
         p {
             align-self: end;
             position: relative;
-            bottom: -77.5%;
+            bottom: -75%;
+            left: -1%;
             color: white;
             font-size: 9pt;
             background-color: rgb(0, 0, 0, 75%);
             text-align: center;
             display: inline-block;
-            padding: 2px 3px;
+            padding: 2px 4px;
+            border-radius: 4px;
         }
     }
 

@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 
 import { Container, Items } from './styles';
 
-import { Header } from '../../components/Header';
 import { SearchBar } from '../../components/SearchBar';
 import { Empty } from '../../components/Empty';
 import { Item } from '../../components/Item';
@@ -39,9 +38,7 @@ export const Home = () => {
 
     return (
         <>
-            <Header />
-
-            <Navbar downloading={ downloading } queueOpened={ setQueueOpened } />
+            <Navbar setQueueOpened={ setQueueOpened } />
 
             {
                 queueOpened && <Queue queueOpened={ setQueueOpened } />

@@ -1,12 +1,5 @@
 <div align="center">
-  <pre>
-            __n__n__
-      .------`-\00/-'
-   /  ##  ## (oo)
-/ \## __   ./
-   |//YY \|/
-   |||   |||
-  </pre>
+  <img src="web/frontend/public/icon.png" width="256" />
   
   <h1>Moo...</h1>
 </div>

@@ -1,42 +1,52 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
     z-index: 999;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 3rem;
+    height: 100%;
+    background: #1a1a1a;
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
+    border-radius: 0px 8px 8px 0px;
 
-    img {
-        width: 24px;
+    nav {
+        width: 80%;
+        height: 98%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
 
-        :not(:last-child) {
-            cursor: pointer;
+        .logo {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .button {
+            width: 100%;
+            height: 2.5rem;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             transition: all ease 300ms;
+            cursor: pointer;
+        }
 
-            :hover {
-                transform: scale(1.1);
-                opacity: 0.75;
-            }
+        .button:hover {
+            background: #333;
         }
     }
 
-    #downloading {
-        animation: rotate infinite 2s;
-    }
-
-    @keyframes rotate {
-        50% {
-            transform: rotate(360deg) scale(1.2);
-        }
-
-        100% {
-            transform: scale(1);
-        }
+    .top {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
     }
 `;
-

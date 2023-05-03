@@ -10,16 +10,21 @@ export const Container = styled.div`
     }
 
     .thumbnail {
+        img {
+            border-radius: 6px;
+        }
+
         p {
             position: relative;
-            bottom: 5%;
-            left: -20%;
+            bottom: 10%;
+            left: -23%;
             color: white;
             font-size: 9pt;
             background-color: rgb(0, 0, 0, 75%);
             text-align: center;
             display: inline-block;
-            padding: 2px 3px;
+            padding: 2px 4px;
+            border-radius: 4px;
         }
     }
 

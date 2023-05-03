@@ -4,7 +4,7 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 3%;
+    margin-top: 1rem;
 
     p {
         font-weight: 500;
@@ -17,9 +17,14 @@ export const Container = styled.div`
 
     .options {
         width: 50%;
-        margin-top: 1%;
         display: flex;
         flex-direction: column;
+
+        h3 {
+            color: #CCC;
+            font-weight: 500;
+            text-align: center;
+        }
     }
 
     .save {
@@ -32,7 +37,7 @@ export const Container = styled.div`
         font-size: 11pt;
         transition: all ease 300ms;
         cursor: pointer;
-        margin-top: 4%;
+        margin: 2rem 0 2rem 0;
 
         :hover {
             opacity: 0.75;
@@ -43,32 +48,11 @@ export const Container = styled.div`
         }
     }
 
-    .back {
-        color: white;
-        position: absolute;
-        top: 0.5rem;
-        right: 1rem;
-        cursor: pointer;
-        transition: all ease 300ms;
-        background-color: transparent;
-        border: none;
-        font-size: 12pt;
-
-        :hover {
-            opacity: 0.75;
-        }
-    }
-
     @media (max-width: 800px) {
         margin-top: 10%;
 
         .options {
             width: 95%;
-        }
-
-        .back {
-            right: 0.5rem;
-            font-size: 14pt;
         }
 
         .save {
@@ -102,7 +86,6 @@ export const TextOption = styled.div`
         border: none;
         border-radius: 8px;
         padding-left: 0.75rem;
-        width: 100%;
         outline: none;
         color: white;
         font-size: 11pt;
@@ -147,6 +130,50 @@ export const SwitchOption = styled.div`
 
     input[type="checkbox"] {
         background-color: red;
+    }
+
+    @media (max-width: 800px) {
+        flex-direction: column;
+
+        .name {
+            font-size: 10pt;
+        }
+
+        .help {
+            font-size: 9pt;
+        }
+    }
+`;
+
+export const ButtonOption = styled.div`
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+
+    .name {
+        font-size: 12pt;
+        color: white;
+    }
+
+    .help {
+        color: #AAA;
+        font-size: 10.5pt;
+    }
+
+    input[type="button"] {
+        background: transparent;
+        border: none;
+        padding: 0;
+        color: #FF5C5C;
+        font-weight: 500;
+        font-size: 11pt;
+        transition: all ease 300ms;
+        cursor: pointer;
+
+        :hover {
+            opacity: 0.75;
+        }
     }
 
     @media (max-width: 800px) {

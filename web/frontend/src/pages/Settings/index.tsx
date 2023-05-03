@@ -1,12 +1,13 @@
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 
 import { ToggleSwitch } from 'react-dragswitch';
 import 'react-dragswitch/dist/index.css'
 
-import { Header } from '../../components/Header';
+import { Navbar } from '../../components/Navbar';
+import { Queue } from '../../components/Queue';
 
-import { Container, TextOption, SwitchOption } from './styles';
+import { Container, TextOption, SwitchOption, ButtonOption } from './styles';
 
 import { Settings as SettingsProps } from '../../types';
 
@@ -16,6 +17,8 @@ export const Settings = () => {
     const [ allFormatsChecked, setAllFormatsChecked ] = useState<boolean>(false);
     const [ videoPlayerChecked, setVideoPlayerChecked ] = useState<boolean>(false);
     const [ saved, setSaved ] = useState<boolean>(true);
+    const [ queueOpened, setQueueOpened ] = useState<boolean>(false);
+    const [ clearing, setClearing ] = useState<boolean>(false);
 
     useEffect(() => {
         if (window.localStorage.getItem('settings') !== null) {
@@ -69,20 +72,6 @@ export const Settings = () => {
         }
     }
 
-    const handleBack = () => {
-        if (window.localStorage.getItem('settings') === null) {
-            toast('Settings must be saved.', {
-                type: 'error',
-                theme: 'dark',
-            });
-
-
-        } else {
-            window.location.href = '/';
-
-        }
-    }
-
     const handleSaved = (e: any, name: string) => {
         if (name === "path" && e.target.value === settings.path
             || name === "allformats" && e === settings.allformats
@@ -96,16 +85,49 @@ export const Settings = () => {
         }
     }
 
+    const handleConfirmClear = () => {
+        window.localStorage.setItem('queue', JSON.stringify([]));
+
+        setClearing(false);
+
+        toast('Queue cleared.', {
+            theme: 'dark',
+            type: 'success',
+        });
+    }
+
+    const handleClear = () => {
+        const queue = JSON.parse(window.localStorage.getItem('queue')!);
+
+        if (queue.length !== 0) {
+            setClearing(true);
+            
+            toast('Press again to confirm clear queue.', {
+                theme: 'dark',
+                type: 'warning',
+            });
+
+        } else {
+            toast('Queue is already empty.', {
+                theme: 'dark',
+                type: 'error',
+            });
+
+        }
+    }
+
     return (
         <>
-            <ToastContainer />
+            <Navbar setQueueOpened={ setQueueOpened } />
 
-            <Header />
+            {
+                queueOpened && <Queue queueOpened={ setQueueOpened } />
+            }
 
             <Container>
-                <h1>Settings</h1>
-
                 <div className="options">
+                    <h3>General</h3>
+
                     <TextOption>
                         <div>
                             <p className="name">Downloads location:</p>
@@ -120,6 +142,18 @@ export const Settings = () => {
                             onChange={ (e) => handleSaved(e, "path") }
                         />
                     </TextOption>
+
+                    <ButtonOption>
+                        <div>
+                            <p className="name">Clear queue</p>
+
+                            <p className="help">🛈 Clear the entire download queue.</p>
+                        </div>
+
+                        <input type="button" value="Clear" onClick={ clearing ? handleConfirmClear : handleClear } />
+                    </ButtonOption>
+
+                    <h3>Functionalities</h3>
 
                     <SwitchOption>
                         <div>
@@ -161,8 +195,6 @@ export const Settings = () => {
                 </div>
 
                 <input type="button" disabled={ saved } className="save" value="Save" onClick={ handleSave } />
-
-                <input type="button" className="back" value="Back" onClick={ handleBack } />
             </Container>
         </>
     );

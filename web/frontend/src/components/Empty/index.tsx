@@ -31,7 +31,14 @@ export const Empty = ({ type }: { type: string }) => {
     }
 
     return (
-        <Container>
+        <Container style={
+            type === 'queue' ? {
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+            } : {}
+        }>
             <img src={ empty.image } width={ empty.width } />
 
             <h3>{ empty.text }</h3>

@@ -13,7 +13,6 @@ import { Empty } from '../Empty';
 
 export const Queue = ({ queueOpened }: { queueOpened: Function }) => {
     const [ queue, setQueue ] = useState<Array<QueueItemProps>>([]);
-    const [ clearing, setClearing ] = useState<boolean>(false);
 
     useEffect(() => {
         const queue = window.localStorage.getItem('queue');
@@ -25,37 +24,6 @@ export const Queue = ({ queueOpened }: { queueOpened: Function }) => {
     }, []);
 
     window.onstorage = () => setQueue(JSON.parse(window.localStorage.getItem('queue')!));
-
-    const handleConfirmClear = () => {
-        window.localStorage.setItem('queue', JSON.stringify([]));
-
-        setQueue([]);
-       
-        setClearing(false);
-
-        toast('Queue cleared.', {
-            theme: 'dark',
-            type: 'success',
-        });
-    }
-
-    const handleClear = () => {
-        if (queue.length !== 0) {
-            setClearing(true);
-            
-            toast('Press again to confirm clear queue.', {
-                theme: 'dark',
-                type: 'warning',
-            });
-
-        } else {
-            toast('Queue is already empty.', {
-                theme: 'dark',
-                type: 'error',
-            });
-
-        }
-    }
 
     return (
         <>
@@ -71,17 +39,6 @@ export const Queue = ({ queueOpened }: { queueOpened: Function }) => {
                             width={ 36 }
                         />
                 }
-
-                <div className="title-queue">
-                    <h1>Queue</h1>
-
-                    <img
-                        src={ ClearAll }
-                        title="Clear Queue"
-                        width={ 32 }
-                        onClick={ clearing ? handleConfirmClear : handleClear }
-                    />
-                </div>
 
                 <div className="items">
                     {

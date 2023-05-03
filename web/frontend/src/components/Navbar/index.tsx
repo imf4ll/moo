@@ -1,18 +1,34 @@
 import { Container } from './styles';
 
+import Logo from '../../../public/icon.png';
 import Settings from '../../assets/settings.svg';
-import Idle from '../../assets/idle.svg';
-import Downloading from '../../assets/downloading.svg';
+import Home from '../../assets/home.svg';
 import Queue from '../../assets/queue.svg';
 
-export const Navbar = ({ downloading, queueOpened }: { downloading: boolean, queueOpened: Function }) => {
+export const Navbar = ({ setQueueOpened }: { setQueueOpened: Function }) => {
     return (
         <Container>
-            <img src={ Settings } title="Settings" onClick={ () => window.location.href = '/settings' } />
+            <nav>
+                <div className="top">
+                    <div className="logo">
+                        <img src={ Logo } width={ 32 } />
+                    </div>
 
-            <img src={ Queue } onClick={ () => queueOpened(true) } />
+                    <div className="button">
+                        <img src={ Home } width={ 24 } onClick={ () => window.location.href = '/' } />
+                    </div>
 
-            <img src={ downloading ? Downloading : Idle } id={ downloading ? "downloading" : "" } title="Status" />
+                    <div className="button">
+                        <img src={ Queue } width={ 24 } onClick={ () => setQueueOpened(true) } />
+                    </div>
+                </div>
+
+                <div className="bottom">
+                    <div className="button">
+                        <img src={ Settings } width={ 24 } onClick={ () => window.location.href = '/settings' } />
+                    </div>
+                </div>
+            </nav>
         </Container>
     );
 }

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Background = styled.div`
     background-color: #000;
     opacity: 0.9;
-    position: absolute;
+    position: fixed;
     top: 0;
     bottom: 0;
     width: 99%;
@@ -12,7 +12,7 @@ export const Background = styled.div`
 `;
 
 export const Container = styled.div`
-    position: absolute;
+    position: fixed;
     top: 0;
     right: -50%;
     transition: all ease 500ms;
@@ -25,35 +25,19 @@ export const Container = styled.div`
     flex-direction: column;
     align-items: center;
 
-    .title-queue {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        margin-top: 1rem;
-
-        img {
-            cursor: pointer;
-            transition: all ease 300ms;
-
-            :hover {
-                opacity: 0.75;
-            }
-        }
-    }
-
     h1 {
         font-size: 16pt;
         color: white;
     }
 
     .items {
-        width: 90%;
+        width: 95%;
         height: 100%;
         display: flex;
         flex-direction: column;
         gap: 1rem;
         overflow-y: auto;
-        margin-bottom: 1rem;
+        margin: 0.75rem 0 0.75rem 0;
     }
 
 
