@@ -9,7 +9,7 @@ import { VideoPlayer } from '../../components/VideoPlayer';
 import { ItemProps } from '../../types';
 import { time } from '../../utils/time';
 
-export const Item = ({ thumb, title, author, views, length, id, downloading, queueOpened }: ItemProps) => {
+export const Item = ({ thumb, title, author, views, length, id, queueOpened }: ItemProps) => {
     const [ videoPlayerEnabled, setVideoPlayerEnabled ] = useState<boolean>(false);
     const [ videoPlayerOpened, setVideoPlayerOpened ] = useState<boolean>(false);
 
@@ -25,8 +25,6 @@ export const Item = ({ thumb, title, author, views, length, id, downloading, que
 
     const handleDownload = () => {
         queueOpened(true);
-
-        downloading(true);
 
         const { path } = JSON.parse(window.localStorage.getItem('settings')!);
 
@@ -98,9 +96,7 @@ export const Item = ({ thumb, title, author, views, length, id, downloading, que
                 window.localStorage.setItem('queue', JSON.stringify(queue));
 
                 window.dispatchEvent(new Event('storage'));
-            })
-            
-            .finally(() => downloading(false));
+            });
     }
 
     return (

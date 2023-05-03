@@ -15,7 +15,6 @@ import { ItemProps } from '../../types';
 export const Home = () => {
     const [ videos, setVideos ] = useState<Array<ItemProps>>([]);
     const [ loading, setLoading ] = useState<boolean>(false);
-    const [ downloading, setDownloading ] = useState<boolean>(false);
     const [ queueOpened, setQueueOpened ] = useState<boolean>(false);
 
     useEffect(() => {
@@ -59,14 +58,13 @@ export const Home = () => {
                                         views={ Number(i.views) }
                                         length={ i.length }
                                         id={ i.id }
-                                        downloading={ setDownloading }
                                         queueOpened={ setQueueOpened }
                                     />
                                 ))
                            }
                            </Items> )
                         : loading
-                            ? <ReactLoading type="spin" color="white" height={ 32 } width={ 32 } />
+                            ? <ReactLoading type="cylon" color="#999" width={ 48 } />
                             : <Empty type="home" />
                     }
                 </Container>

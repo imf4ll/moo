@@ -5,7 +5,6 @@ export interface ItemProps {
     views: number;
     length: string;
     id: string;
-    downloading: Function;
     queueOpened: Function;
 }
 
