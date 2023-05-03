@@ -45,7 +45,7 @@ func SearchService(query string) ([]types.Video, error) {
 
     videos := []types.Video{};
 
-    for _, video := range all_videos[1:9] {
+    for _, video := range all_videos[1:17] {
         title := strings.Split(strings.Split(video, `{"text":"`)[1], `"}]`)[0];
         author := strings.Split(strings.Split(video, `"ownerText":{"runs":[{"text":"`)[1], `","navigation`)[0];
         views := strings.ReplaceAll(strings.Split(strings.Split(strings.Split(video, `"simpleText":"`)[3], `"`)[0], " ")[0], ".", "");
