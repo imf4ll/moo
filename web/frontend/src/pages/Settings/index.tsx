@@ -157,7 +157,7 @@ export const Settings = () => {
 
                     <SwitchOption>
                         <div>
-                            <p className="name">All formats</p>
+                            <p className="name">All formats (soon...)</p>
 
                             <p className="help">🛈 Enable an option that allow download all formats, instead of just audio.</p>
                         </div>
@@ -171,6 +171,7 @@ export const Settings = () => {
                             }}
                             onColor="#9361FF"
                             offColor="#1A1A1A"
+                            disabled
                         />
                     </SwitchOption>
 
