@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="web/frontend/public/icon.png" width="256" />
+  <img src="./icon.png" width="128" />
   
   <h1>Moo...</h1>
 </div>
