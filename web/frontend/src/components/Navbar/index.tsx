@@ -1,6 +1,7 @@
 import { Container } from './styles';
 
 import Logo from '../../../public/icon.png';
+import LogoBackground from '../../../public/iconbackground.png';
 import Settings from '../../assets/settings.svg';
 import Home from '../../assets/home.svg';
 import Queue from '../../assets/queue.svg';
@@ -10,9 +11,12 @@ export const Navbar = ({ setQueueOpened }: { setQueueOpened: Function }) => {
         <Container>
             <nav>
                 <div className="top">
-                    <div className="logo">
-                        <img src={ Logo } width={ 32 } />
-                    </div>
+                    <a href="/">
+                        <div className="logo">
+                            <img src={ LogoBackground } id="background" width={ 32 } />
+                            <img src={ Logo } width={ 32 } />
+                        </div>
+                    </a>
 
                     <div className="button">
                         <img src={ Home } width={ 24 } onClick={ () => window.location.href = '/' } />

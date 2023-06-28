@@ -25,6 +25,33 @@ export const Container = styled.div`
             width: 100%;
             display: flex;
             justify-content: center;
+            cursor: pointer;
+            transition: all ease 350ms;
+
+            :hover {
+                transform: scale(1.1);
+                transform: rotate(90deg);
+            }
+
+            img:first-child {
+                animation: infinite linear 2s breath;
+                position: absolute;
+                z-index: -1;
+            }
+        }
+
+        @keyframes breath {
+            0% {
+                -webkit-filter: blur(0px);
+            }
+
+            50% {
+                -webkit-filter: blur(4px);
+            }
+
+            100% {
+                -webkit-filter: blur(0px);
+            }
         }
 
         .button {
