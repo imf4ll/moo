@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
 
 import { Container } from './styles';
@@ -8,6 +7,7 @@ import { VideoPlayer } from '../../components/VideoPlayer';
 
 import { ItemProps } from '../../types';
 import { time } from '../../utils/time';
+import { notificate } from '../../utils/notifications';
 
 export const Item = ({ thumb, title, author, views, length, id, queueOpened }: ItemProps) => {
     const [ videoPlayerEnabled, setVideoPlayerEnabled ] = useState<boolean>(false);
@@ -65,10 +65,7 @@ export const Item = ({ thumb, title, author, views, length, id, queueOpened }: I
 
         axios.get(`http://localhost:3001/download?id=${ id }&path=${ path }`)
             .then(() => {
-                toast('Downloaded succesfully.', {
-                    type: 'success',
-                    theme: 'dark',
-                });
+                notificate('download', title);
                 
                 const queue: Array<{}> = JSON.parse(window.localStorage.getItem('queue')!);
 
@@ -81,11 +78,8 @@ export const Item = ({ thumb, title, author, views, length, id, queueOpened }: I
             })
 
             .catch(e => {
-                toast(e.response.data.error, {
-                    type: 'error',
-                    theme: 'dark',
-                });
-
+                notificate('error', title);
+                
                 const queue: Array<{}> = JSON.parse(window.localStorage.getItem('queue')!);
 
                 // @ts-ignore

@@ -9,6 +9,36 @@ export const Container = styled.div`
     align-items: center;
     padding-bottom: 2%;
     width: 100%;
+
+    .notifications {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        cursor: pointer;
+        transition: all ease 300ms;
+
+        .new {
+            animation: infinite linear 3s animate;
+        }
+    }
+
+    @keyframes animate {
+        0% {
+            transform: rotate(15deg);
+        }
+
+        10% {
+            transform: rotate(0deg);
+        }
+
+        20% {
+            transform: rotate(-15deg);
+        }
+
+        30% {
+            transform: rotate(0deg);
+        }
+    }
 `;
 
 export const Items = styled.div`

@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import { Background, Container } from './styles';
 
 import { QueueItemProps } from '../../types';
 
-import ClearAll from '../../assets/clear-all.svg';
 import Close from '../../assets/close.svg';
 
 import { QueueItem } from '../QueueItem';

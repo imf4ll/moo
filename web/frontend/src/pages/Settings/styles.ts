@@ -48,6 +48,32 @@ export const Container = styled.div`
         }
     }
 
+    .version {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        margin-top: -1rem;
+
+        p {
+            color: #DDD;
+            font-size: 10.5pt;
+        }
+
+        .uptodate {
+            color: #AC6AFF;
+        }
+
+        .update {
+            color: #FF5C5C;
+            text-decoration: none;
+            transition: all ease 500ms;
+
+            :hover {
+                opacity: 0.85;
+            }
+        }
+    }
+
     @media (max-width: 800px) {
         margin-top: 10%;
 

@@ -13,24 +13,10 @@ export const Container = styled.div`
         img {
             border-radius: 6px;
         }
-
-        p {
-            position: relative;
-            bottom: 10%;
-            left: -23%;
-            color: white;
-            font-size: 9pt;
-            background-color: rgb(0, 0, 0, 75%);
-            text-align: center;
-            display: inline-block;
-            padding: 2px 4px;
-            border-radius: 4px;
-        }
     }
 
     .details {
-        margin-left: -1.5rem;
-        max-width: 65%;
+        margin-left: 0.5rem;
 
         p {
             word-break: break-all;

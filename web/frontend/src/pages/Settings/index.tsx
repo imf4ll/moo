@@ -1,4 +1,3 @@
-import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 
 import { ToggleSwitch } from 'react-dragswitch';
@@ -11,6 +10,9 @@ import { Container, TextOption, SwitchOption, ButtonOption } from './styles';
 
 import { Settings as SettingsProps } from '../../types';
 
+import { version as current } from '../../../package.json';
+import { checkUpdate } from '../../utils/update';
+
 export const Settings = () => {
     // @ts-ignore
     const [ settings, setSettings ] = useState<SettingsProps>({});
@@ -18,7 +20,7 @@ export const Settings = () => {
     const [ videoPlayerChecked, setVideoPlayerChecked ] = useState<boolean>(false);
     const [ saved, setSaved ] = useState<boolean>(true);
     const [ queueOpened, setQueueOpened ] = useState<boolean>(false);
-    const [ clearing, setClearing ] = useState<boolean>(false);
+    const [ latestVersion, setLatestVersion ] = useState<String>();
 
     useEffect(() => {
         if (window.localStorage.getItem('settings') !== null) {
@@ -37,18 +39,16 @@ export const Settings = () => {
             }
         }
 
+        (async () => setLatestVersion(await checkUpdate()))();
+
     }, []);
 
     const handleSave = () => {
         const path = document.querySelector<HTMLInputElement>('#download-path')!;
 
         if (path.value === '') {
-            toast('Path can\'t be empty.', {
-                type: 'error',
-                theme: 'dark',
-            });
-
             path.focus();
+            // If empty, red
 
         } else {
             setSettings({
@@ -64,11 +64,6 @@ export const Settings = () => {
                 allformats: allFormatsChecked,
                 videoplayer: videoPlayerChecked,
             }));
-
-            toast('Settings saved.', {
-                type: 'success',
-                theme: 'dark',
-            });
         }
     }
 
@@ -85,33 +80,11 @@ export const Settings = () => {
         }
     }
 
-    const handleConfirmClear = () => {
-        window.localStorage.setItem('queue', JSON.stringify([]));
-
-        setClearing(false);
-
-        toast('Queue cleared.', {
-            theme: 'dark',
-            type: 'success',
-        });
-    }
-
     const handleClear = () => {
         const queue = JSON.parse(window.localStorage.getItem('queue')!);
 
         if (queue.length !== 0) {
-            setClearing(true);
-            
-            toast('Press again to confirm clear queue.', {
-                theme: 'dark',
-                type: 'warning',
-            });
-
-        } else {
-            toast('Queue is already empty.', {
-                theme: 'dark',
-                type: 'error',
-            });
+            window.localStorage.setItem('queue', JSON.stringify([]));
 
         }
     }
@@ -150,8 +123,27 @@ export const Settings = () => {
                             <p className="help">🛈 Clear the entire download queue.</p>
                         </div>
 
-                        <input type="button" value="Clear" onClick={ clearing ? handleConfirmClear : handleClear } />
+                        <input type="button" value="Clear" onClick={ handleClear } />
                     </ButtonOption>
+
+                    <TextOption>
+                        <div>
+                            <p className="name">Version:</p>
+                            
+                            <p className="help">🛈 Moo's versioning system.</p>
+                        </div>
+
+                        <div className="version">
+                            <p>Current: { current }</p>
+
+                            <p>Latest: { latestVersion } {
+                                current === latestVersion
+                                    ? <span className="uptodate">(Up to date)</span>
+                                    : <a className="update" href="https://github.com/imf4ll/moo/blob/master/README.md#updating"><span className="update">(New update available)</span></a>
+                                }
+                            </p>
+                        </div>
+                    </TextOption>
 
                     <h3>Functionalities</h3>
 
