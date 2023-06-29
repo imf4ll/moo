@@ -4,7 +4,7 @@ from utils.position import get_audio_pos
 from utils.progress import on_progress
 
 def byurl(url: str, filename: str, path: str, first: bool):
-    video = YouTube(url, on_progress_callback = on_progress)
+    video = YouTube(url, on_progress_callback = on_progress, use_oauth = True, allow_oauth_cache = True)
 
     print(f"Downloading \033[1;34m{ video.title }\033[m\n")
 

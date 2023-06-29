@@ -5,7 +5,7 @@ from utils.position import get_audio_pos, get_video_pos
 from utils.progress import on_progress
 
 def download_audio(videos: list, filename: str, path: str, position: int, first: bool):
-    video_req = YouTube('https://www.youtube.com/watch?v=' + videos[position]['id'], on_progress_callback = on_progress)
+    video_req = YouTube('https://www.youtube.com/watch?v=' + videos[position]['id'], on_progress_callback = on_progress, use_oauth = True, allow_oauth_cache = True)
 
     audios = video_req.streams.filter(only_audio = True, file_extension = 'mp4')
 
