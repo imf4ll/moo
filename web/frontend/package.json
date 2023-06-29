@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "version": "1.0.0",
+  "version": "v0.1.2",
   "main": "dist/index.js",
   "license": "MIT",
   "devDependencies": {
