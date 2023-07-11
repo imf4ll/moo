@@ -8,7 +8,7 @@ export const Container = styled.div`
 
     h3 {
         color: white;
-        font-weight: 500;
+        font-weight: 400;
         margin-top: 3rem;
     }
 

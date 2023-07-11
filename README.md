@@ -21,7 +21,7 @@
 <br />
 
 ## 😎 About
-If you're tired of searching for video downloaders across the internet cause the domain was been seized,
+If you're tired of searching for downloaders across the internet cause the domain was been seized,
 here are my solution, a CLI and a self-hosted service to avoid these problems, just install and download
 videos from your terminal or in-browser running the self-hosted service powered by React, Vite on frontend
 and Golang and Python on backend.

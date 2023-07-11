@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { Home } from './pages/Home';
 import { Settings } from './pages/Settings';
+import { Player } from './pages/Player';
 
 import './styles/global.css';
 
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
         path: "/settings",
         element: <Settings />
     },
+    {
+        path: "/player",
+        element: <Player />
+    }
 ]);
 
 createRoot(document.querySelector('#root')!).render(

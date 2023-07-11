@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { Background, Container } from './styles';
+import { Container } from './styles';
 
 import { QueueItemProps } from '../../types';
 
@@ -25,9 +25,7 @@ export const Queue = ({ queueOpened }: { queueOpened: Function }) => {
 
     return (
         <>
-            <Background onClick={ () => queueOpened(false) } />
-
-            <Container id="container-queue">
+            <Container id="container-queue" onMouseLeave={ () => queueOpened(false) }>
                 {
                     window.innerWidth < 800 &&
                         <img

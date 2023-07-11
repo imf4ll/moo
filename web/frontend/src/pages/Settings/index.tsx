@@ -16,7 +16,6 @@ import { checkUpdate } from '../../utils/update';
 export const Settings = () => {
     // @ts-ignore
     const [ settings, setSettings ] = useState<SettingsProps>({});
-    const [ allFormatsChecked, setAllFormatsChecked ] = useState<boolean>(false);
     const [ videoPlayerChecked, setVideoPlayerChecked ] = useState<boolean>(false);
     const [ saved, setSaved ] = useState<boolean>(true);
     const [ queueOpened, setQueueOpened ] = useState<boolean>(false);
@@ -27,11 +26,6 @@ export const Settings = () => {
             const settings: SettingsProps = JSON.parse(window.localStorage.getItem('settings')!);
 
             setSettings(settings);
-
-            if (settings.allformats) {
-                setAllFormatsChecked(settings.allformats);
-
-            }
 
             if (settings.videoplayer) {
                 setVideoPlayerChecked(settings.videoplayer);
@@ -53,7 +47,6 @@ export const Settings = () => {
         } else {
             setSettings({
                 path: path.value,
-                allformats: allFormatsChecked,
                 videoplayer: videoPlayerChecked,
             });
 
@@ -61,7 +54,6 @@ export const Settings = () => {
 
             window.localStorage.setItem('settings', JSON.stringify({
                 path: path.value,
-                allformats: allFormatsChecked,
                 videoplayer: videoPlayerChecked,
             }));
         }
@@ -146,26 +138,6 @@ export const Settings = () => {
                     </TextOption>
 
                     <h3>Functionalities</h3>
-
-                    <SwitchOption>
-                        <div>
-                            <p className="name">All formats (soon...)</p>
-
-                            <p className="help">🛈 Enable an option that allow download all formats, instead of just audio.</p>
-                        </div>
-
-                        <ToggleSwitch
-                            checked={ allFormatsChecked }
-                            onChange={ (e) => {
-                                setAllFormatsChecked(!allFormatsChecked);
-
-                                handleSaved(e, "allformats");
-                            }}
-                            onColor="#9361FF"
-                            offColor="#1A1A1A"
-                            disabled
-                        />
-                    </SwitchOption>
 
                     <SwitchOption>
                         <div>

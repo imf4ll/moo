@@ -4,15 +4,12 @@ import { toast } from 'react-toastify';
 
 import { Container, Items } from './styles';
 
-import { SearchBar } from '../../components/SearchBar';
+import { SearchBar } from './components/SearchBar';
 import { Empty } from '../../components/Empty';
-import { Item } from '../../components/Item';
+import { Item } from './components/Item';
 import { Navbar } from '../../components/Navbar';
 import { Queue } from '../../components/Queue';
 import { Notifications } from '../../components/Notifications';
-
-import NotificationsBell from '../../assets/notifications.svg';
-import NewNotification from '../../assets/newnotification.svg';
 
 import { ItemProps } from '../../types';
 
@@ -24,9 +21,7 @@ export const Home = () => {
     const [ videos, setVideos ] = useState<Array<ItemProps>>([]);
     const [ loading, setLoading ] = useState<boolean>(false);
     const [ queueOpened, setQueueOpened ] = useState<boolean>(false);
-    const [ notificationsOpened, setNotificationsOpened ] = useState<boolean>(false);
     const [ latestVersion, setLatestVersion ] = useState<String>();
-    const [ newNotifications, setNewNotifications ] = useState<boolean>();
 
     useEffect(() => {
         if (window.localStorage.getItem('settings') === null) {
@@ -60,11 +55,6 @@ export const Home = () => {
         }
     }, []);
 
-    useEffect(() => {
-        const notifications = JSON.parse(window.localStorage.getItem('notifications')!);
-
-        notifications.map(i => i.new ? setNewNotifications(true) : setNewNotifications(false));
-    });
 
     useEffect(() => {
         if (window.localStorage.getItem('update') === null) {
@@ -95,21 +85,8 @@ export const Home = () => {
                 queueOpened && <Queue queueOpened={ setQueueOpened } />
             }
 
-            {
-                notificationsOpened && <Notifications notificationsOpened={ setNotificationsOpened } />
-            }
-
             <Container>
-                <div
-                    className="notifications"
-                    onClick={ () => setNotificationsOpened(!notificationsOpened) }
-                >
-                    <img
-                        src={ newNotifications ? NewNotification : NotificationsBell }
-                        width={ 24 }
-                        className={ newNotifications ? "new" : "" }
-                    />
-                </div>
+                <Notifications position="absolute" />
 
                 <SearchBar setVideos={ setVideos } setLoading={ setLoading } />
             

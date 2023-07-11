@@ -5,9 +5,9 @@ import { Container } from './styles';
 
 import { VideoPlayer } from '../../components/VideoPlayer';
 
-import { ItemProps } from '../../types';
-import { time } from '../../utils/time';
-import { notificate } from '../../utils/notifications';
+import { ItemProps } from '../../../../types';
+import { time } from '../../../../utils/time';
+import { notificate } from '../../../../utils/notifications';
 
 export const Item = ({ thumb, title, author, views, length, id, queueOpened }: ItemProps) => {
     const [ videoPlayerEnabled, setVideoPlayerEnabled ] = useState<boolean>(false);
@@ -77,7 +77,7 @@ export const Item = ({ thumb, title, author, views, length, id, queueOpened }: I
                 window.dispatchEvent(new Event('storage'));
             })
 
-            .catch(e => {
+            .catch(() => {
                 notificate('error', title);
                 
                 const queue: Array<{}> = JSON.parse(window.localStorage.getItem('queue')!);

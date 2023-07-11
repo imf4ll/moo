@@ -1,11 +1,10 @@
 import { ChangeEvent, useState, useEffect } from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
 
 import { Container, Bar, Buttons } from './styles';
 
-import Search from '../../assets/search.svg';
-import Close from '../../assets/close.svg';
+import Search from '../../../../assets/search.svg';
+import Close from '../../../../assets/close.svg';
 
 interface SearchProps {
     setVideos: Function;
@@ -37,22 +36,16 @@ export const SearchBar = ({ setVideos, setLoading }: SearchProps) => {
         setVideos([]);
         setLoading(true);
         
-        (async () =>                                                                                                                                                         await axios.get('http://localhost:3001/' + ( type === 'search' ? 'search?query=' : 'video?id=') + value.substring(value.length - 11))
+        (async () =>                                                                                                                                                         await axios.get('http://localhost:3001/' + ( type === 'search' ? `search?query=${ value }` : `video?id=${ value.substring(value.length - 11) }`))
                 .then(r => {
                     setVideos(type === 'video' ? [ r.data.video ] : r.data.videos);
                     
                     setLoading(false);
                 })
 
-                .catch(e => {
+                .catch(() => {
                     setVideos([]);
                     setLoading(false);
-                    
-                    toast(e.response.data.error, {
-                        theme: 'dark',
-                        pauseOnHover: true,
-                        type: 'error',
-                    });
                 })
         )();
     }

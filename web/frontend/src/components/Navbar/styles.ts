@@ -27,6 +27,7 @@ export const Container = styled.div`
             justify-content: center;
             cursor: pointer;
             transition: all ease 350ms;
+            margin-bottom: 0.75rem;
 
             :hover {
                 transform: scale(1.1);
@@ -74,6 +75,5 @@ export const Container = styled.div`
     .top {
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
     }
 `;

@@ -1,16 +1,5 @@
 import styled from 'styled-components';
 
-export const Background = styled.div`
-    background-color: #000;
-    opacity: 0.9;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    width: 99%;
-    height: 100%;
-    z-index: 999;
-`;
-
 export const Container = styled.div`
     position: fixed;
     top: 0;

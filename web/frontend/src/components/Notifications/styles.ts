@@ -1,28 +1,50 @@
 import styled from 'styled-components';
 
-export const Background = styled.div`
-    background-color: #000;
-    opacity: 0.9;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    width: 99%;
-    height: 100%;
-    z-index: 999;
+export const Container = styled.div`
+    .notifications {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        cursor: pointer;
+        transition: all ease 300ms;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .new {
+            animation: linear infinite 500ms breath;
+            position: absolute;
+        }
+
+        @keyframes breath {
+            0% {
+                -webkit-filter: blur(0px);
+            }
+
+            50% {
+                -webkit-filter: blur(2px);
+            }
+
+            100% {
+                -webkit-filter: blur(0px);
+            }
+        }
+    };
 `;
 
-export const Container = styled.div`
+export const Modal = styled.div`
     display: flex;
     flex-direction: column;
     background-color: #171717;
     border-radius: 10px;
-    width: 25%;
-    height: 80%;
+    width: 25vw;
+    height: 80vh;
     position: absolute;
     top: 2.5rem;
     right: 0.5rem;
     z-index: 1000;
-    overflow-y: scroll;
+    overflow-y: auto;
 
     .notification-new {
         background: #232323;

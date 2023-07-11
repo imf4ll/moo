@@ -10,17 +10,6 @@ export const Container = styled.div`
     padding-bottom: 2%;
     width: 100%;
 
-    .notifications {
-        position: absolute;
-        top: 0.5rem;
-        right: 0.5rem;
-        cursor: pointer;
-        transition: all ease 300ms;
-
-        .new {
-            animation: infinite linear 3s animate;
-        }
-    }
 
     @keyframes animate {
         0% {
