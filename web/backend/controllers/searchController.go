@@ -11,14 +11,15 @@ import (
 
 func SearchController(ctx *gin.Context) {
     query := ctx.Query("query");
+    mode := ctx.Query("mode");
 
-    if query == "" {
+    if query == "" || mode == "" {
         utils.Error(ctx, errors.New("Invalid query."))
    
         return
     }
 
-    videos, err := services.SearchService(query);
+    videos, err := services.SearchService(query, mode);
     if err != nil {
         utils.Error(ctx, err);
 

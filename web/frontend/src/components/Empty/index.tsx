@@ -22,7 +22,7 @@ export const Empty = ({ type }: { type: string }) => {
         musicplayer: {
             image: MusicPlayerEmpty,
             text: "There's nothing here. :/",
-            width: '30%',
+            width: '40%',
         },
         notifications: {
             image: NotificationsEmpty,

@@ -6,13 +6,21 @@ import { Container } from './styles';
 import { Notifications } from '../../../../components/Notifications';
 
 import Search from '../../../../assets/search.svg';
+import Add from '../../../../assets/playlistadd.svg';
 
-export const Header = ({ setVideos, setLoading }: { setVideos: Function, setLoading: Function }) => {
+export const Header = ({ setVideos, setLoading, playlistModalOpened, setPlaylistModalOpened }: {
+        setVideos: Function,
+        setLoading: Function,
+        playlistModalOpened: boolean,
+        setPlaylistModalOpened: Function,
+    }) => {
+
     const handleSearch = (type: string, value: string) => {
         setVideos([]);
         setLoading(true);
         
-        (async () =>                                                                                                                                                         await axios.get('http://localhost:3001/' + ( type === 'search' ? `search?query=${ value }` : `video?id=${ value.substring(value.length - 11) }`))
+        (async () => 
+            await axios.get('http://localhost:3001/' + ( type === 'search' ? `search?query=${ value }&mode=player` : `video?id=${ value.substring(value.length - 11) }`))
                 .then(r => {
                     setVideos(type === 'video' ? [ r.data.video ] : r.data.videos);
                     
@@ -70,7 +78,11 @@ export const Header = ({ setVideos, setLoading }: { setVideos: Function, setLoad
                 <img src={ Search } id="search" width={ 22 } />
             </div>
 
-            <Notifications position="relative" />
+            <div className="buttons">
+                <img src={ Add } width={ 28 } onClick={ () => setPlaylistModalOpened(!playlistModalOpened) } />
+
+                <Notifications position="relative" />
+            </div>
         </Container>
     );
 }

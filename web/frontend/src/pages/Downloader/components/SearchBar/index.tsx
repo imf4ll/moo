@@ -36,7 +36,7 @@ export const SearchBar = ({ setVideos, setLoading }: SearchProps) => {
         setVideos([]);
         setLoading(true);
         
-        (async () =>                                                                                                                                                         await axios.get('http://localhost:3001/' + ( type === 'search' ? `search?query=${ value }` : `video?id=${ value.substring(value.length - 11) }`))
+        (async () =>                                                                                                                                                         await axios.get('http://localhost:3001/' + ( type === 'search' ? `search?query=${ value }&mode=download` : `video?id=${ value.substring(value.length - 11) }`))
                 .then(r => {
                     setVideos(type === 'video' ? [ r.data.video ] : r.data.videos);
                     

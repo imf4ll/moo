@@ -12,3 +12,14 @@ type Video struct {
 type Videos struct {
     Videos []Video `json:"videos"`
 }
+
+type PlaylistVideo struct {
+    Title string `json:"title"`
+    ID string `json:"id"`
+    Thumbnail string `json:"thumb"`
+    Author string `json:"author"`
+}
+
+type Playlist struct {
+    Videos []PlaylistVideo `json:"videos"`
+}

@@ -27,13 +27,15 @@ export const Notifications = ({ position }: { position: string }) => {
     }, []);
 
     useEffect(() => {
-        window.addEventListener('storage', () => {
+        const onStorage = window.addEventListener('storage', () => {
             const notifications = JSON.parse(window.localStorage.getItem('notifications')!);
 
             notifications.map(i => i.new ? setNewNotifications(true) : setNewNotifications(false));
 
             setNotifications(notifications);
         });
+        
+        window.removeEventListener('storage', onStorage);
 
         document.querySelector('.notifications')?.addEventListener('click', () => {
             setTimeout(() => {

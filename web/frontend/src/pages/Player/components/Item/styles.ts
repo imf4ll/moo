@@ -16,22 +16,23 @@ export const Container = styled.div`
 
     .title {
         display: flex;
-        gap: 0.75rem;
+        gap: 0.5rem;
 
         p {
             font-weight: 500;
+            margin-left: 0.4rem;
         }
 
         img {
             border-radius: 6px;
-
-            :first-child {
-                cursor: pointer;
-                transition: all ease 300ms;
-                
-                :hover {
-                    opacity: 0.7;
-                }
+        }
+   
+        #control {
+            cursor: pointer;
+            transition: all ease 300ms;
+            
+            :hover {
+                opacity: 0.7;
             }
         }
 

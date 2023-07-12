@@ -57,11 +57,7 @@ export const Container = styled.div`
         align-items: center;
         justify-content: center;
         width: 100%;
-        margin-left: -12.5%;
-
-        img {
-            cursor: pointer;
-        }
+        margin-left: -10%;
     }
 
     .time {
@@ -76,6 +72,23 @@ export const Container = styled.div`
         margin: 0 1.5rem;
     }
 
+    .otherbuttons {
+        display: flex;
+        gap: 1rem;
+        margin-right: 0.75rem;
+    }
+
+    .otherbuttons, .volume, .audioplayer {
+        img {
+            transition: all ease 500ms;
+            cursor: pointer;
+
+            :hover {
+                opacity: 0.6;
+            }    
+        }
+    }
+
     .volume {
         width: 10%;
         display: flex;
@@ -83,53 +96,38 @@ export const Container = styled.div`
         justify-content: center;
         gap: 0.2rem;
         margin-right: 1rem;
-    }
 
-    #rangeVolume {
-        width: 100%;
-        outline: none;
-        border-radius: 10px;
-        overflow: hidden;
-        height: 6px;
-        
-        ::-webkit-slider-runnable-track {
-            background: #333;
-        }
+        img {
+            transition: all ease 500ms;
+            cursor: pointer;
 
-        ::-moz-range-thumb {
-            background: #333;
-        }
-
-        ::-webkit-slider-thumb {
-            box-shadow: -407px 0 0 400px #AC6AFF;
-        }
-
-        ::-moz-range-thumb {
-            box-shadow: -400px 0 0 400px #AC6AFF;
+            :hover {
+                opacity: 0.6;
+            }
         }
     }
 
-    #rangeAudio {
+    #rangeAudio, #rangeVolume {
         width: 100%;
         outline: none;
-        border-radius: 10px;
-        overflow: hidden;
         height: 6px;
-        
+        -webkit-appearance: none;
+        appearance: none;
+        background: transparent;
+
         ::-webkit-slider-runnable-track {
             background: #333;
-        }
-
-        ::-moz-range-thumb {
-            background: #333;
+            border-radius: 100px;
+            overflow: hidden;
         }
 
         ::-webkit-slider-thumb {
-            box-shadow: -407px 0 0 400px #AC6AFF;
-        }
-
-        ::-moz-range-thumb {
-            box-shadow: -400px 0 0 400px #AC6AFF;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #AC6AFF;
+            height: 6px;
+            width: 0.5rem;
+            border-radius: 1px;
         }
     }
 `;

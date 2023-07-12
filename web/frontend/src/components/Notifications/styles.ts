@@ -5,12 +5,20 @@ export const Container = styled.div`
         position: absolute;
         top: 0.5rem;
         right: 0.5rem;
-        cursor: pointer;
         transition: all ease 300ms;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+
+        img {
+            transition: all ease 500ms;
+            cursor: pointer;
+
+            :hover {
+                opacity: 0.7;
+            }
+        }
 
         .new {
             animation: linear infinite 500ms breath;

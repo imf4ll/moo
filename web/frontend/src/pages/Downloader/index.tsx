@@ -17,7 +17,7 @@ import { checkUpdate } from '../../utils/update';
 import { notificate } from '../../utils/notifications';
 import { version as current } from '../../../package.json';
 
-export const Home = () => {
+export const Downloader = () => {
     const [ videos, setVideos ] = useState<Array<ItemProps>>([]);
     const [ loading, setLoading ] = useState<boolean>(false);
     const [ queueOpened, setQueueOpened ] = useState<boolean>(false);

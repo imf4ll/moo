@@ -1,6 +1,7 @@
 package services
 
 import (
+    // "errors"
     "net/http"
     "fmt"
     "io/ioutil"
@@ -9,14 +10,12 @@ import (
     "github.com/imf4ll/moo-web/backend/types"
 )
 
-func SearchService(query string, mode string) ([]types.Video, error) {
+func AddPlaylistService(id string) ([]types.PlaylistVideo, error) {
     client := &http.Client{}
 
-    query = strings.ReplaceAll(query, " ", "+");
-
-    req, err := http.NewRequest("GET", fmt.Sprintf("https://www.youtube.com/results?search_query=%s", query), nil)
+    req, err := http.NewRequest("GET", fmt.Sprintf("https://www.youtube.com/playlist?list=%s", id), nil)
     if err != nil {
-        return []types.Video{}, err;
+        return []types.PlaylistVideo{}, err;
     
     }
 
@@ -24,7 +23,7 @@ func SearchService(query string, mode string) ([]types.Video, error) {
 
     res, err := client.Do(req);
     if err != nil {
-        return []types.Video{}, err;
+        return []types.PlaylistVideo{}, err;
 
     }
 
@@ -32,7 +31,7 @@ func SearchService(query string, mode string) ([]types.Video, error) {
 
     data, err := ioutil.ReadAll(res.Body)
     if err != nil {
-        return []types.Video{}, err;
+        return []types.PlaylistVideo{}, err;
 
     }
 
@@ -43,25 +42,21 @@ func SearchService(query string, mode string) ([]types.Video, error) {
     
     }
 
-    videos := []types.Video{};
+    videos := []types.PlaylistVideo{};
 
-    for _, video := range all_videos[1:17] {
+    for _, video := range all_videos[1:len(all_videos) - 8] {
         title := strings.Split(strings.Split(video, `{"text":"`)[1], `"}]`)[0];
-        author := strings.Split(strings.Split(video, `"ownerText":{"runs":[{"text":"`)[1], `","navigation`)[0];
-        views := strings.ReplaceAll(strings.Split(strings.Split(strings.Split(video, `"simpleText":"`)[3], `"`)[0], " ")[0], ".", "");
-        length := strings.Split(strings.Split(video, `"simpleText":"`)[2], `"`)[0];
         id := strings.Split(strings.Split(video, `"videoId":"`)[1], `"`)[0];
         thumbnail := fmt.Sprintf("https://i.ytimg.com/vi/%s/hqdefault.jpg", id);
+        author := strings.Split(strings.Split(video, `"shortBylineText":{"runs":[{"text":"`)[1], `","navigation`)[0];
 
-        videos = append(videos, types.Video {
+        videos = append(videos, types.PlaylistVideo {
             Title: title,
-            Author: author,
-            Views: views,
-            Length: length,
             ID: id,
             Thumbnail: thumbnail,
+            Author: author,
         });
     }
-
+    
     return videos, nil;
 }
