@@ -19,7 +19,7 @@ export const Container = styled.div`
     right: 50%;
     transform: translate(-50%, -50%);
     width: 50%;
-    background: #181818;
+    background: #121212;
     padding: 1rem 0;
     border-radius: 8px;
     display: flex;
@@ -27,6 +27,9 @@ export const Container = styled.div`
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+    background-color: rgba(15, 15, 15, 90%);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
 
     img {
         border-radius: 8px;

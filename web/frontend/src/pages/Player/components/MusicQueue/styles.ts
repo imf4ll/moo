@@ -2,36 +2,51 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
     position: absolute;
-    bottom: 3.5rem;
-    right: 0.75rem;
-    width: 30vw;
+    bottom: 5rem;
+    right: 0.5rem;
+    width: 35vw;
     height: 60vh;
-    background: #181818;
     border-radius: 10px;
     z-index: 999;
-    padding: 0.5rem 0;
+    padding: 0.5rem 1rem;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
     overflow: auto;
+    background-color: rgba(15, 15, 15, 95%);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
 
     .item {
         display: flex;
         color: white;
         font-size: 11pt;
         font-weight: 500;
-        gap: 0.5rem;
-        margin: 0 0.5rem;
+        gap: 1rem;
         align-items: center;
+        width: 100%;
+ 
+        .thumb {
+            display: flex;
+            margin: 0;
+            gap: 1rem;
+            align-items: center;
+
+            p {
+                font-weight: 600;
+            }
+        }
 
         :first-child {
-            background: #252525;
-            border-radius: 10px;
-            padding: 0.25rem 0.4rem;
+            .thumb p:first-child {
+                color: #AC6AFF;  
+            }
         }
+
 
         span {
             color: #AAA;
+            font-weight: 400;
         }
 
         img {

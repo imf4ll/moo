@@ -2,6 +2,8 @@ import axios from 'axios';
 
 import { Container } from './styles';
 
+import { notificate } from '../../../../utils/notifications';
+
 import { duration as durationFormat } from '../../../../utils/time';
 
 import Play from '../../../../assets/play.svg';
@@ -36,9 +38,11 @@ export const Item = ({ thumb, title, user, views, duration, id, setCurrentAudio,
                 window.localStorage.setItem('songqueue', JSON.stringify([]));
             })
 
-            .catch(() => {}); 
+            .catch(() => {
+                notificate('error', 'to get audio.');
 
-
+                window.dispatchEvent(new Event('newnotification'));
+            });
     }
 
     const handleAddToQueue = () => {
@@ -69,6 +73,12 @@ export const Item = ({ thumb, title, user, views, duration, id, setCurrentAudio,
 
             window.dispatchEvent(new Event('newqueue'));
         }
+
+        const addButton: HTMLImageElement = document.querySelector(`.addToQueue-${ id }`)!;
+
+        addButton.style.scale = '1.3';
+        
+        setTimeout(() => addButton.style.scale = '1', 300);
     }
     
     return (
@@ -76,11 +86,18 @@ export const Item = ({ thumb, title, user, views, duration, id, setCurrentAudio,
             <div className="title">
                 <img src={ Play } width={ 28 } onClick={ () => handleSetAudio() } id="control" />
 
-                <img src={ AddToQueue } width={ 20 } id="control" style={{ marginRight: '0.3rem' }} onClick={ () => handleAddToQueue() } />
+                <img
+                    src={ AddToQueue }
+                    width={ 20 }
+                    id="control"
+                    style={{ marginRight: '0.3rem' }}
+                    onClick={ () => handleAddToQueue() }
+                    className={ `addToQueue-${ id }` }
+                />
 
                 <img src={ thumb } width={ 128 } />
 
-                <p title={ title }>{ title.length >= 60 ? title.substring(0, 59) + '...' : title } · <span>{ user }</span></p>
+                <p title={ title }>{ title.length >= 60 ? title.replace("\\u0026", "&").substring(0, 59) + '...' : title.replace("\\u0026", "&") } · <span>{ user.replace("\\u0026", "&") }</span></p>
             </div>
             
             <div className="stats">

@@ -3,6 +3,8 @@ import axios from 'axios';
 
 import { Background, Container } from './styles';
 
+import { notificate } from '../../../../utils/notifications';
+
 import ImageBackground from '../../../../assets/background.jpg';
 
 export const PlaylistModal = ({ setPlaylistModalOpened }: { setPlaylistModalOpened: Function }) => {
@@ -37,7 +39,11 @@ export const PlaylistModal = ({ setPlaylistModalOpened }: { setPlaylistModalOpen
                         document.querySelector<HTMLImageElement>('#image')!.src = data.videos[0].thumb;
                     })
 
-                    .catch(() => {});
+                    .catch(() => {
+                        notificate('error', 'to get playlist.');
+
+                        window.dispatchEvent(new Event('newnotification'));
+                    });
             }
         });
 
@@ -101,7 +107,7 @@ export const PlaylistModal = ({ setPlaylistModalOpened }: { setPlaylistModalOpen
                 <div>
                     <p>Title:</p>
 
-                    <input type="text" id="title" maxLength={ 16 } placeholder="Playlist title" />
+                    <input type="text" id="title" maxLength={ 24 } placeholder="Playlist title" />
                 </div>
 
                 <img src={ ImageBackground } width={ 200 } height={ 200 } id="image" />

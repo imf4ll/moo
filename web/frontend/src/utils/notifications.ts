@@ -10,7 +10,7 @@ export const notificate = (type: String, title: String) => {
         }]));
 
     } else {
-        notifications.push({
+        notifications.unshift({
             type,
             title: `${ title.length > 35 ? title.substring(0, 34) + '...' : title }`,
             new: true,

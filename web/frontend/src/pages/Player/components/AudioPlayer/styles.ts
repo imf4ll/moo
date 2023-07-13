@@ -4,12 +4,15 @@ export const Container = styled.div`
     position: fixed;
     bottom: 0;
     left: 0;
-    background: #151515;
-    width: 100vw;
+    width: 100%;
     height: 4.5rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    z-index: 998;
+    background-color: rgba(0, 0, 0, 95%);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
 
     .stats {
         display: flex;
@@ -17,9 +20,9 @@ export const Container = styled.div`
         color: white;
         font-size: 11pt;
         align-items: center;
-        margin-left: 3.5rem;
-        min-width: 25%;
-        max-width: 25%;
+        margin-left: 1rem;
+        min-width: 35%;
+        max-width: 35%;
         
         img {
             border-radius: 6px;
@@ -37,7 +40,7 @@ export const Container = styled.div`
         white-space: nowrap;
 
         .animated {
-            animation: infinite 10s marquee linear;
+            animation: infinite 15s marquee linear;
         }
 
         @keyframes marquee {
@@ -57,7 +60,7 @@ export const Container = styled.div`
         align-items: center;
         justify-content: center;
         width: 100%;
-        margin-left: -10%;
+        margin-left: -20%;
     }
 
     .time {
@@ -90,7 +93,7 @@ export const Container = styled.div`
     }
 
     .volume {
-        width: 10%;
+        width: 12.5%;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -110,7 +113,6 @@ export const Container = styled.div`
     #rangeAudio, #rangeVolume {
         width: 100%;
         outline: none;
-        height: 6px;
         -webkit-appearance: none;
         appearance: none;
         background: transparent;
@@ -125,9 +127,21 @@ export const Container = styled.div`
             -webkit-appearance: none;
             appearance: none;
             background: #AC6AFF;
-            height: 6px;
+            height: 4px;
             width: 0.5rem;
             border-radius: 1px;
+        }
+    }
+
+    #rangeAudio {
+        position: absolute;
+        top: -0.1rem;
+        right: -0.1rem;
+        width: 100%;
+
+        ::-webkit-slider-runnable-track {
+            border-radius: 0;    
+            background: #222;
         }
     }
 `;

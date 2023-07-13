@@ -2,17 +2,22 @@ import axios from 'axios';
 import { useEffect } from 'react';
 
 import { Container } from './styles';
+import { notificate } from '../../../../utils/notifications';
 
 import { Notifications } from '../../../../components/Notifications';
 
+import Logo from '../../../../../public/icon.png';
+import LogoBackground from '../../../../../public/iconbackground.png';
 import Search from '../../../../assets/search.svg';
-import Add from '../../../../assets/playlistadd.svg';
+import Clear from '../../../../assets/close.svg';
+import More from '../../../../assets/more.svg';
 
-export const Header = ({ setVideos, setLoading, playlistModalOpened, setPlaylistModalOpened }: {
+export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOpened, setMoreOptionsOpened }: {
         setVideos: Function,
         setLoading: Function,
-        playlistModalOpened: boolean,
-        setPlaylistModalOpened: Function,
+        setPlaylistsToAdd: Function,
+        moreOptionsOpened: boolean,
+        setMoreOptionsOpened: Function,
     }) => {
 
     const handleSearch = (type: string, value: string) => {
@@ -23,13 +28,22 @@ export const Header = ({ setVideos, setLoading, playlistModalOpened, setPlaylist
             await axios.get('http://localhost:3001/' + ( type === 'search' ? `search?query=${ value }&mode=player` : `video?id=${ value.substring(value.length - 11) }`))
                 .then(r => {
                     setVideos(type === 'video' ? [ r.data.video ] : r.data.videos);
+
+                    setPlaylistsToAdd(r.data.playlists);
                     
                     setLoading(false);
                 })
 
                 .catch(() => {
                     setVideos([]);
+
                     setLoading(false);
+
+                    setPlaylistsToAdd([]);
+
+                    notificate('error', 'to search.');
+
+                    window.dispatchEvent(new Event('newnotification'));
                 })
         )();
     }
@@ -70,18 +84,24 @@ export const Header = ({ setVideos, setLoading, playlistModalOpened, setPlaylist
 
     return (
         <Container>
-            <div></div>
+            <div className="logo">
+                <img src={ LogoBackground } id="background" width={ 32 } />
+                <img src={ Logo } width={ 32 } />
+            </div>
 
             <div className="searchBar">
                 <input type="text" id="bar" placeholder="Search for a music or artist" />
 
-                <img src={ Search } id="search" width={ 22 } />
+                <div className="bar-buttons">
+                    <img src={ Search } id="search" width={ 24 } />
+                    <img src={ Clear } width={ 26 } onClick={ () => { setVideos([]); setPlaylistsToAdd([]); } } />
+                </div>
             </div>
 
             <div className="buttons">
-                <img src={ Add } width={ 28 } onClick={ () => setPlaylistModalOpened(!playlistModalOpened) } />
-
                 <Notifications position="relative" />
+
+                <img src={ More } width={ 32 } onClick={ () => setMoreOptionsOpened(!moreOptionsOpened) } />
             </div>
         </Container>
     );

@@ -1,5 +1,18 @@
 import styled from "styled-components";
 
+export const Back = styled.img`
+    position: absolute;
+    top: 1rem;
+    left: 0.75rem;
+    transition: all ease 300ms;
+    cursor: pointer;
+    z-index: 999;
+
+    :hover {
+        opacity: 0.6;
+    }
+`;
+
 export const Container = styled.div`
     position: absolute;
     top: 0;

@@ -6,7 +6,9 @@ import 'react-dragswitch/dist/index.css'
 import { Navbar } from '../../components/Navbar';
 import { Queue } from '../../components/Queue';
 
-import { Container, TextOption, SwitchOption, ButtonOption } from './styles';
+import BackImage from '../../assets/back.svg';
+
+import { Back, Container, TextOption, SwitchOption, ButtonOption } from './styles';
 
 import { Settings as SettingsProps } from '../../types';
 
@@ -83,7 +85,11 @@ export const Settings = () => {
 
     return (
         <>
-            <Navbar setQueueOpened={ setQueueOpened } />
+            <Back
+                src={ BackImage }
+                onClick={ () => history.back() }
+                width={ 24 }
+            />
 
             {
                 queueOpened && <Queue queueOpened={ setQueueOpened } />

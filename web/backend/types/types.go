@@ -23,3 +23,10 @@ type PlaylistVideo struct {
 type Playlist struct {
     Videos []PlaylistVideo `json:"videos"`
 }
+
+type PlaylistSearch struct {
+    ID string `json:"id"`
+    Songs int `json:"songs"`
+    Thumbnail string `json:"thumb"`
+    Title string `json:"title"`
+}

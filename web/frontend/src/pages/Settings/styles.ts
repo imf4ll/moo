@@ -1,5 +1,17 @@
 import styled from 'styled-components';
 
+export const Back = styled.img`
+    position: absolute;
+    top: 1rem;
+    left: 0.75rem;
+    transition: all ease 300ms;
+    cursor: pointer;
+
+    :hover {
+        opacity: 0.6;
+    }
+`;
+
 export const Container = styled.div`
     display: flex;
     flex-direction: column;

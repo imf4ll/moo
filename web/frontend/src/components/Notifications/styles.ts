@@ -44,15 +44,17 @@ export const Container = styled.div`
 export const Modal = styled.div`
     display: flex;
     flex-direction: column;
-    background-color: #171717;
     border-radius: 10px;
     width: 25vw;
     height: 80vh;
     position: absolute;
     top: 2.5rem;
     right: 0.5rem;
-    z-index: 1000;
+    z-index: 100;
     overflow-y: auto;
+    background-color: rgba(18, 18, 18, 95%);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
 
     .notification-new {
         background: #232323;

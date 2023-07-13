@@ -19,7 +19,7 @@ func SearchController(ctx *gin.Context) {
         return
     }
 
-    videos, err := services.SearchService(query, mode);
+    videos, playlists, err := services.SearchService(query, mode);
     if err != nil {
         utils.Error(ctx, err);
 
@@ -28,5 +28,6 @@ func SearchController(ctx *gin.Context) {
 
     ctx.JSON(200, gin.H {
         "videos": videos,
+        "playlists": playlists,
     });
 }

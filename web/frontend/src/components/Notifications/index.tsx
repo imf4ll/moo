@@ -27,7 +27,7 @@ export const Notifications = ({ position }: { position: string }) => {
     }, []);
 
     useEffect(() => {
-        const onStorage = window.addEventListener('storage', () => {
+        const onStorage = window.addEventListener('newnotification', () => {
             const notifications = JSON.parse(window.localStorage.getItem('notifications')!);
 
             notifications.map(i => i.new ? setNewNotifications(true) : setNewNotifications(false));
@@ -35,7 +35,7 @@ export const Notifications = ({ position }: { position: string }) => {
             setNotifications(notifications);
         });
         
-        window.removeEventListener('storage', onStorage);
+        window.removeEventListener('newnotification', onStorage);
 
         document.querySelector('.notifications')?.addEventListener('click', () => {
             setTimeout(() => {
@@ -113,7 +113,7 @@ export const Notifications = ({ position }: { position: string }) => {
                     <Modal onMouseLeave={ () => setNotificationsOpened(false) } >
                         {
                             notifications.length > 0
-                                ? notifications.reverse().map((i, k) => (
+                                ? notifications.map((i, k) => (
                                     <div key={ k } className={ i.new ? "notification-new" : "notification" }>
                                         <img src={ setSource(i.type) } width={ 24 } />
 

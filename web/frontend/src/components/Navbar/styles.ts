@@ -7,12 +7,13 @@ export const Container = styled.div`
     left: 0;
     width: 3rem;
     height: 100%;
-    background: #1a1a1a;
+    background: #000;
+    border-right: 2px solid #222;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border-radius: 0px 8px 8px 0px;
+    border-radius: 0px 5px 5px 0px;
 
     nav {
         width: 80%;
@@ -35,7 +36,7 @@ export const Container = styled.div`
             }
 
             img:first-child {
-                animation: infinite linear 2s breath;
+                animation: infinite linear 4s breath;
                 position: absolute;
                 z-index: -1;
             }
@@ -47,7 +48,7 @@ export const Container = styled.div`
             }
 
             50% {
-                -webkit-filter: blur(4px);
+                -webkit-filter: blur(6px);
             }
 
             100% {

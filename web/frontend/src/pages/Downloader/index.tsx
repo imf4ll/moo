@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 
-import { Container, Items } from './styles';
+import { Back, Container, Items } from './styles';
+
+import BackImage from '../../assets/back.svg';
 
 import { SearchBar } from './components/SearchBar';
 import { Empty } from '../../components/Empty';
 import { Item } from './components/Item';
-import { Navbar } from '../../components/Navbar';
 import { Queue } from '../../components/Queue';
 import { Notifications } from '../../components/Notifications';
 
@@ -79,7 +80,11 @@ export const Downloader = () => {
 
     return (
         <>
-            <Navbar setQueueOpened={ setQueueOpened } />
+            <Back
+                src={ BackImage }
+                onClick={ () => history.back() }
+                width={ 24 }
+            />
 
             {
                 queueOpened && <Queue queueOpened={ setQueueOpened } />

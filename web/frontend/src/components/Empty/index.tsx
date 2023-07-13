@@ -6,6 +6,7 @@ import HomeEmpty from '../../assets/homeempty.svg';
 import QueueEmpty from '../../assets/queueempty.svg';
 import MusicPlayerEmpty from '../../assets/musicplayerempty.svg';
 import NotificationsEmpty from '../../assets/notificationsempty.svg';
+import MusicQueueEmpty from '../../assets/musicqueueempty.svg';
 
 export const Empty = ({ type }: { type: string }) => {
     const types = {
@@ -28,7 +29,12 @@ export const Empty = ({ type }: { type: string }) => {
             image: NotificationsEmpty,
             text: "There's nothing here. :/",
             width: '70%',
-        }
+        },
+        musicqueue: {
+            image: MusicQueueEmpty,
+            text: "No songs here. :/",
+            width: '40%',
+        },
     };
 
     // @ts-ignore
@@ -38,6 +44,7 @@ export const Empty = ({ type }: { type: string }) => {
         case 'queue': empty = types.queue; break;
         case 'musicplayer': empty = types.musicplayer; break;
         case 'notifications': empty = types.notifications; break;
+        case 'musicqueue': empty = types.musicqueue; break;
         default: empty = types.home;
     }
 

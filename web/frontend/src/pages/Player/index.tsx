@@ -7,8 +7,10 @@ import { ItemProps } from '../../types';
 
 import Play from '../../assets/play.svg';
 import Remove from '../../assets/remove.svg';
+import Add from '../../assets/add.svg';
 
-import { Navbar } from '../../components/Navbar';
+import ImageBackground from '../../assets/background.jpg';
+
 import { Queue } from '../../components/Queue';
 import { Header } from './components/Header';
 import { AudioPlayer } from './components/AudioPlayer';
@@ -16,17 +18,21 @@ import { Item } from './components/Item';
 import { MusicQueue } from './components/MusicQueue';
 import { PlaylistModal } from './components/PlaylistModal';
 import { Empty } from '../../components/Empty';
+import { Playlist } from './components/Playlist';
+import { MoreOptionsModal } from './components/MoreOptionsModal';
 
 export const Player = () => {
     const [ queueOpened, setQueueOpened ] = useState<boolean>(false);
     const [ videos, setVideos ] = useState<Array<ItemProps>>([]);
     const [ loading, setLoading ] = useState<boolean>(false);
     const [ playlists, setPlaylists ] = useState<Array<any>>([]);
+    const [ playlistsToAdd, setPlaylistsToAdd ] = useState<Array<any>>([]);
     const [ playlistModalOpened, setPlaylistModalOpened ] = useState<boolean>(false);
     const [ musicQueueOpened, setMusicQueueOpened ] = useState<boolean>(false);
+    const [ moreOptionsOpened, setMoreOptionsOpened ] = useState<boolean>(false);
     const [ currentAudio, setCurrentAudio ] = useState<string>("");
     const [ currentStats, setCurrentStats ] = useState<ItemProps>({
-        thumb: 'https://4.bp.blogspot.com/--OiScnnTPiU/Va-HwLLdONI/AAAAAAAAILs/_97hmfQLl8M/s1600/fundo-cinza-fundos%2B%25289%2529.jpg',
+        thumb: ImageBackground,
         title: 'Not playing',
         author: '',
         id: '',
@@ -58,6 +64,7 @@ export const Player = () => {
             if (e.target!.value === '') {
                 setVideos([]);
 
+                setPlaylistsToAdd([]);
             }
         });
 
@@ -65,6 +72,17 @@ export const Player = () => {
 
     const handlePlaylist = (k: number) => {
         const playlist = JSON.parse(window.localStorage.getItem('playlists')!)[k];
+
+        if (window.localStorage.getItem('playersettings') !== null) {
+            const playerSettings = JSON.parse(window.localStorage.getItem('playersettings')!);
+
+            if (playerSettings.random) {
+                playlist.videos = playlist.videos
+                    .map(i => ({ i, sort: Math.random() }))
+                    .sort((a, b) => a.sort - b.sort)
+                    .map(({ i }) => i);
+            }
+        }
     
         window.localStorage.setItem('songqueue', JSON.stringify(playlist.videos));
 
@@ -83,10 +101,12 @@ export const Player = () => {
     
     return (
         <>
-            <Navbar setQueueOpened={ setQueueOpened } />
-
             {
                 queueOpened && <Queue queueOpened={ setQueueOpened } />
+            }
+
+            { 
+                moreOptionsOpened && <MoreOptionsModal />
             }
 
             {
@@ -101,10 +121,25 @@ export const Player = () => {
                 <Header
                     setVideos={ setVideos }
                     setLoading={ setLoading }
-                    playlistModalOpened={ playlistModalOpened }
-                    setPlaylistModalOpened={ setPlaylistModalOpened }
+                    setPlaylistsToAdd={ setPlaylistsToAdd }
+                    moreOptionsOpened={ moreOptionsOpened }
+                    setMoreOptionsOpened={ setMoreOptionsOpened }
                 />
 
+                <div className="playlistsToAdd">
+                    { playlistsToAdd.length > 0 && !loading &&
+                        playlistsToAdd.map((i, k) => (
+                            <Playlist
+                                title={ i.title }
+                                id={ i.id }
+                                songs={ i.songs }
+                                thumb={ i.thumb }
+                                key={ k }
+                            />
+                        ))
+                    }
+                </div>
+                
                 <div className="items">
                     { videos.length > 0 && !loading ?
                         videos.map((i, k) => (
@@ -121,7 +156,7 @@ export const Player = () => {
                             />
                         ))
                         : loading 
-                            ? <ReactLoading type="spin" color="#999" width={ 24 } className="spinner" />
+                            ? <ReactLoading type="spin" color="#999" width={ 36 } className="spinner" />
                             : <div className="playlists">
                                 {
                                     playlists.length > 0
@@ -129,18 +164,30 @@ export const Player = () => {
                                             <div key={ k } className="playlist" onClick={ () => handlePlaylist(k) }>
                                                 <div className="background" style={{ backgroundImage: `url('${ i.thumb }')` }}></div>
                                                 
-                                                <p>{ i.title }</p>
+                                                <p title={ i.title }>{ i.title.length > 16 ? i.title.substring(0, 15) + '...' : i.title }</p>
 
                                                 <p className="songs">{ playlists[k].videos.length } songs</p>
 
                                                 <div className="buttons">
-                                                    <img src={ Play } width={ 54 } />
+                                                    <img src={ Play } width={ 36 } />
 
-                                                    <img src={ Remove } width={ 50 } id="remove" onClick={ () => handleRemovePlaylist(k) } />
+                                                    <img src={ Remove } width={ 32 } id="remove" onClick={ () => handleRemovePlaylist(k) } />
                                                 </div>
                                             </div>
                                         ))
                                         : <Empty type='musicplayer' />
+                                }
+                                {
+                                    videos.length === 0 && !loading &&
+                                        <div className="playlist" onClick={ () => setPlaylistModalOpened(true) }>
+                                            <div className="background" style={{ backgroundImage: `url('${ ImageBackground }')` }}></div>
+                                            
+                                            <p>Create new</p>
+
+                                            <div className="buttons">
+                                                <img src={ Add } width={ 36 } />
+                                            </div>
+                                        </div>
                                 }
                             </div>
                     }
