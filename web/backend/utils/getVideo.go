@@ -24,7 +24,7 @@ func GetVideo(id string) (types.Video, error) {
         Title: info.Title,
         Author: info.Author,
         Views: fmt.Sprintf("%d", info.Views),
-        Length: fmt.Sprintf("%.0f", info.Duration.Seconds()),
+        Duration: fmt.Sprintf("%.0f", info.Duration.Seconds()),
         ID: id,
         Thumbnail: info.Thumbnails[len(info.Thumbnails) - 1].URL,
     }

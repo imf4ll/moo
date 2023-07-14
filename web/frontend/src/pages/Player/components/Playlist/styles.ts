@@ -33,24 +33,23 @@ export const Container = styled.div`
 
     .buttons {
         display: flex;
+        gap: 1rem;
 
-        #remove:hover {
-            opacity: 0.7
+        img {
+            cursor: pointer;
+            transition: all ease 300ms;
+            
+            :hover {
+                opacity: 0.7
+            }
         }
     }
 
     p, img {
-        transition: all ease 150ms;
         z-index: 1;
     }
 
     .background {
         filter: blur(2px);
-    }
-
-    :hover {
-        .background {
-            filter: blur(4px);
-        }
     }
 `;

@@ -1,14 +1,15 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-    background-color: rgba(0, 0, 0, 95%);
+    background-color: rgba(5, 5, 5, 95%);
+    backdrop-filter: blur(2px);
     border-bottom: 1px solid #222;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 50%;
     right: 50%;
     transform: translateX(-50%);
-    width: 98%;
+    width: 100%;
     height: 3rem;
     display: flex;
     flex-direction: row;
@@ -16,15 +17,10 @@ export const Container = styled.div`
     align-items: center;
     z-index: 999;
 
-    .notifications {
-        margin-top: 0.25rem;
-    }
-
     .buttons {
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-right: -0.75rem;
 
         img {
             cursor: pointer;
@@ -40,7 +36,7 @@ export const Container = styled.div`
         display: flex;
         justify-content: center;
         transition: all ease 350ms;
-        margin-left: -0.5rem;
+        margin-left: 0.25rem;
 
         :hover {
             transform: scale(1.1);
@@ -73,7 +69,7 @@ export const Container = styled.div`
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        background-color: #161616;
+        background-color: #181818;
         border-radius: 5px;
         padding: 0.3rem 0.45rem;
         width: 40%;

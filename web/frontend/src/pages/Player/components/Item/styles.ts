@@ -23,8 +23,13 @@ export const Container = styled.div`
             margin-left: 0.4rem;
         }
 
-        img {
-            border-radius: 6px;
+        .thumbnail {
+            border-radius: 10px;
+            width: 80px;
+            height: 80px;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 140px;
         }
    
         #control {

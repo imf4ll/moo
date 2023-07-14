@@ -3,10 +3,7 @@ import { Container } from './styles';
 import { Empty as IEmpty } from '../../types';
 
 import HomeEmpty from '../../assets/homeempty.svg';
-import QueueEmpty from '../../assets/queueempty.svg';
 import MusicPlayerEmpty from '../../assets/musicplayerempty.svg';
-import NotificationsEmpty from '../../assets/notificationsempty.svg';
-import MusicQueueEmpty from '../../assets/musicqueueempty.svg';
 
 export const Empty = ({ type }: { type: string }) => {
     const types = {
@@ -15,25 +12,10 @@ export const Empty = ({ type }: { type: string }) => {
             text: "There's nothing here. :/",
             width: '40%',
         },
-        queue: {
-            image: QueueEmpty,
-            text: 'Queue empty. >:(',
-            width: '60%',
-        },
         musicplayer: {
             image: MusicPlayerEmpty,
-            text: "There's nothing here. :/",
-            width: '40%',
-        },
-        notifications: {
-            image: NotificationsEmpty,
-            text: "There's nothing here. :/",
-            width: '70%',
-        },
-        musicqueue: {
-            image: MusicQueueEmpty,
-            text: "No songs here. :/",
-            width: '40%',
+            text: "Queue empty, try to search for a song or play a list. :)",
+            width: '30%',
         },
     };
 
@@ -41,10 +23,7 @@ export const Empty = ({ type }: { type: string }) => {
     let empty: IEmpty = {};
 
     switch (type) {
-        case 'queue': empty = types.queue; break;
         case 'musicplayer': empty = types.musicplayer; break;
-        case 'notifications': empty = types.notifications; break;
-        case 'musicqueue': empty = types.musicqueue; break;
         default: empty = types.home;
     }
 

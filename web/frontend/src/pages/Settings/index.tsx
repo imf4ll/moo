@@ -3,9 +3,6 @@ import { useEffect, useState } from 'react';
 import { ToggleSwitch } from 'react-dragswitch';
 import 'react-dragswitch/dist/index.css'
 
-import { Navbar } from '../../components/Navbar';
-import { Queue } from '../../components/Queue';
-
 import BackImage from '../../assets/back.svg';
 
 import { Back, Container, TextOption, SwitchOption, ButtonOption } from './styles';
@@ -90,10 +87,6 @@ export const Settings = () => {
                 onClick={ () => history.back() }
                 width={ 24 }
             />
-
-            {
-                queueOpened && <Queue queueOpened={ setQueueOpened } />
-            }
 
             <Container>
                 <div className="options">

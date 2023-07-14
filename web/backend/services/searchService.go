@@ -39,18 +39,20 @@ func SearchService(query string, mode string) ([]types.Video, []types.PlaylistSe
 
     all_videos := []string{};
 
-    for _, video := range strings.Split(fmt.Sprintf("%s", data), `"title":{"runs":[`) {
-        all_videos = append(all_videos, strings.Split(video, `,"title":{"runs":[`)[0]);
+    for _, video := range strings.Split(fmt.Sprintf("%s", data), `"videoRenderer":{`) {
+        all_videos = append(all_videos, strings.Split(video, `},{"videoRenderer":{`)[0]);
     
     }
 
     videos := []types.Video{};
 
     for _, video := range all_videos[1:17] {
+        if strings.Contains(video, `"iconType":"LIVE"`) { continue }
+
         title := strings.Split(strings.Split(video, `{"text":"`)[1], `"}]`)[0];
         author := strings.Split(strings.Split(video, `"ownerText":{"runs":[{"text":"`)[1], `","navigation`)[0];
-        views := strings.ReplaceAll(strings.Split(strings.Split(strings.Split(video, `"simpleText":"`)[3], `"`)[0], " ")[0], ".", "");
-        length := strings.Split(strings.Split(video, `"simpleText":"`)[2], `"`)[0];
+        views := strings.Split(strings.Split(strings.Split(video, `"viewCountText":{"simpleText":"`)[1], `"`)[0], " ")[0];
+        duration := strings.Split(strings.Split(video, `}},"simpleText":"`)[3], `"`)[0];
         id := strings.Split(strings.Split(video, `"videoId":"`)[1], `"`)[0];
         thumbnail := fmt.Sprintf("https://i.ytimg.com/vi/%s/hqdefault.jpg", id);
 
@@ -58,7 +60,7 @@ func SearchService(query string, mode string) ([]types.Video, []types.PlaylistSe
             Title: title,
             Author: author,
             Views: views,
-            Length: length,
+            Duration: duration,
             ID: id,
             Thumbnail: thumbnail,
         });

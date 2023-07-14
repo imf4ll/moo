@@ -2,8 +2,8 @@ export interface ItemProps {
     thumb: string;
     title: string;
     author: string;
-    views: number;
-    length: string;
+    views: string;
+    duration: string;
     id: string;
     queueOpened: Function;
 }

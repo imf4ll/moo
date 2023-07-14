@@ -4,13 +4,12 @@ import { useEffect } from 'react';
 import { Container } from './styles';
 import { notificate } from '../../../../utils/notifications';
 
-import { Notifications } from '../../../../components/Notifications';
-
 import Logo from '../../../../../public/icon.png';
 import LogoBackground from '../../../../../public/iconbackground.png';
 import Search from '../../../../assets/search.svg';
 import Clear from '../../../../assets/close.svg';
 import More from '../../../../assets/more.svg';
+import Less from '../../../../assets/less.svg';
 
 export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOpened, setMoreOptionsOpened }: {
         setVideos: Function,
@@ -41,7 +40,7 @@ export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOp
 
                     setPlaylistsToAdd([]);
 
-                    notificate('error', 'to search.');
+                    notificate('error', 'Failed to search, try again.');
 
                     window.dispatchEvent(new Event('newnotification'));
                 })
@@ -99,9 +98,7 @@ export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOp
             </div>
 
             <div className="buttons">
-                <Notifications position="relative" />
-
-                <img src={ More } width={ 32 } onClick={ () => setMoreOptionsOpened(!moreOptionsOpened) } />
+                <img src={ moreOptionsOpened ? Less : More } width={ 32 } onClick={ () => setMoreOptionsOpened(!moreOptionsOpened) } />
             </div>
         </Container>
     );

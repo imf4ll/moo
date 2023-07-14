@@ -5,12 +5,12 @@ export const Container = styled.div`
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 4.5rem;
+    height: 5rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    z-index: 998;
-    background-color: rgba(0, 0, 0, 95%);
+    z-index: 999;
+    background-color: rgba(0, 0, 0, 90%);
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
 
@@ -23,9 +23,15 @@ export const Container = styled.div`
         margin-left: 1rem;
         min-width: 35%;
         max-width: 35%;
+        margin-top: 0.2rem;
         
-        img {
-            border-radius: 6px;
+        .thumbnail {
+            border-radius: 10px;
+            width: 72px;
+            height: 64px;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 110px;
         }
     }
 
@@ -45,7 +51,7 @@ export const Container = styled.div`
 
         @keyframes marquee {
             0% { transform: translateX(0%) }
-            100% { transform: translateX(-100%) }
+            100% { transform: translateX(-75%) }
         }
 
         p:last-child {
@@ -60,7 +66,7 @@ export const Container = styled.div`
         align-items: center;
         justify-content: center;
         width: 100%;
-        margin-left: -20%;
+        margin-left: -25%;
     }
 
     .time {

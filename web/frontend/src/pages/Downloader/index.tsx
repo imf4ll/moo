@@ -9,8 +9,6 @@ import BackImage from '../../assets/back.svg';
 import { SearchBar } from './components/SearchBar';
 import { Empty } from '../../components/Empty';
 import { Item } from './components/Item';
-import { Queue } from '../../components/Queue';
-import { Notifications } from '../../components/Notifications';
 
 import { ItemProps } from '../../types';
 
@@ -21,7 +19,6 @@ import { version as current } from '../../../package.json';
 export const Downloader = () => {
     const [ videos, setVideos ] = useState<Array<ItemProps>>([]);
     const [ loading, setLoading ] = useState<boolean>(false);
-    const [ queueOpened, setQueueOpened ] = useState<boolean>(false);
     const [ latestVersion, setLatestVersion ] = useState<String>();
 
     useEffect(() => {
@@ -33,11 +30,6 @@ export const Downloader = () => {
                 delay: 3000,
                 onClose: () => window.location.href = '/settings',
             });
-        }
-
-        if (window.localStorage.getItem('queue') === null) {
-            window.localStorage.setItem('queue', JSON.stringify([]));
-
         }
 
         if (window.localStorage.getItem('notifications') === null) {
@@ -86,13 +78,7 @@ export const Downloader = () => {
                 width={ 24 }
             />
 
-            {
-                queueOpened && <Queue queueOpened={ setQueueOpened } />
-            }
-
             <Container>
-                <Notifications position="absolute" />
-
                 <SearchBar setVideos={ setVideos } setLoading={ setLoading } />
             
                 {
@@ -105,9 +91,8 @@ export const Downloader = () => {
                                         title={ i.title }
                                         author={ i.author }
                                         views={ Number(i.views) }
-                                        length={ i.length }
+                                        duration={ i.duration }
                                         id={ i.id }
-                                        queueOpened={ setQueueOpened }
                                     />
                                 ))
                            }

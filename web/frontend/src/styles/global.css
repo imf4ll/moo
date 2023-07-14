@@ -18,3 +18,9 @@ html, body {
     width: 100%;
     overflow-x: hidden;
 }
+
+.Toastify__toast-container {
+    font-size: 11pt;
+    font-weight: 500;
+    color: white;
+}

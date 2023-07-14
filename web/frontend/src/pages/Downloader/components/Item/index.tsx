@@ -9,7 +9,7 @@ import { ItemProps } from '../../../../types';
 import { time } from '../../../../utils/time';
 import { notificate } from '../../../../utils/notifications';
 
-export const Item = ({ thumb, title, author, views, length, id, queueOpened }: ItemProps) => {
+export const Item = ({ thumb, title, author, views, duration, id }: ItemProps) => {
     const [ videoPlayerEnabled, setVideoPlayerEnabled ] = useState<boolean>(false);
     const [ videoPlayerOpened, setVideoPlayerOpened ] = useState<boolean>(false);
 
@@ -24,72 +24,17 @@ export const Item = ({ thumb, title, author, views, length, id, queueOpened }: I
     }, []);
 
     const handleDownload = () => {
-        queueOpened(true);
-
         const { path } = JSON.parse(window.localStorage.getItem('settings')!);
-
-        const queue: Array<{}> = JSON.parse(window.localStorage.getItem('queue')!);
-
-        let pos = 0;
-
-        if (queue === null) {
-            window.localStorage.setItem('queue', JSON.stringify([{
-                thumb,
-                title,
-                author,
-                views,
-                length,
-                id,
-                pos: 0,
-                downloading: true,
-                failed: false,
-            }]));
-
-        } else {
-            pos = queue.length;
-
-            queue.push({
-                thumb,
-                title,
-                author,
-                views,
-                length,
-                id,
-                pos: queue.length,
-                downloading: true,
-                failed: false,
-            });
-
-            window.localStorage.setItem('queue', JSON.stringify(queue));
-        }
-
+ 
         axios.get(`http://localhost:3001/download?id=${ id }&path=${ path }`)
             .then(() => {
-                notificate('download', title);
-                
-                const queue: Array<{}> = JSON.parse(window.localStorage.getItem('queue')!);
+                notificate('success', `Downloaded ${ title.substring(0, 15) + '...' }`);
 
-                // @ts-ignore
-                queue[pos].downloading = false;
-
-                window.localStorage.setItem('queue', JSON.stringify(queue));
-
-                window.dispatchEvent(new Event('storage'));
             })
 
             .catch(() => {
-                notificate('error', title);
-                
-                const queue: Array<{}> = JSON.parse(window.localStorage.getItem('queue')!);
+                notificate('error', `Failed to download ${ title.substring(0, 15) + '...' }`);
 
-                // @ts-ignore
-                queue[pos].downloading = false;
-                // @ts-ignore
-                queue[pos].failed = true;
-
-                window.localStorage.setItem('queue', JSON.stringify(queue));
-
-                window.dispatchEvent(new Event('storage'));
             });
     }
 

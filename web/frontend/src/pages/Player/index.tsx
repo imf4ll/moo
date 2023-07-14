@@ -11,47 +11,53 @@ import Add from '../../assets/add.svg';
 
 import ImageBackground from '../../assets/background.jpg';
 
-import { Queue } from '../../components/Queue';
 import { Header } from './components/Header';
 import { AudioPlayer } from './components/AudioPlayer';
 import { Item } from './components/Item';
-import { MusicQueue } from './components/MusicQueue';
 import { PlaylistModal } from './components/PlaylistModal';
 import { Empty } from '../../components/Empty';
 import { Playlist } from './components/Playlist';
 import { MoreOptionsModal } from './components/MoreOptionsModal';
+import { QueueItem } from './components/QueueItem';
 
 export const Player = () => {
-    const [ queueOpened, setQueueOpened ] = useState<boolean>(false);
     const [ videos, setVideos ] = useState<Array<ItemProps>>([]);
     const [ loading, setLoading ] = useState<boolean>(false);
     const [ playlists, setPlaylists ] = useState<Array<any>>([]);
+    const [ queue, setQueue ] = useState<Array<any>>([]);
     const [ playlistsToAdd, setPlaylistsToAdd ] = useState<Array<any>>([]);
     const [ playlistModalOpened, setPlaylistModalOpened ] = useState<boolean>(false);
-    const [ musicQueueOpened, setMusicQueueOpened ] = useState<boolean>(false);
     const [ moreOptionsOpened, setMoreOptionsOpened ] = useState<boolean>(false);
     const [ currentAudio, setCurrentAudio ] = useState<string>("");
     const [ currentStats, setCurrentStats ] = useState<ItemProps>({
         thumb: ImageBackground,
-        title: 'Not playing',
-        author: '',
         id: '',
+        title: '',
+        author: '',
+        duration: '',
     });
 
     useEffect(() => {
-        if (JSON.parse(window.localStorage.getItem('songqueue')!).length === 0) {
+        if (window.localStorage.getItem('songqueue') === null || JSON.parse(window.localStorage.getItem('songqueue')!).length === 0) {
             if (window.localStorage.getItem('lastsong') !== null) {
                 const lastSong = JSON.parse(window.localStorage.getItem('lastsong')!);
 
                 setCurrentAudio(lastSong.audio);
                 setCurrentStats(lastSong);
-            }    
+            }
+
+        } else {
+            setQueue(JSON.parse(window.localStorage.getItem('songqueue')!));
+
         }
 
         if (window.localStorage.getItem('playlists') !== null) {
             if (JSON.parse(window.localStorage.getItem('playlists')!).length > 0) {
-                setPlaylists(JSON.parse(window.localStorage.getItem('playlists')!));
+                const updatePlaylist = () => setPlaylists(JSON.parse(window.localStorage.getItem('playlists')!));
 
+                window.addEventListener('playlistsUpdated', () => updatePlaylist());
+
+                updatePlaylist();
             }
         }
 
@@ -68,23 +74,37 @@ export const Player = () => {
             }
         });
 
+        const handleNewMusic = () => setQueue(JSON.parse(window.localStorage.getItem('songqueue')!));
+
+        window.addEventListener('newqueue', () => handleNewMusic());
+
+        window.addEventListener('musicended', () => handleNewMusic());
+
     }, []);
 
     const handlePlaylist = (k: number) => {
-        const playlist = JSON.parse(window.localStorage.getItem('playlists')!)[k];
+        let playlists = JSON.parse(window.localStorage.getItem('playlists')!);
+
+        playlists.unshift(playlists[k]);
+
+        delete playlists[k + 1];
+
+        window.localStorage.setItem('playlists', JSON.stringify(playlists.filter(i => i !== null)));
+
+        window.dispatchEvent(new Event('playlistsUpdated'));
 
         if (window.localStorage.getItem('playersettings') !== null) {
             const playerSettings = JSON.parse(window.localStorage.getItem('playersettings')!);
 
             if (playerSettings.random) {
-                playlist.videos = playlist.videos
+                playlists[0].videos = playlists[0].videos
                     .map(i => ({ i, sort: Math.random() }))
                     .sort((a, b) => a.sort - b.sort)
                     .map(({ i }) => i);
             }
         }
-    
-        window.localStorage.setItem('songqueue', JSON.stringify(playlist.videos));
+
+        window.localStorage.setItem('songqueue', JSON.stringify(playlists[0].videos));
 
         window.dispatchEvent(new Event('newqueue'));
     }
@@ -101,33 +121,25 @@ export const Player = () => {
     
     return (
         <>
-            {
-                queueOpened && <Queue queueOpened={ setQueueOpened } />
-            }
-
             { 
                 moreOptionsOpened && <MoreOptionsModal />
-            }
-
-            {
-                musicQueueOpened && <MusicQueue musicQueueOpened={ setMusicQueueOpened } />
             }
 
             {
                 playlistModalOpened && <PlaylistModal setPlaylistModalOpened={ setPlaylistModalOpened } />
             }
 
-            <Container>
+            <Container style={{ paddingTop: videos && videos.length > 0 ? '3rem' : '2rem' }}>
                 <Header
                     setVideos={ setVideos }
                     setLoading={ setLoading }
-                    setPlaylistsToAdd={ setPlaylistsToAdd }
+                setPlaylistsToAdd={ setPlaylistsToAdd }
                     moreOptionsOpened={ moreOptionsOpened }
                     setMoreOptionsOpened={ setMoreOptionsOpened }
                 />
 
                 <div className="playlistsToAdd">
-                    { playlistsToAdd.length > 0 && !loading &&
+                    { playlistsToAdd && playlistsToAdd.length > 0 && !loading &&
                         playlistsToAdd.map((i, k) => (
                             <Playlist
                                 title={ i.title }
@@ -147,49 +159,71 @@ export const Player = () => {
                                 key={ k }
                                 thumb={ i.thumb }
                                 title={ i.title }
-                                user={ i.author }
+                                author={ i.author }
                                 views={ i.views }
                                 id={ i.id }
-                                duration={ i.length }
+                                duration={ i.duration }
                                 setCurrentAudio={ setCurrentAudio }
                                 setCurrentStats={ setCurrentStats }
                             />
                         ))
                         : loading 
                             ? <ReactLoading type="spin" color="#999" width={ 36 } className="spinner" />
-                            : <div className="playlists">
-                                {
-                                    playlists.length > 0
-                                        ? playlists.map((i, k) => (
-                                            <div key={ k } className="playlist" onClick={ () => handlePlaylist(k) }>
-                                                <div className="background" style={{ backgroundImage: `url('${ i.thumb }')` }}></div>
+                            : <>
+                                <div className="playlists">
+                                    {
+                                        playlists.length > 0
+                                            && playlists.map((i, k) => (
+                                                <div title={ i.title } key={ k } className="playlist">
+                                                    <div className="background" style={{ backgroundImage: `url('${ i.thumb }')` }}></div>
+                                                    
+                                                    <div className="buttons">
+                                                        <img src={ Play } onClick={ () => handlePlaylist(k) } width={ 28 } />
+
+                                                        <img src={ Remove } width={ 24 } id="remove" onClick={ () => handleRemovePlaylist(k) } />
+                                                    </div>
+                                                </div>
+                                            ))
+                                    }
+                                    {
+                                        videos.length === 0 && !loading &&
+                                            <div className="playlist" onClick={ () => setPlaylistModalOpened(true) }>
+                                                <div className="background" style={{ backgroundImage: `url('${ ImageBackground }')` }}></div>
                                                 
-                                                <p title={ i.title }>{ i.title.length > 16 ? i.title.substring(0, 15) + '...' : i.title }</p>
-
-                                                <p className="songs">{ playlists[k].videos.length } songs</p>
-
                                                 <div className="buttons">
-                                                    <img src={ Play } width={ 36 } />
-
-                                                    <img src={ Remove } width={ 32 } id="remove" onClick={ () => handleRemovePlaylist(k) } />
+                                                    <img src={ Add } width={ 28 } />
                                                 </div>
                                             </div>
-                                        ))
-                                        : <Empty type='musicplayer' />
-                                }
-                                {
-                                    videos.length === 0 && !loading &&
-                                        <div className="playlist" onClick={ () => setPlaylistModalOpened(true) }>
-                                            <div className="background" style={{ backgroundImage: `url('${ ImageBackground }')` }}></div>
-                                            
-                                            <p>Create new</p>
+                                    }
+                                </div>
 
-                                            <div className="buttons">
-                                                <img src={ Add } width={ 36 } />
-                                            </div>
-                                        </div>
-                                }
-                            </div>
+                                <div className="queue">
+                                    {
+                                        queue && queue.length > 0
+                                            ? queue.map((i, k) => (
+                                                <QueueItem
+                                                    key={ k }
+                                                    position={ k }
+                                                    title={ i.title }
+                                                    thumb={ i.thumb }
+                                                    author={ i.author }
+                                                    duration={ i.duration }
+                                                    views={ i.views }
+                                                />
+                                            ))
+                                            : currentStats && currentStats.duration !== ''
+                                                ? <QueueItem 
+                                                        position={ 0 }
+                                                        title={ currentStats.title }
+                                                        author={ currentStats.author }
+                                                        thumb={ currentStats.thumb }
+                                                        views={ currentStats.views }
+                                                        duration={ currentStats.duration }
+                                                    />
+                                                : <Empty type="musicplayer" />
+                                    }
+                                </div>
+                            </>
                     }
                 </div>
                 
@@ -197,8 +231,6 @@ export const Player = () => {
                     currentAudio={ currentAudio }
                     currentStats={ currentStats }
                     setCurrentStats={ setCurrentStats }
-                    setMusicQueueOpened={ setMusicQueueOpened }
-                    musicQueueOpened={ musicQueueOpened }
                 />
             </Container>
         </>

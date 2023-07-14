@@ -4,7 +4,7 @@ type Video struct {
     Title string `json:"title"`
     Author string `json:"author"`
     Views string `json:"views"`
-    Length string `json:"length"`
+    Duration string `json:"duration"`
     ID string `json:"id"`
     Thumbnail string `json:"thumb"`
 }
@@ -18,6 +18,8 @@ type PlaylistVideo struct {
     ID string `json:"id"`
     Thumbnail string `json:"thumb"`
     Author string `json:"author"`
+    Views string `json:"views"`
+    Duration string `json:"duration"`
 }
 
 type Playlist struct {

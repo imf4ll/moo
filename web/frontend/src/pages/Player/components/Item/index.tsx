@@ -9,39 +9,41 @@ import { duration as durationFormat } from '../../../../utils/time';
 import Play from '../../../../assets/play.svg';
 import AddToQueue from '../../../../assets/addtoqueue.svg';
 
-export const Item = ({ thumb, title, user, views, duration, id, setCurrentAudio, setCurrentStats }: {
-        thumb: string,
-        title: string,
-        user: string,
-        views: number,
-        duration: string,
-        id: string
-        setCurrentAudio: Function,
-        setCurrentStats: Function,
-    }) => {
-
+export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudio, setCurrentStats }: {
+    thumb: string,
+    title: string,
+    author: string,
+    views: string,
+    duration: string,
+    id: string
+    setCurrentAudio: Function,
+    setCurrentStats: Function,
+}) => {
     const handleSetAudio = () => {
         axios.get(`http://localhost:3001/audio?id=${ id }`)
             .then(({ data }) => {
-                setCurrentStats({ thumb, title, author: user, id });
+                setCurrentStats({ thumb, title, author, id, duration });
 
                 setCurrentAudio(data.audio);
 
                 window.localStorage.setItem('lastsong', JSON.stringify({
                     thumb,
                     title,
-                    author: user,
+                    author,
                     id,
+                    views,
+                    duration,
                     audio: data.audio,
                 }));
 
                 window.localStorage.setItem('songqueue', JSON.stringify([]));
+
+                window.dispatchEvent(new Event('newqueue'));
             })
 
             .catch(() => {
-                notificate('error', 'to get audio.');
+                notificate('warning', 'Trying to get audio...');
 
-                window.dispatchEvent(new Event('newnotification'));
             });
     }
 
@@ -52,8 +54,10 @@ export const Item = ({ thumb, title, user, views, duration, id, setCurrentAudio,
             songQueue.push({
                 thumb,
                 title,
-                author: user,
+                author,
                 id,
+                views,
+                duration,
             });
 
             window.localStorage.setItem('songqueue', JSON.stringify(songQueue));
@@ -67,8 +71,10 @@ export const Item = ({ thumb, title, user, views, duration, id, setCurrentAudio,
             window.localStorage.setItem('songqueue', JSON.stringify([{
                 thumb,
                 title,
-                author: user,
+                author,
                 id,
+                views,
+                duration,
             }]));
 
             window.dispatchEvent(new Event('newqueue'));
@@ -95,20 +101,18 @@ export const Item = ({ thumb, title, user, views, duration, id, setCurrentAudio,
                     className={ `addToQueue-${ id }` }
                 />
 
-                <img src={ thumb } width={ 128 } />
+                <div className="thumbnail" style={{ backgroundImage: `url('${ thumb }')` }} />
 
-                <p title={ title }>{ title.length >= 60 ? title.replace("\\u0026", "&").substring(0, 59) + '...' : title.replace("\\u0026", "&") } · <span>{ user.replace("\\u0026", "&") }</span></p>
+                <p title={ title }>{ title.length >= 80 ? title.replace("\\u0026", "&").substring(0, 79) + '...' : title.replace("\\u0026", "&") } · <span>{ author.replace("\\u0026", "&") }</span></p>
             </div>
             
             <div className="stats">
                 {
-                    isNaN(Number(views))
-                        ? <p>{ duration.split(' ')[0] }</p>
-                        : <>
-                            <p>{ Intl.NumberFormat('pt-BR').format(views) }</p>
+                    <>
+                        <p>{ views }</p>
 
-                            <p>{ duration.includes(':') ? duration : durationFormat(Number(duration)) }</p>
-                        </>
+                        <p>{ duration.includes(':') ? duration : durationFormat(Number(duration)) }</p>
+                    </>
                 }
             </div>
         </Container>

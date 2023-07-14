@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-    padding-bottom: 4.5rem;
-    padding-top: 3rem;
-    overflow: hidden;
+    padding-bottom: 5rem;
+    display: flex;
+    flex-direction: column;
 
     .items {
         width: 100%;
@@ -22,7 +22,7 @@ export const Container = styled.div`
         transform: translate(-50%, -50%);
     }
 
-    .playlists, .playlistsToAdd {
+    .playlistsToAdd {
         display: flex;
         gap: 2rem;
         justify-content: center;
@@ -34,7 +34,24 @@ export const Container = styled.div`
     }
 
     .playlists {
-        margin-left: -0.75rem;
+        position: fixed;
+        display: flex;
+        top: 47.5%;
+        left: 0.3rem;
+        height: 75vh;
+        transform: translateY(-50%);
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 4rem;
+        overflow: auto;
+        align-items: center;
+        padding: 0.5rem 0;
+        border-radius: 6px;
+        background: #101010;
+    
+        ::-webkit-scrollbar {
+            display: none;
+        }
     }
 
     .playlistsToAdd {
@@ -42,29 +59,28 @@ export const Container = styled.div`
     }
 
     .playlist {
-        width: 260px;
-        height: 150px;
+        width: 54px;
+        height: 54px;
+        min-width: 54px;
+        min-height: 54px;
         display: flex;
-        border: 2px solid #111;
-        border-radius: 10px;
         justify-content: center;
         align-items: center;
         color: white;
         font-weight: 500;
         font-size: 14pt;
-        cursor: pointer;
         flex-direction: column;
         position: relative;
 
         .background {
-            transition: all ease 500ms;
+            transition: all ease 250ms;
             background-repeat: no-repeat;
             background-position: center;
-            background-size: cover;
+            background-size: 120px;
             width: 100%;
             height: 100%;
             position: absolute;
-            border-radius: 10px;
+            border-radius: 5px;
         }
 
         .songs {
@@ -74,25 +90,40 @@ export const Container = styled.div`
 
         .buttons {
             display: flex;
+            gap: 0;
 
-            #remove:hover {
-                opacity: 0.7
+            img {
+                cursor: pointer;
+                
+                :hover {
+                    opacity: 0.7
+                }
             }
         }
 
-        p, img {
+        img {
+            opacity: 0;
             transition: all ease 150ms;
             z-index: 1;
         }
 
-        .background {
-            filter: blur(2px);
-        }
-
         :hover {
+            img {
+                opacity: 1;
+            }
+
             .background {
-                filter: blur(4px);
+                filter: blur(1.5px);
             }
         }
+    }
+
+    .queue {
+        width: 94vw;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        gap: 0.75rem;
+        align-self: flex-end;
     }
 `;

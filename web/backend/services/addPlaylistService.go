@@ -49,12 +49,16 @@ func AddPlaylistService(id string) ([]types.PlaylistVideo, error) {
         id := strings.Split(strings.Split(video, `"videoId":"`)[1], `"`)[0];
         thumbnail := fmt.Sprintf("https://i.ytimg.com/vi/%s/hqdefault.jpg", id);
         author := strings.Split(strings.Split(video, `"shortBylineText":{"runs":[{"text":"`)[1], `","navigation`)[0];
+        views := strings.Split(strings.Split(strings.Split(video, `accessibilityData":{"label":"`)[1], `"`)[0], " ");
+        duration := strings.Split(strings.Split(video, `"simpleText":"`)[2], `"`)[0];
 
         videos = append(videos, types.PlaylistVideo {
             Title: title,
             ID: id,
             Thumbnail: thumbnail,
             Author: author,
+            Views: views[len(views) - 2],
+            Duration: duration,
         });
     }
     
