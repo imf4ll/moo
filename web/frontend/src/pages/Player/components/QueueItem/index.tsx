@@ -4,17 +4,16 @@ import { copy } from '../../../../utils/copy';
 
 import { duration as durationFormat } from '../../../../utils/time';
 
-export const QueueItem = ({ position, title, thumb, author, views, duration, id }: {
+export const QueueItem = ({ position, title, thumb, author, duration, id }: {
     position: number,
     title: string,
     thumb: string,
     author: string,
-    views: string,
     duration: string,
     id: string,
 }) => {
     const handleSetMusic = (e: any) => {
-        if (e.detail === 2) {
+        if (e.detail === 2 && position !== 0) {
             const songQueue = JSON.parse(window.localStorage.getItem('songqueue')!);
             const playerSettings = window.localStorage.getItem('playersettings');
 
@@ -52,13 +51,7 @@ export const QueueItem = ({ position, title, thumb, author, views, duration, id 
             </div>
             
             <div className="stats">
-                {
-                    <>
-                        <p>{ views }</p>
-
-                        <p>{ duration.includes(':') ? duration : durationFormat(Number(duration)) }</p>
-                    </>
-                }
+                <p>{ duration.includes(':') ? duration : durationFormat(Number(duration)) }</p>
             </div>
         </Container>
     );

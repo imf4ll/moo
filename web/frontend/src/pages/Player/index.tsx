@@ -198,7 +198,6 @@ export const Player = () => {
                                         thumb={ i.thumb }
                                         author={ i.author }
                                         duration={ i.duration }
-                                        views={ i.views }
                                         id={ i.id }
                                     />
                                 ))
@@ -208,7 +207,6 @@ export const Player = () => {
                                             title={ currentStats.title }
                                             author={ currentStats.author }
                                             thumb={ currentStats.thumb }
-                                            views={ currentStats.views }
                                             duration={ currentStats.duration }
                                             id={ currentStats.id }
                                         />
