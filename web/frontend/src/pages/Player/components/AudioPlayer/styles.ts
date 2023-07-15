@@ -9,7 +9,7 @@ export const Container = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    z-index: 999;
+    z-index: 2000;
     background-color: rgba(0, 0, 0, 90%);
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
@@ -66,7 +66,22 @@ export const Container = styled.div`
         align-items: center;
         justify-content: center;
         width: 100%;
-        margin-left: -25%;
+    }
+
+    .controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        left: 50%;
+        right: 50%;
+        transform: translateX(-50%);
+    }
+
+    .main-controls {
+        display: flex;
+        gap: 0.25rem;
+        margin: 0 0.75rem;
     }
 
     .time {
@@ -99,7 +114,7 @@ export const Container = styled.div`
     }
 
     .volume {
-        width: 12.5%;
+        width: 15%;
         display: flex;
         align-items: center;
         justify-content: center;

@@ -24,7 +24,7 @@ export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOp
         setLoading(true);
         
         (async () => 
-            await axios.get('http://localhost:3001/' + ( type === 'search' ? `search?query=${ value }&mode=player` : `video?id=${ value.substring(value.length - 11) }`))
+            await axios.get('http://localhost:3001/' + ( type === 'search' ? `search?query=${ value }` : `video?id=${ value.substring(value.length - 11) }`))
                 .then(r => {
                     setVideos(type === 'video' ? [ r.data.video ] : r.data.videos);
 
@@ -81,6 +81,14 @@ export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOp
 
     }, []);
 
+    const handleClear = () => {
+        setVideos([]);
+
+        setPlaylistsToAdd([]);
+
+        document.querySelector<HTMLInputElement>('#bar')!.value = '';
+    }
+
     return (
         <Container>
             <div className="logo">
@@ -93,7 +101,7 @@ export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOp
 
                 <div className="bar-buttons">
                     <img src={ Search } id="search" width={ 24 } />
-                    <img src={ Clear } width={ 26 } onClick={ () => { setVideos([]); setPlaylistsToAdd([]); } } />
+                    <img src={ Clear } width={ 26 } onClick={ () => { handleClear() } } />
                 </div>
             </div>
 

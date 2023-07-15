@@ -10,7 +10,7 @@ import { duration as durationFormat } from '../../../../utils/time';
 
 import { ItemProps } from '../../../../types';
 
-import Play from '../../../../assets/play.svg';
+import Play from '../../../../assets/playaudio.svg';
 import Pause from '../../../../assets/pause.svg';
 import Previous from '../../../../assets/previous.svg';
 import Next from '../../../../assets/next.svg';
@@ -52,7 +52,7 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                     })
 
                     .catch(() => {
-                        notificate('warning', 'Trying to get audio...');
+                        notificate('error', 'Failed to get audio, maybe caused by age restriction.');
 
                         songQueue.shift();
 
@@ -252,29 +252,30 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
         const repeat = JSON.parse(window.localStorage.getItem('playersettings')!).repeat;
         const songQueue = JSON.parse(window.localStorage.getItem('songqueue')!);
 
-        if (type === 'previous') {
+        if (type === 'previous' || songQueue === null || songQueue.length <= 0) {
             audio.currentTime = 0;
-
+        
         } else {
-            if (repeat === 'no' || repeat === 'one') {
-                songQueue.shift();
+            if (songQueue !== null && songQueue.length > 0) {
+                if (repeat === 'no' || repeat === 'one') {
+                    songQueue.shift();
 
-                window.localStorage.setItem('songqueue', JSON.stringify(songQueue));
+                    window.localStorage.setItem('songqueue', JSON.stringify(songQueue));
+                    
+                    window.dispatchEvent(new Event('musicended'));
+                    
+                    setSongQueue(songQueue);
                 
-                window.dispatchEvent(new Event('musicended'));
-                
-                setSongQueue(songQueue);    
-            
-            } else if (repeat === 'yes') {
-                songQueue.push(songQueue.shift());
+                } else if (repeat === 'yes') {
+                    songQueue.push(songQueue.shift());
 
-                window.localStorage.setItem('songqueue', JSON.stringify(songQueue));
-                
-                window.dispatchEvent(new Event('musicended'));
-                
-                setSongQueue(songQueue);    
-            
-            }
+                    window.localStorage.setItem('songqueue', JSON.stringify(songQueue));
+                    
+                    window.dispatchEvent(new Event('musicended'));
+                    
+                    setSongQueue(songQueue);   
+                }
+            }    
         }
     }
 
@@ -331,18 +332,6 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
             randomImg.src = RandomActive;
         }
     }
-    
-    const handleShare = () => {
-        navigator.permissions.query({ name: 'clipboard-write' }).then(r => {
-            if (r.state === 'granted' || r.state === 'prompt') {
-                const shareButton: HTMLImageElement = document.querySelector('#shareButton')!;
-                
-                navigator.clipboard.writeText(`https://www.youtube.com/watch?v=${ currentStats.id }`);
-
-                notificate('success', 'Copied to clipboard.');
-            }
-        });
-    }
 
     return (
         <>
@@ -350,6 +339,7 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                 src={ currentAudio }
                 id="audio"
                 onError={ () => handleMusic() }
+                style={{ pointerEvents: 'none' }}
             />
 
             <Container>
@@ -367,45 +357,45 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                 </div>
 
                 <div className="audioplayer">
-                    <img
-                        src={ randomState ? RandomActive : Random }
-                        width={ 24 }
-                        id="random"
-                        onClick={ () => handleRandom() }
-                    />
+                    <div className="controls">
+                        <img
+                            src={ randomState ? RandomActive : Random }
+                            width={ 24 }
+                            id="random"
+                            onClick={ () => handleRandom() }
+                        />
 
-                    <img
-                        src={ Previous }
-                        width={ 32 }
-                        onClick={ () => handleSkip('previous') }
-                    />
+                        <div className="main-controls">
+                            <img
+                                src={ Previous }
+                                width={ 28 }
+                                onClick={ () => handleSkip('previous') }
+                            />
 
-                    <img
-                        src={ Play }
-                        width={ 42 }
-                        onClick={ () => handlePlayPause() }
-                        id="playpause"
-                    />
+                            <img
+                                src={ Play }
+                                width={ 42 }
+                                onClick={ () => handlePlayPause() }
+                                id="playpause"
+                            />
 
-                    <img
-                        src={ Next }
-                        width={ 32 }
-                        onClick={ () => handleSkip('next') }
-                        title={ songQueue.length > 1 ? songQueue[1].title : '' }
-                    />
+                            <img
+                                src={ Next }
+                                width={ 28 }
+                                onClick={ () => handleSkip('next') }
+                                title={ songQueue.length > 1 ? songQueue[1].title : '' }
+                            />
+                        </div>
 
-                    <img
-                        src={ repeatState === 'no' ? NoRepeat : repeatState === 'yes' ? Repeat : RepeatOne }
-                        width={ 24 }
-                        id="repeat"
-                        onClick={ () => handleRepeat() }
-                    />
+                        <img
+                            src={ repeatState === 'no' ? NoRepeat : repeatState === 'yes' ? Repeat : RepeatOne }
+                            width={ 24 }
+                            id="repeat"
+                            onClick={ () => handleRepeat() }
+                        />
+                    </div>
 
                     <input type="range" id="rangeAudio" defaultValue={ 0 } title={ `${ duration } / ${ length }` } />
-                </div>
-
-                <div className="otherbuttons">
-                    <img src={ Share } width={ 20 } onClick={ () => handleShare() } id="shareButton" />
                 </div>
 
                 <div className="volume">

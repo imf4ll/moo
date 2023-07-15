@@ -1,118 +1,138 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 
-import { Background, Container } from './styles';
+import { Container } from './styles';
 
-import { notificate } from '../../../../utils/notifications';
+import Back from '../../../../assets/back.svg';
+import Play from '../../../../assets/play.svg';
+import Save from '../../../../assets/heart.svg';
+import Saved from '../../../../assets/heartfilled.svg';
 
-import ImageBackground from '../../../../assets/background.jpg';
+import { Item } from '../../components/Item';
 
-export const PlaylistModal = ({ setPlaylistModalOpened }: { setPlaylistModalOpened: Function }) => {
-    const [ title, setTitle ] = useState<string>('');
-    const [ thumb, setThumb ] = useState<string>('');
-    const [ playlist, setPlaylist ] = useState<{ thumb: string, title: string, id: string, author: string }>({
-        title: '',
-        thumb: '',
-        id: '',
-        author: '',
-    });
+export const PlaylistModal = ({ currentPlaylist, setPlaylistModalOpened, setCurrentAudio, setCurrentStats }: {
+    currentPlaylist: Object,
+    setPlaylistModalOpened: Function,
+    setCurrentAudio: Function,
+    setCurrentStats: Function,
+}) => {
+    const [ alreadySaved, setAlreadySaved ] = useState<boolean>(false);
 
     useEffect(() => {
-        document.querySelector<HTMLInputElement>('#save')!.disabled = true;
+        const playlists = window.localStorage.getItem('playlists');
 
-        window.addEventListener('keydown', e => {
-            if (e.key === 'Escape') {
-                setPlaylistModalOpened(false);
+        if (playlists !== null) {
+            if (JSON.parse(playlists).filter(i => i.id === currentPlaylist.id).length > 0) {
+                setAlreadySaved(true);
 
             }
-        });
-
-        document.querySelector('#url')!.addEventListener('keydown', e => {
-            if (e.target!.value === '') { return };
-
-            if (e.key === 'Enter') {
-                axios.get(`http://localhost:3001/addPlaylist?list=${ e.target!.value.split("list=")[1] }`)
-                    .then(({ data }) => {
-                        setPlaylist(data.videos);
-                        setThumb(data.videos[0].thumb);
-
-                        document.querySelector<HTMLImageElement>('#image')!.src = data.videos[0].thumb;
-                    })
-
-                    .catch(() => {
-                        notificate('error', 'to get playlist.');
-
-                        window.dispatchEvent(new Event('newnotification'));
-                    });
-            }
-        });
+        }
 
     }, []);
 
-    useEffect(() => {
-        document.querySelector('#title')!.addEventListener('input', e => {
-            const saveBtn: HTMLInputElement = document.querySelector('#save')!;
+    const handlePlaylist = () => {
+        let playlist = Object.assign({}, currentPlaylist);
 
-            if (e.target!.value !== '') {
-                saveBtn.disabled = false;
+        if (window.localStorage.getItem('playersettings') !== null) {
+            const playerSettings = JSON.parse(window.localStorage.getItem('playersettings')!);
 
-            } else {
-                saveBtn.disabled = true;
-
+            if (playerSettings.random) {
+                playlist.videos = playlist.videos
+                    .map(i => ({ i, sort: Math.random() }))
+                    .sort((a, b) => a.sort - b.sort)
+                    .map(({ i }) => i);
             }
-            
-            setTitle(e.target!.value);
-        });
+        }
 
-    }, [ playlist ]);
+        window.localStorage.setItem('songqueue', JSON.stringify(playlist.videos));
 
-    const handleSave = () => {
+        window.dispatchEvent(new Event('newqueue'));
+    }
+
+    const handleRemovePlaylist = () => {
+        const playlists = JSON.parse(window.localStorage.getItem('playlists')!);
+        
+        window.localStorage.setItem('playlists', JSON.stringify(playlists.filter(i => i.id !== currentPlaylist.id)));
+
+        window.dispatchEvent(new Event('playlistsaved'));
+    
+        document.querySelector<HTMLImageElement>('#save')!.src = Save;
+    
+        setAlreadySaved(false);
+    }
+
+    const handleSavePlaylist = () => {
         if (window.localStorage.getItem('playlists') !== null) {
             const playlists = JSON.parse(window.localStorage.getItem('playlists')!);
 
-            playlists.push({
-                videos: playlist,
-                title,
-                thumb,
+            playlists.unshift({
+                ...currentPlaylist,
             });
 
             window.localStorage.setItem('playlists', JSON.stringify(playlists));
 
         } else {
             window.localStorage.setItem('playlists', JSON.stringify([{
-                videos: playlist,
-                title,
-                thumb,
+                ...currentPlaylist,
             }]));
         }
 
-        setPlaylist({});
-        
-        setPlaylistModalOpened(false);
+        document.querySelector<HTMLImageElement>('#save')!.src = Saved;
 
+        setAlreadySaved(true);
+        
         window.dispatchEvent(new Event('playlistsaved'));
     }
 
     return (
         <>
-            <Background onClick={ () => setPlaylistModalOpened(false) } />
-
             <Container>
-                <div>
-                    <p>URL:</p>
+                <div className="background" style={{ backgroundImage: `url("${ currentPlaylist.thumb }")` }}></div>
+                
+                <img id="back" src={ Back } width={ 20 } onClick={ () => setPlaylistModalOpened(false) } />
+                
+                <div className="content">
+                    <div className="title-playlist">
+                        <div className="title-thumbnail" style={{ backgroundImage: `url("${ currentPlaylist.thumb }")` }} />
 
-                    <input type="text" id="url" placeholder="Playlist URL from YouTube" />
+                        <div className="stats">
+                            <h1>{ currentPlaylist.title }</h1>
+                        
+                            <p>{ currentPlaylist.videos.length } songs</p>
+
+                            <div className="buttons">
+                                <img src={ Play } width={ 32 } onClick={ () => handlePlaylist() } />
+                                
+                                <img
+                                    src={ alreadySaved ? Saved : Save }
+                                    id="save"
+                                    width={ 28 }
+                                    style={{ padding: '0.65rem' }}
+                                    onClick={ alreadySaved ? () => handleRemovePlaylist() : () => handleSavePlaylist() }
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="items">
+                        {
+                            currentPlaylist.videos.map((i, k) => (
+                                <Item
+                                    key={ k }
+                                    title={ i.title }
+                                    thumb={ i.thumb }
+                                    id={ i.id }
+                                    author={ i.author }
+                                    duration={ i.duration }
+                                    views={ i.views }
+                                    setCurrentAudio={ setCurrentAudio }
+                                    setCurrentStats={ setCurrentStats }
+                                    position={ k }
+                                    playlist={ currentPlaylist }
+                                />
+                            ))
+                        }
+                    </div>
                 </div>
-
-                <div>
-                    <p>Title:</p>
-
-                    <input type="text" id="title" maxLength={ 24 } placeholder="Playlist title" />
-                </div>
-
-                <img src={ ImageBackground } width={ 200 } height={ 200 } id="image" />
-
-                <input type="button" id="save" className="save" value="Save" onClick={ () => handleSave() } />
             </Container>
         </>
     );

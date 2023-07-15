@@ -32,3 +32,9 @@ type PlaylistSearch struct {
     Thumbnail string `json:"thumb"`
     Title string `json:"title"`
 }
+
+type Artist struct {
+    Photo string `json:"photo"`
+    Name string `json:"name"`
+    ID string `json:"id"`
+}

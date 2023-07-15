@@ -10,36 +10,18 @@ import (
     "github.com/imf4ll/moo-web/backend/types"
 )
 
-func SearchService(query string, mode string) ([]types.Video, []types.PlaylistSearch, error) {
-    client := &http.Client{}
-
+func SearchService(query string) ([]types.Video, []types.PlaylistSearch, types.Artist, error) {
     query = strings.ReplaceAll(query, " ", "+");
 
-    req, err := http.NewRequest("GET", fmt.Sprintf("https://www.youtube.com/results?search_query=%s", query), nil)
+    data, err := request(fmt.Sprintf("https://www.youtube.com/results?search_query=%s", query))
     if err != nil {
-        return []types.Video{}, []types.PlaylistSearch{}, err;
+        return []types.Video{}, []types.PlaylistSearch{}, types.Artist{}, err;
     
-    }
-
-    req.Header.Add("authority", "www.youtube.com");
-
-    res, err := client.Do(req);
-    if err != nil {
-        return []types.Video{}, []types.PlaylistSearch{}, err;
-
-    }
-
-    defer res.Body.Close();
-
-    data, err := ioutil.ReadAll(res.Body)
-    if err != nil {
-        return []types.Video{}, []types.PlaylistSearch{}, err;
-
     }
 
     all_videos := []string{};
 
-    for _, video := range strings.Split(fmt.Sprintf("%s", data), `"videoRenderer":{`) {
+    for _, video := range strings.Split(data, `"videoRenderer":{`) {
         all_videos = append(all_videos, strings.Split(video, `},{"videoRenderer":{`)[0]);
     
     }
@@ -66,62 +48,152 @@ func SearchService(query string, mode string) ([]types.Video, []types.PlaylistSe
         });
     }
 
-    if mode == "player" {
-        client := &http.Client{}
+    data, err = request(fmt.Sprintf("https://www.youtube.com/results?search_query=%s&sp=EgIQAw==", query))
+    if err != nil {
+        return []types.Video{}, []types.PlaylistSearch{}, types.Artist{}, err;
+    
+    }
 
-        req, err := http.NewRequest("GET", fmt.Sprintf("https://www.youtube.com/results?search_query=%s&sp=EgIQAw==", query), nil)
+    all_playlists := []string{};
+
+    for _, playlist := range strings.Split(data, `"playlistRenderer":{`) {
+        all_playlists = append(all_playlists, strings.Split(playlist, `}},{"playlistRenderer":{`)[0]);
+    
+    }
+
+    playlists := []types.PlaylistSearch{};
+
+    for _, playlist := range all_playlists[1:5] {
+        id := strings.Split(strings.Split(playlist, `"playlistId":"`)[1], `"`)[0];
+        thumbnail := strings.Split(strings.Split(playlist, `"watchEndpoint":{"videoId":"`)[1], `"`)[0];
+        songs := strings.Split(strings.Split(playlist, `"videoCount":"`)[1], `"`)[0];
+        title := strings.Split(strings.Split(playlist, `"title":{"simpleText":"`)[1], `"`)[0];
+        
+        songs_conv, err := strconv.Atoi(songs)
         if err != nil {
-            return []types.Video{}, []types.PlaylistSearch{}, err;
+            return []types.Video{}, []types.PlaylistSearch{}, types.Artist{}, err;
+        
+        }
+
+        playlists = append(playlists, types.PlaylistSearch {
+            ID: id,
+            Thumbnail: fmt.Sprintf("https://i.ytimg.com/vi/%s/hqdefault.jpg", thumbnail),
+            Songs: songs_conv,
+            Title: title,
+        });
+    }
+
+    data, err = request(fmt.Sprintf("https://www.youtube.com/results?search_query=%s&sp=EgIQAg==", query))
+    if err != nil {
+        return []types.Video{}, []types.PlaylistSearch{}, types.Artist{}, err;
+    
+    }
+
+    all_channels := []string{};
+
+    for _, channel := range strings.Split(data, `{"channelRenderer":{`) {
+        all_channels = append(all_channels, strings.Split(channel, `,{"channelRenderer":{`)[0]);
+
+    }
+
+    artist := types.Artist{}
+
+    for _, c := range all_channels[1:len(all_channels) - 2] {
+        if strings.Contains(c, `"OFFICIAL_ARTIST_BADGE"`) {
+            artist.ID = strings.Split(strings.Split(c, `"channelId":"`)[1], `"`)[0];
+            artist.Photo = strings.ReplaceAll(strings.Split(strings.Split(c, `"thumbnail":{"thumbnails":[{"url":"`)[1], `"`)[0], "88", "176");
+            artist.Name = strings.Split(strings.Split(c, `"title":{"simpleText":"`)[1], `"`)[0];
+
+            return videos, playlists, artist, nil;
+        }
+    }
+
+    /*
+    if channel != "" {
+        artist_client := &http.Client{}
+
+        req, err = http.NewRequest("GET", fmt.Sprintf("https://www.youtube.com/channel/%s/releases", channel), nil)
+        if err != nil {
+            return []types.Video{}, []types.PlaylistSearch{}, types.Artist{}, err;
         
         }
 
         req.Header.Add("authority", "www.youtube.com");
 
-        res, err := client.Do(req);
+        res, err = artist_client.Do(req);
         if err != nil {
-            return []types.Video{}, []types.PlaylistSearch{}, err;
+            return []types.Video{}, []types.PlaylistSearch{}, types.Artist{}, err;
 
         }
 
         defer res.Body.Close();
 
-        data, err := ioutil.ReadAll(res.Body)
+        data, err = ioutil.ReadAll(res.Body)
         if err != nil {
-            return []types.Video{}, []types.PlaylistSearch{}, err;
+            return []types.Video{}, []types.PlaylistSearch{}, types.Artist{}, err;
 
         }
 
         all_playlists := []string{};
 
-        for _, playlist := range strings.Split(fmt.Sprintf("%s", data), `"playlistRenderer":{`) {
-            all_playlists = append(all_playlists, strings.Split(playlist, `}},{"playlistRenderer":{`)[0]);
+        for _, playlist := range strings.Split(fmt.Sprintf("%s", data), `{"playlistRenderer":{`) {
+            all_playlists = append(all_playlists, strings.Split(playlist, `{"playlistRenderer":{`)[0]);
         
         }
 
-        playlists := []types.PlaylistSearch{};
+        artist_playlists := []types.PlaylistSearch{};
 
-        for _, playlist := range all_playlists[1:5] {
+        for _, playlist := range all_playlists[1:len(all_playlists) - 2] {
             id := strings.Split(strings.Split(playlist, `"playlistId":"`)[1], `"`)[0];
-            thumbnail := strings.Split(strings.Split(playlist, `"watchEndpoint":{"videoId":"`)[1], `"`)[0];
-            songs := strings.Split(strings.Split(playlist, `"videoCount":"`)[1], `"`)[0];
             title := strings.Split(strings.Split(playlist, `"title":{"simpleText":"`)[1], `"`)[0];
-            
-            songsConv, err := strconv.Atoi(songs)
+            songs := strings.Split(strings.Split(playlist, `"videoCount":"`)[1], `"`)[0];
+            thumbnail := strings.Split(strings.Split(playlist, `"watchEndpoint":{"videoId":"`)[1], `"`)[0];
+
+            songs_conv, err := strconv.Atoi(songs)
             if err != nil {
-                return []types.Video{}, []types.PlaylistSearch{}, err;
-            
+                return []types.Video{}, []types.PlaylistSearch{}, types.Artist{}, err;
+
             }
 
-            playlists = append(playlists, types.PlaylistSearch {
+            artist_playlists = append(artist_playlists, types.PlaylistSearch {
                 ID: id,
-                Thumbnail: fmt.Sprintf("https://i.ytimg.com/vi/%s/hqdefault.jpg", thumbnail),
-                Songs: songsConv,
                 Title: title,
+                Songs: songs_conv,
+                Thumbnail: fmt.Sprintf("https://i.ytimg.com/vi/%s/hqdefault.jpg", thumbnail),
             });
         }
 
-        return videos, playlists, nil;
+        return videos, playlists, artist, nil;
+    }
+    */
+
+    return videos, playlists, types.Artist{}, nil;
+}
+
+func request(query string) (string, error) {
+    client := &http.Client{}
+
+    req, err := http.NewRequest("GET", query, nil)
+    if err != nil {
+        return "", err;
+    
     }
 
-    return videos, []types.PlaylistSearch{}, nil;
+    req.Header.Add("authority", "www.youtube.com");
+
+    res, err := client.Do(req);
+    if err != nil {
+        return "", err;
+
+    }
+
+    defer res.Body.Close();
+
+    data, err := ioutil.ReadAll(res.Body)
+    if err != nil {
+        return "", err;
+
+    }
+
+    return fmt.Sprintf("%s", data), nil;
 }

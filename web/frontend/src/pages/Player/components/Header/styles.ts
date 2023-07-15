@@ -1,16 +1,15 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-    background-color: rgba(5, 5, 5, 95%);
+    background-color: rgba(0, 0, 0, 90%);
     backdrop-filter: blur(2px);
-    border-bottom: 1px solid #222;
     position: fixed;
     top: 0;
     left: 50%;
     right: 50%;
     transform: translateX(-50%);
     width: 100%;
-    height: 3rem;
+    height: 3.5rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -70,8 +69,8 @@ export const Container = styled.div`
         justify-content: center;
         align-items: center;
         background-color: #181818;
-        border-radius: 5px;
-        padding: 0.3rem 0.45rem;
+        border-radius: 20px;
+        padding: 0.5rem 0.75rem;
         width: 40%;
         position: absolute;
         right: 50%;
@@ -85,7 +84,7 @@ export const Container = styled.div`
             width: 100%;
             color: white;
             font-family: 'Inter', sans-serif;
-            font-size: 11pt;
+            font-size: 12pt;
         }
     }
 

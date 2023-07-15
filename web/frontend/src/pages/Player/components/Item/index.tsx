@@ -3,13 +3,14 @@ import axios from 'axios';
 import { Container } from './styles';
 
 import { notificate } from '../../../../utils/notifications';
+import { copy } from '../../../../utils/copy';
 
 import { duration as durationFormat } from '../../../../utils/time';
 
 import Play from '../../../../assets/play.svg';
 import AddToQueue from '../../../../assets/addtoqueue.svg';
 
-export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudio, setCurrentStats }: {
+export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudio, setCurrentStats, position, playlist }: {
     thumb: string,
     title: string,
     author: string,
@@ -18,33 +19,66 @@ export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudi
     id: string
     setCurrentAudio: Function,
     setCurrentStats: Function,
+    position: number,
+    playlist: {},
 }) => {
     const handleSetAudio = () => {
         axios.get(`http://localhost:3001/audio?id=${ id }`)
             .then(({ data }) => {
-                setCurrentStats({ thumb, title, author, id, duration });
+                if (!playlist.videos) {
+                    setCurrentStats({ thumb, title, author, id, duration });
 
-                setCurrentAudio(data.audio);
+                    setCurrentAudio(data.audio);
 
-                window.localStorage.setItem('lastsong', JSON.stringify({
-                    thumb,
-                    title,
-                    author,
-                    id,
-                    views,
-                    duration,
-                    audio: data.audio,
-                }));
+                    window.localStorage.setItem('lastsong', JSON.stringify({
+                        thumb,
+                        title,
+                        author,
+                        id,
+                        views,
+                        duration,
+                        audio: data.audio,
+                    }));
 
-                window.localStorage.setItem('songqueue', JSON.stringify([]));
+                    window.localStorage.setItem('songqueue', JSON.stringify([]));
 
-                window.dispatchEvent(new Event('newqueue'));
+                    window.dispatchEvent(new Event('newqueue'));
+                    
+                } else {
+                    if (window.localStorage.getItem('playersettings') !== null) {
+                        const playerSettings = JSON.parse(window.localStorage.getItem('playersettings')!);
+
+                        if (playerSettings.random) {
+                            const currentSong = playlist.videos[position];
+
+                            let randomizedPlaylist = [];
+
+                            randomizedPlaylist = playlist.videos
+                                .map(i => ({ i, sort: Math.random() }))
+                                .sort((a, b) => a.sort - b.sort)
+                                .map(({ i }) => i)
+                                .filter(i => i.id !== currentSong.id);
+
+                            randomizedPlaylist.unshift(currentSong);
+
+                            window.localStorage.setItem('songqueue', JSON.stringify(randomizedPlaylist));
+
+                            window.dispatchEvent(new Event('newqueue'));
+
+                            return;
+                        }
+                    }
+
+                    window.localStorage.setItem('songqueue', JSON.stringify([
+                        ...playlist.videos.slice(position, playlist.videos.length),
+                        ...playlist.videos.slice(0, position),
+                    ]));
+
+                    window.dispatchEvent(new Event('newqueue'));
+                }
             })
 
-            .catch(() => {
-                notificate('warning', 'Trying to get audio...');
-
-            });
+            .catch(() => notificate('warning', 'Trying to get audio...'));
     }
 
     const handleAddToQueue = () => {
@@ -88,13 +122,13 @@ export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudi
     }
     
     return (
-        <Container>
+        <Container onClick={ e => e.detail === 2 && handleSetAudio() } onContextMenu={ e => copy(e, id) }>
             <div className="title">
                 <img src={ Play } width={ 28 } onClick={ () => handleSetAudio() } id="control" />
 
                 <img
                     src={ AddToQueue }
-                    width={ 20 }
+                    width={ 24 }
                     id="control"
                     style={{ marginRight: '0.3rem' }}
                     onClick={ () => handleAddToQueue() }

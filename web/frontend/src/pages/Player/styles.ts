@@ -1,17 +1,17 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-    padding-bottom: 5rem;
+    padding-bottom: 5.5rem;
     display: flex;
     flex-direction: column;
 
     .items {
-        width: 100%;
-        padding: 0.75rem;
+        width: 98%;
         display: flex;
         flex-direction: column;
-        gap: 0.75rem;
         overflow: auto;
+        align-self: center;
+        margin-top: 1.5rem;
     }
 
     .spinner {
@@ -48,6 +48,7 @@ export const Container = styled.div`
         padding: 0.5rem 0;
         border-radius: 6px;
         background: #101010;
+        z-index: 999;
     
         ::-webkit-scrollbar {
             display: none;
@@ -71,6 +72,7 @@ export const Container = styled.div`
         font-size: 14pt;
         flex-direction: column;
         position: relative;
+        cursor: pointer;
 
         .background {
             transition: all ease 250ms;
@@ -113,17 +115,34 @@ export const Container = styled.div`
             }
 
             .background {
-                filter: blur(1.5px);
+                filter: blur(1px);
             }
         }
     }
 
     .queue {
-        width: 94vw;
+        width: 92.5%;
         display: flex;
         flex-direction: column;
         position: relative;
-        gap: 0.75rem;
         align-self: flex-end;
+        margin-right: 1rem;
+        margin-top: -0.5rem;
+
+        #first {
+            background: #111;
+            margin-bottom: 0.75rem;
+            cursor: auto;
+
+            .title p:first-child {
+                font-weight: 600;
+            }
+
+            .thumbnail {
+                width: 120px;
+                height: 120px;
+                background-size: 220px;
+            }
+        }
     }
 `;

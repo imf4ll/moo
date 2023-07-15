@@ -11,15 +11,14 @@ import (
 
 func SearchController(ctx *gin.Context) {
     query := ctx.Query("query");
-    mode := ctx.Query("mode");
 
-    if query == "" || mode == "" {
+    if query == "" {
         utils.Error(ctx, errors.New("Invalid query."))
    
         return
     }
 
-    videos, playlists, err := services.SearchService(query, mode);
+    videos, playlists, artist, err := services.SearchService(query);
     if err != nil {
         utils.Error(ctx, err);
 
@@ -29,5 +28,6 @@ func SearchController(ctx *gin.Context) {
     ctx.JSON(200, gin.H {
         "videos": videos,
         "playlists": playlists,
+        "artist": artist,
     });
 }

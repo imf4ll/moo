@@ -6,6 +6,13 @@ export const Container = styled.div`
     align-items: center;
     flex-direction: row;
     justify-content: space-between;
+    transition: all ease 150ms;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    
+    :hover {
+        background: rgba(25, 25, 25, 50%);
+    }
 
     .title, .stats {
         display: flex;
@@ -50,6 +57,5 @@ export const Container = styled.div`
     .stats {
         display: flex;
         gap: 5rem;
-        margin-right: 2rem;
     }
 `;

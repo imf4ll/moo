@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-    width: 260px;
-    height: 150px;
+    width: 180px;
+    height: 180px;
     border: 2px solid #111;
     border-radius: 10px;
     display: flex;
@@ -19,7 +19,7 @@ export const Container = styled.div`
         transition: all ease 500ms;
         background-repeat: no-repeat;
         background-position: center;
-        background-size: cover;
+        background-size: 360px;
         width: 100%;
         height: 100%;
         border-radius: 10px;
@@ -40,7 +40,7 @@ export const Container = styled.div`
             transition: all ease 300ms;
             
             :hover {
-                opacity: 0.7
+                opacity: 0.5;
             }
         }
     }

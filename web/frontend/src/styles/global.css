@@ -17,6 +17,8 @@ html, body {
     height: 100%;
     width: 100%;
     overflow-x: hidden;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .Toastify__toast-container {

@@ -1,30 +1,31 @@
-package controllers
+package controllers;
 
 import (
-    "strings"
+    "errors"
 
-    "github.com/imf4ll/moo-web/backend/services"
     "github.com/imf4ll/moo-web/backend/utils"
+    "github.com/imf4ll/moo-web/backend/services"
 
     "github.com/gin-gonic/gin"
 )
 
 func PlaylistController(ctx *gin.Context) {
-    ids := ctx.Query("ids");
-    path := ctx.Query("path");
+    list := ctx.Query("list")
 
-    ids_arr := strings.Split(ids, ",");
+    if list == "" || len(list) != 34 {
+        utils.Error(ctx, errors.New("Invalid playlist ID."));
 
-    for _, id := range ids_arr {
-        _, err := services.DownloadService(id, path);
-        if err != nil {
-            utils.Error(ctx, err);
+        return;
+    }
 
-            continue;
-        }
+    videos, err := services.PlaylistService(list);
+    if err != nil {
+        utils.Error(ctx, errors.New("Failed to get playlist videos."));
+
+        return;
     }
 
     ctx.JSON(200, gin.H {
-        "success": "Playlist succesfully downloaded.",
-    });
+        "videos": videos,
+    })
 }

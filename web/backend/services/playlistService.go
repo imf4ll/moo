@@ -10,7 +10,7 @@ import (
     "github.com/imf4ll/moo-web/backend/types"
 )
 
-func AddPlaylistService(id string) ([]types.PlaylistVideo, error) {
+func PlaylistService(id string) ([]types.PlaylistVideo, error) {
     client := &http.Client{}
 
     req, err := http.NewRequest("GET", fmt.Sprintf("https://www.youtube.com/playlist?list=%s", id), nil)

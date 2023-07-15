@@ -7,9 +7,13 @@ export const Container = styled.div`
     gap: 1rem;
     align-items: center;
     justify-content: space-between;
+    transition: all ease 150ms;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
 
-    #first {
-        color: #AC6AFF;  
+    :hover {
+        background: #111;
     }
 
     .title {
@@ -19,7 +23,6 @@ export const Container = styled.div`
     }
 
     .stats {
-        margin-right: 2rem;
         display: flex;
         gap: 5rem;
     }
@@ -31,7 +34,7 @@ export const Container = styled.div`
         align-items: center;
 
         p {
-            font-weight: 600;
+            font-weight: 500;
         }
 
         .thumbnail {

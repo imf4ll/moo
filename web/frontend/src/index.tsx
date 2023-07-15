@@ -21,7 +21,7 @@ const router = createBrowserRouter([
     {
         path: "/download",
         element: <Downloader />
-    }
+    },
 ]);
 
 createRoot(document.querySelector('#root')!).render(

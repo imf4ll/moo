@@ -5,8 +5,6 @@ import { Container } from './styles';
 
 import { ItemProps } from '../../types';
 
-import Play from '../../assets/play.svg';
-import Remove from '../../assets/remove.svg';
 import Add from '../../assets/add.svg';
 
 import ImageBackground from '../../assets/background.jpg';
@@ -14,11 +12,12 @@ import ImageBackground from '../../assets/background.jpg';
 import { Header } from './components/Header';
 import { AudioPlayer } from './components/AudioPlayer';
 import { Item } from './components/Item';
-import { PlaylistModal } from './components/PlaylistModal';
+import { NewPlaylistModal } from './components/NewPlaylistModal';
 import { Empty } from '../../components/Empty';
 import { Playlist } from './components/Playlist';
 import { MoreOptionsModal } from './components/MoreOptionsModal';
 import { QueueItem } from './components/QueueItem';
+import { PlaylistModal } from './components/PlaylistModal';
 
 export const Player = () => {
     const [ videos, setVideos ] = useState<Array<ItemProps>>([]);
@@ -26,9 +25,11 @@ export const Player = () => {
     const [ playlists, setPlaylists ] = useState<Array<any>>([]);
     const [ queue, setQueue ] = useState<Array<any>>([]);
     const [ playlistsToAdd, setPlaylistsToAdd ] = useState<Array<any>>([]);
+    const [ newPlaylistModalOpened, setNewPlaylistModalOpened ] = useState<boolean>(false);
     const [ playlistModalOpened, setPlaylistModalOpened ] = useState<boolean>(false);
     const [ moreOptionsOpened, setMoreOptionsOpened ] = useState<boolean>(false);
     const [ currentAudio, setCurrentAudio ] = useState<string>("");
+    const [ currentPlaylist, setCurrentPlaylist ] = useState<{}>({});
     const [ currentStats, setCurrentStats ] = useState<ItemProps>({
         thumb: ImageBackground,
         id: '',
@@ -93,30 +94,9 @@ export const Player = () => {
 
         window.dispatchEvent(new Event('playlistsUpdated'));
 
-        if (window.localStorage.getItem('playersettings') !== null) {
-            const playerSettings = JSON.parse(window.localStorage.getItem('playersettings')!);
+        setPlaylistModalOpened(true);
 
-            if (playerSettings.random) {
-                playlists[0].videos = playlists[0].videos
-                    .map(i => ({ i, sort: Math.random() }))
-                    .sort((a, b) => a.sort - b.sort)
-                    .map(({ i }) => i);
-            }
-        }
-
-        window.localStorage.setItem('songqueue', JSON.stringify(playlists[0].videos));
-
-        window.dispatchEvent(new Event('newqueue'));
-    }
-
-    const handleRemovePlaylist = (k: number) => {
-        if (window.confirm('Are you sure?')) {
-            const playlists = JSON.parse(window.localStorage.getItem('playlists')!);
-
-            window.localStorage.setItem('playlists', JSON.stringify(playlists.filter((_, key: number) => key !== k)));
-        
-            window.dispatchEvent(new Event('playlistsaved'));
-        }
+        setCurrentPlaylist(playlists[0]);
     }
     
     return (
@@ -126,14 +106,24 @@ export const Player = () => {
             }
 
             {
-                playlistModalOpened && <PlaylistModal setPlaylistModalOpened={ setPlaylistModalOpened } />
+               newPlaylistModalOpened && <NewPlaylistModal setNewPlaylistModalOpened={ setNewPlaylistModalOpened } />
+            }
+
+            {
+                playlistModalOpened &&
+                    <PlaylistModal
+                        currentPlaylist={ currentPlaylist }
+                        setPlaylistModalOpened={ setPlaylistModalOpened }
+                        setCurrentAudio={ setCurrentAudio }
+                        setCurrentStats={ setCurrentStats }
+                    />
             }
 
             <Container style={{ paddingTop: videos && videos.length > 0 ? '3rem' : '2rem' }}>
                 <Header
                     setVideos={ setVideos }
                     setLoading={ setLoading }
-                setPlaylistsToAdd={ setPlaylistsToAdd }
+                    setPlaylistsToAdd={ setPlaylistsToAdd }
                     moreOptionsOpened={ moreOptionsOpened }
                     setMoreOptionsOpened={ setMoreOptionsOpened }
                 />
@@ -146,12 +136,14 @@ export const Player = () => {
                                 id={ i.id }
                                 songs={ i.songs }
                                 thumb={ i.thumb }
+                                setPlaylistModalOpened={ setPlaylistModalOpened }
+                                setCurrentPlaylist={ setCurrentPlaylist }
                                 key={ k }
                             />
                         ))
                     }
                 </div>
-                
+
                 <div className="items">
                     { videos.length > 0 && !loading ?
                         videos.map((i, k) => (
@@ -165,65 +157,63 @@ export const Player = () => {
                                 duration={ i.duration }
                                 setCurrentAudio={ setCurrentAudio }
                                 setCurrentStats={ setCurrentStats }
+                                position={ 0 }
+                                playlist={{}}
                             />
                         ))
                         : loading 
                             ? <ReactLoading type="spin" color="#999" width={ 36 } className="spinner" />
-                            : <>
-                                <div className="playlists">
-                                    {
-                                        playlists.length > 0
-                                            && playlists.map((i, k) => (
-                                                <div title={ i.title } key={ k } className="playlist">
-                                                    <div className="background" style={{ backgroundImage: `url('${ i.thumb }')` }}></div>
-                                                    
-                                                    <div className="buttons">
-                                                        <img src={ Play } onClick={ () => handlePlaylist(k) } width={ 28 } />
-
-                                                        <img src={ Remove } width={ 24 } id="remove" onClick={ () => handleRemovePlaylist(k) } />
-                                                    </div>
-                                                </div>
-                                            ))
-                                    }
-                                    {
-                                        videos.length === 0 && !loading &&
-                                            <div className="playlist" onClick={ () => setPlaylistModalOpened(true) }>
-                                                <div className="background" style={{ backgroundImage: `url('${ ImageBackground }')` }}></div>
-                                                
-                                                <div className="buttons">
-                                                    <img src={ Add } width={ 28 } />
-                                                </div>
+                            :  <div className="playlists">
+                                {
+                                    playlists.length > 0
+                                        && playlists.map((i, k) => (
+                                            <div title={ i.title } key={ k } className="playlist" onClick={ () => handlePlaylist(k) }>
+                                                <div className="background" style={{ backgroundImage: `url('${ i.thumb }')` }}></div>
                                             </div>
-                                    }
-                                </div>
+                                        ))
+                                }
+                                {
+                                    videos.length === 0 && !loading &&
+                                        <div className="playlist" onClick={ () => setNewPlaylistModalOpened(true) }>
+                                            <div className="background" style={{ backgroundImage: `url('${ ImageBackground }')` }}></div>
+                                            
+                                            <div className="buttons">
+                                                <img src={ Add } width={ 28 } />
+                                            </div>
+                                        </div>
+                                }
+                        </div> 
+                    }
+                </div>
 
-                                <div className="queue">
-                                    {
-                                        queue && queue.length > 0
-                                            ? queue.map((i, k) => (
-                                                <QueueItem
-                                                    key={ k }
-                                                    position={ k }
-                                                    title={ i.title }
-                                                    thumb={ i.thumb }
-                                                    author={ i.author }
-                                                    duration={ i.duration }
-                                                    views={ i.views }
-                                                />
-                                            ))
-                                            : currentStats && currentStats.duration !== ''
-                                                ? <QueueItem 
-                                                        position={ 0 }
-                                                        title={ currentStats.title }
-                                                        author={ currentStats.author }
-                                                        thumb={ currentStats.thumb }
-                                                        views={ currentStats.views }
-                                                        duration={ currentStats.duration }
-                                                    />
-                                                : <Empty type="musicplayer" />
-                                    }
-                                </div>
-                            </>
+                <div className="queue">
+                    {
+                        !loading && videos && videos.length === 0 && (
+                            queue && queue.length > 0
+                                ? queue.map((i, k) => (
+                                    <QueueItem
+                                        key={ k }
+                                        position={ k }
+                                        title={ i.title }
+                                        thumb={ i.thumb }
+                                        author={ i.author }
+                                        duration={ i.duration }
+                                        views={ i.views }
+                                        id={ i.id }
+                                    />
+                                ))
+                                : currentStats && currentStats.duration !== ''
+                                    ? <QueueItem 
+                                            position={ 0 }
+                                            title={ currentStats.title }
+                                            author={ currentStats.author }
+                                            thumb={ currentStats.thumb }
+                                            views={ currentStats.views }
+                                            duration={ currentStats.duration }
+                                            id={ currentStats.id }
+                                        />
+                                    : <Empty type="musicplayer" />         
+                        )
                     }
                 </div>
                 
