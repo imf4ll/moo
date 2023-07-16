@@ -16,6 +16,7 @@ export const Container = styled.div`
     position: relative;
 
     .background {
+        background: #333;
         transition: all ease 500ms;
         background-repeat: no-repeat;
         background-position: center;

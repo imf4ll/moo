@@ -9,10 +9,6 @@ type Video struct {
     Thumbnail string `json:"thumb"`
 }
 
-type Videos struct {
-    Videos []Video `json:"videos"`
-}
-
 type PlaylistVideo struct {
     Title string `json:"title"`
     ID string `json:"id"`
@@ -20,10 +16,6 @@ type PlaylistVideo struct {
     Author string `json:"author"`
     Views string `json:"views"`
     Duration string `json:"duration"`
-}
-
-type Playlist struct {
-    Videos []PlaylistVideo `json:"videos"`
 }
 
 type PlaylistSearch struct {

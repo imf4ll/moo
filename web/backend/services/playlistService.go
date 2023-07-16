@@ -44,7 +44,9 @@ func PlaylistService(id string) ([]types.PlaylistVideo, error) {
 
     videos := []types.PlaylistVideo{};
 
-    for _, video := range all_videos[1:len(all_videos) - 8] {
+    for _, video := range all_videos[1:len(all_videos) - 6] {
+        if !strings.Contains(video, `"videoId"`) { continue };
+
         title := strings.Split(strings.Split(video, `{"text":"`)[1], `"}]`)[0];
         id := strings.Split(strings.Split(video, `"videoId":"`)[1], `"`)[0];
         thumbnail := fmt.Sprintf("https://i.ytimg.com/vi/%s/hqdefault.jpg", id);

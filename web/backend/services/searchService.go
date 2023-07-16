@@ -108,65 +108,6 @@ func SearchService(query string) ([]types.Video, []types.PlaylistSearch, types.A
         }
     }
 
-    /*
-    if channel != "" {
-        artist_client := &http.Client{}
-
-        req, err = http.NewRequest("GET", fmt.Sprintf("https://www.youtube.com/channel/%s/releases", channel), nil)
-        if err != nil {
-            return []types.Video{}, []types.PlaylistSearch{}, types.Artist{}, err;
-        
-        }
-
-        req.Header.Add("authority", "www.youtube.com");
-
-        res, err = artist_client.Do(req);
-        if err != nil {
-            return []types.Video{}, []types.PlaylistSearch{}, types.Artist{}, err;
-
-        }
-
-        defer res.Body.Close();
-
-        data, err = ioutil.ReadAll(res.Body)
-        if err != nil {
-            return []types.Video{}, []types.PlaylistSearch{}, types.Artist{}, err;
-
-        }
-
-        all_playlists := []string{};
-
-        for _, playlist := range strings.Split(fmt.Sprintf("%s", data), `{"playlistRenderer":{`) {
-            all_playlists = append(all_playlists, strings.Split(playlist, `{"playlistRenderer":{`)[0]);
-        
-        }
-
-        artist_playlists := []types.PlaylistSearch{};
-
-        for _, playlist := range all_playlists[1:len(all_playlists) - 2] {
-            id := strings.Split(strings.Split(playlist, `"playlistId":"`)[1], `"`)[0];
-            title := strings.Split(strings.Split(playlist, `"title":{"simpleText":"`)[1], `"`)[0];
-            songs := strings.Split(strings.Split(playlist, `"videoCount":"`)[1], `"`)[0];
-            thumbnail := strings.Split(strings.Split(playlist, `"watchEndpoint":{"videoId":"`)[1], `"`)[0];
-
-            songs_conv, err := strconv.Atoi(songs)
-            if err != nil {
-                return []types.Video{}, []types.PlaylistSearch{}, types.Artist{}, err;
-
-            }
-
-            artist_playlists = append(artist_playlists, types.PlaylistSearch {
-                ID: id,
-                Title: title,
-                Songs: songs_conv,
-                Thumbnail: fmt.Sprintf("https://i.ytimg.com/vi/%s/hqdefault.jpg", thumbnail),
-            });
-        }
-
-        return videos, playlists, artist, nil;
-    }
-    */
-
     return videos, playlists, types.Artist{}, nil;
 }
 

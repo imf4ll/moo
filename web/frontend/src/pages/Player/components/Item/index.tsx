@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import { Container } from './styles';
@@ -9,6 +10,10 @@ import { duration as durationFormat } from '../../../../utils/time';
 
 import Play from '../../../../assets/play.svg';
 import AddToQueue from '../../../../assets/addtoqueue.svg';
+import Save from '../../../../assets/heart.svg';
+import Saved from '../../../../assets/heartfilled.svg';
+
+import { Video, Playlist } from '../../../../types';
 
 export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudio, setCurrentStats, position, playlist }: {
     thumb: string,
@@ -20,8 +25,28 @@ export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudi
     setCurrentAudio: Function,
     setCurrentStats: Function,
     position: number,
-    playlist: {},
+    playlist: Playlist,
 }) => {
+    const [ alreadySaved, setAlreadySaved ] = useState<boolean>(false);
+
+    useEffect(() => {
+        const onFavorite = () => {
+            const favs = window.localStorage.getItem('favorites');
+
+            if (favs !== null && favs) {
+                if (JSON.parse(favs).filter((i: Video) => i.id === id).length > 0) {
+                    setAlreadySaved(true);
+
+                }
+            }
+        }
+
+        onFavorite();
+
+        window.addEventListener('favoritesUpdated', onFavorite);
+
+    }, []);
+
     const handleSetAudio = () => {
         axios.get(`http://localhost:3001/audio?id=${ id }`)
             .then(({ data }) => {
@@ -120,11 +145,57 @@ export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudi
         
         setTimeout(() => addButton.style.scale = '1', 300);
     }
+
+    const handleAddFavorite = () => {
+        const favs = window.localStorage.getItem('favorites');
+
+        const newFav = {
+            thumb,
+            title,
+            author,
+            id,
+            views,
+            duration,
+        }
+
+        if (favs !== null && favs.length > 0) {
+            const favorites = JSON.parse(favs);
+
+            favorites.push(newFav);
+
+            window.localStorage.setItem('favorites', JSON.stringify(favorites));
+
+        } else {
+            window.localStorage.setItem('favorites', JSON.stringify([ newFav ]));
+
+        }
+
+        window.dispatchEvent(new Event('favoritesUpdated'));
+    }
+
+    const handleRemoveFavorite = () => {
+        const favs = window.localStorage.getItem('favorites');
+
+        if (favs !== null && favs?.length > 0) {
+            const favorites = JSON.parse(favs!);
+
+            window.localStorage.setItem('favorites', JSON.stringify(favorites.filter((i: Video) => i.id !== id)));
+        
+            window.dispatchEvent(new Event('favoritesUpdated'));
+        }
+    }
     
     return (
         <Container onClick={ e => e.detail === 2 && handleSetAudio() } onContextMenu={ e => copy(e, id) }>
             <div className="title">
                 <img src={ Play } width={ 28 } onClick={ () => handleSetAudio() } id="control" />
+
+                <img
+                    src={ alreadySaved ? Saved : Save }
+                    width={ 24 }
+                    onClick={ alreadySaved ? () => handleRemoveFavorite() : () => handleAddFavorite() }
+                    id="control"
+                />
 
                 <img
                     src={ AddToQueue }

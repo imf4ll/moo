@@ -9,8 +9,10 @@ import Saved from '../../../../assets/heartfilled.svg';
 
 import { Item } from '../../components/Item';
 
+import { Video, Playlist } from '../../../../types';
+
 export const PlaylistModal = ({ currentPlaylist, setPlaylistModalOpened, setCurrentAudio, setCurrentStats }: {
-    currentPlaylist: Object,
+    currentPlaylist: Playlist,
     setPlaylistModalOpened: Function,
     setCurrentAudio: Function,
     setCurrentStats: Function,
@@ -21,7 +23,7 @@ export const PlaylistModal = ({ currentPlaylist, setPlaylistModalOpened, setCurr
         const playlists = window.localStorage.getItem('playlists');
 
         if (playlists !== null) {
-            if (JSON.parse(playlists).filter(i => i.id === currentPlaylist.id).length > 0) {
+            if (JSON.parse(playlists).filter((i: Video) => i.id === currentPlaylist.id).length > 0) {
                 setAlreadySaved(true);
 
             }
@@ -48,18 +50,6 @@ export const PlaylistModal = ({ currentPlaylist, setPlaylistModalOpened, setCurr
         window.dispatchEvent(new Event('newqueue'));
     }
 
-    const handleRemovePlaylist = () => {
-        const playlists = JSON.parse(window.localStorage.getItem('playlists')!);
-        
-        window.localStorage.setItem('playlists', JSON.stringify(playlists.filter(i => i.id !== currentPlaylist.id)));
-
-        window.dispatchEvent(new Event('playlistsaved'));
-    
-        document.querySelector<HTMLImageElement>('#save')!.src = Save;
-    
-        setAlreadySaved(false);
-    }
-
     const handleSavePlaylist = () => {
         if (window.localStorage.getItem('playlists') !== null) {
             const playlists = JSON.parse(window.localStorage.getItem('playlists')!);
@@ -83,57 +73,67 @@ export const PlaylistModal = ({ currentPlaylist, setPlaylistModalOpened, setCurr
         window.dispatchEvent(new Event('playlistsaved'));
     }
 
+    const handleRemovePlaylist = () => {
+        const playlists = JSON.parse(window.localStorage.getItem('playlists')!);
+        
+        window.localStorage.setItem('playlists', JSON.stringify(playlists.filter((i: Video) => i.id !== currentPlaylist.id)));
+
+        window.dispatchEvent(new Event('playlistsaved'));
+    
+        document.querySelector<HTMLImageElement>('#save')!.src = Save;
+    
+        setAlreadySaved(false);
+    }
+
     return (
-        <>
-            <Container>
-                <div className="background" style={{ backgroundImage: `url("${ currentPlaylist.thumb }")` }}></div>
-                
-                <img id="back" src={ Back } width={ 20 } onClick={ () => setPlaylistModalOpened(false) } />
-                
-                <div className="content">
-                    <div className="title-playlist">
-                        <div className="title-thumbnail" style={{ backgroundImage: `url("${ currentPlaylist.thumb }")` }} />
+        <Container>
+            <div className="background" style={{ backgroundImage: `url("${ currentPlaylist.thumb }")` }}></div>
+            
+            <img id="back" src={ Back } width={ 20 } onClick={ () => setPlaylistModalOpened(false) } />
+            
+            <div className="content">
+                <div className="title-playlist">
+                    <div className="title-thumbnail" style={{ backgroundImage: `url("${ currentPlaylist.thumb }")` }} />
 
-                        <div className="stats">
-                            <h1>{ currentPlaylist.title }</h1>
-                        
-                            <p>{ currentPlaylist.videos.length } songs</p>
+                    <div className="stats">
+                        <h1>{ currentPlaylist.title }</h1>
+                    
+                        <p>{ currentPlaylist.videos.length } songs</p>
 
-                            <div className="buttons">
-                                <img src={ Play } width={ 32 } onClick={ () => handlePlaylist() } />
-                                
-                                <img
-                                    src={ alreadySaved ? Saved : Save }
-                                    id="save"
-                                    width={ 28 }
-                                    style={{ padding: '0.65rem' }}
-                                    onClick={ alreadySaved ? () => handleRemovePlaylist() : () => handleSavePlaylist() }
-                                />
-                            </div>
+                        <div className="buttons">
+                            <img src={ Play } width={ 32 } onClick={ () => handlePlaylist() } />
+                            
+                            <img
+                                src={ alreadySaved ? Saved : Save }
+                                id="save"
+                                width={ 28 }
+                                style={{ padding: '0.65rem' }}
+                                onClick={ alreadySaved ? () => handleRemovePlaylist() : () => handleSavePlaylist() }
+                            />
                         </div>
                     </div>
-
-                    <div className="items">
-                        {
-                            currentPlaylist.videos.map((i, k) => (
-                                <Item
-                                    key={ k }
-                                    title={ i.title }
-                                    thumb={ i.thumb }
-                                    id={ i.id }
-                                    author={ i.author }
-                                    duration={ i.duration }
-                                    views={ i.views }
-                                    setCurrentAudio={ setCurrentAudio }
-                                    setCurrentStats={ setCurrentStats }
-                                    position={ k }
-                                    playlist={ currentPlaylist }
-                                />
-                            ))
-                        }
-                    </div>
                 </div>
-            </Container>
-        </>
+
+                <div className="items">
+                    {
+                        currentPlaylist.videos.map((i, k) => (
+                            <Item
+                                key={ k }
+                                title={ i.title }
+                                thumb={ i.thumb }
+                                id={ i.id }
+                                author={ i.author }
+                                duration={ i.duration }
+                                views={ i.views }
+                                setCurrentAudio={ setCurrentAudio }
+                                setCurrentStats={ setCurrentStats }
+                                position={ k }
+                                playlist={ currentPlaylist }
+                            />
+                        ))
+                    }
+                </div>
+            </div>
+        </Container>
     );
 }

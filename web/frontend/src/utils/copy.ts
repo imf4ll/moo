@@ -1,8 +1,9 @@
 import { notificate } from './notifications';
 
-export const copy = (e: MouseEvent<HTMLDivElement, MouseEvent>, id: string) => {
+export const copy = (e: any, id: string) => {
     e.preventDefault();
 
+    // @ts-ignore
     navigator.permissions.query({ name: 'clipboard-write' }).then(r => {
         if (r.state === 'granted' || r.state === 'prompt') {
             navigator.clipboard.writeText(`https://www.youtube.com/watch?v=${ id }`);

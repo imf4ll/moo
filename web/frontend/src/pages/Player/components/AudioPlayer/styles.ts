@@ -20,7 +20,7 @@ export const Container = styled.div`
         color: white;
         font-size: 11pt;
         align-items: center;
-        margin-left: 1rem;
+        margin-left: 0.5rem;
         min-width: 35%;
         max-width: 35%;
         margin-top: 0.2rem;
@@ -84,18 +84,6 @@ export const Container = styled.div`
         margin: 0 0.75rem;
     }
 
-    .time {
-        width: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.4rem;
-        color: #FFF;
-        font-size: 10pt;
-        font-weight: 500;
-        margin: 0 1.5rem;
-    }
-
     .otherbuttons {
         display: flex;
         gap: 1rem;
@@ -133,25 +121,40 @@ export const Container = styled.div`
 
     #rangeAudio, #rangeVolume {
         width: 100%;
+        height: 3px;
         outline: none;
         -webkit-appearance: none;
         appearance: none;
-        background: transparent;
-
-        ::-webkit-slider-runnable-track {
-            background: #333;
-            border-radius: 100px;
-            overflow: hidden;
-        }
+        cursor: pointer;
+        overflow: hidden;
+        background: #222;
 
         ::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            background: #AC6AFF;
-            height: 4px;
-            width: 0.5rem;
-            border-radius: 1px;
+            background: #333;
+            height: 0;
+            width: 0;
+            box-shadow: -50vw 0 0 50vw #ac6aff;
         }
+
+        ::-moz-range-track {
+            background: #222;
+            border-radius: 100px;
+        }
+
+        ::-moz-range-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            height: 0;
+            width: 0;
+            box-shadow: -50vw 0 0 50vw #ac6aff;
+        }
+    }
+
+    #rangeVolume {
+        border-radius: 100px;
     }
 
     #rangeAudio {
@@ -159,10 +162,5 @@ export const Container = styled.div`
         top: -0.1rem;
         right: -0.1rem;
         width: 100%;
-
-        ::-webkit-slider-runnable-track {
-            border-radius: 0;    
-            background: #222;
-        }
     }
 `;

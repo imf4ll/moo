@@ -8,6 +8,7 @@ import { ItemProps } from '../../types';
 import Add from '../../assets/add.svg';
 
 import ImageBackground from '../../assets/background.jpg';
+import FavoritesBackground from '../../assets/favorites.png';
 
 import { Header } from './components/Header';
 import { AudioPlayer } from './components/AudioPlayer';
@@ -18,18 +19,28 @@ import { Playlist } from './components/Playlist';
 import { MoreOptionsModal } from './components/MoreOptionsModal';
 import { QueueItem } from './components/QueueItem';
 import { PlaylistModal } from './components/PlaylistModal';
+import { FavoritesModal } from './components/FavoritesModal';
+import { ArtistModal } from './components/ArtistModal';
+
+import { Playlist as PlaylistT, Artist } from '../../types';
 
 export const Player = () => {
     const [ videos, setVideos ] = useState<Array<ItemProps>>([]);
     const [ loading, setLoading ] = useState<boolean>(false);
     const [ playlists, setPlaylists ] = useState<Array<any>>([]);
     const [ queue, setQueue ] = useState<Array<any>>([]);
-    const [ playlistsToAdd, setPlaylistsToAdd ] = useState<Array<any>>([]);
+    const [ playlistsToAdd, setPlaylistsToAdd ] = useState<Array<PlaylistT>>([]);
     const [ newPlaylistModalOpened, setNewPlaylistModalOpened ] = useState<boolean>(false);
     const [ playlistModalOpened, setPlaylistModalOpened ] = useState<boolean>(false);
     const [ moreOptionsOpened, setMoreOptionsOpened ] = useState<boolean>(false);
+    const [ favoritesModalOpened, setFavoritesModalOpened ] = useState<boolean>(false);
+    const [ artistModalOpened, setArtistModalOpened ] = useState<boolean>(false);
+    // @ts-ignore
+    const [ artist, setArtist ] = useState<Artist>({});
     const [ currentAudio, setCurrentAudio ] = useState<string>("");
-    const [ currentPlaylist, setCurrentPlaylist ] = useState<{}>({});
+    // @ts-ignore
+    const [ currentPlaylist, setCurrentPlaylist ] = useState<PlaylistT>({});
+    // @ts-ignore
     const [ currentStats, setCurrentStats ] = useState<ItemProps>({
         thumb: ImageBackground,
         id: '',
@@ -67,7 +78,7 @@ export const Player = () => {
 
         });
 
-        document.querySelector('#bar')!.addEventListener('input', e => {
+        document.querySelector('#bar')!.addEventListener('input', (e: any) => {
             if (e.target!.value === '') {
                 setVideos([]);
 
@@ -90,13 +101,29 @@ export const Player = () => {
 
         delete playlists[k + 1];
 
-        window.localStorage.setItem('playlists', JSON.stringify(playlists.filter(i => i !== null)));
+        window.localStorage.setItem('playlists', JSON.stringify(playlists.filter((i: PlaylistT) => i !== null)));
 
         window.dispatchEvent(new Event('playlistsUpdated'));
 
         setPlaylistModalOpened(true);
 
         setCurrentPlaylist(playlists[0]);
+    }
+
+    const handleArtist = (k: number) => {
+        let playlists = JSON.parse(window.localStorage.getItem('playlists')!);
+
+        playlists.unshift(playlists[k]);
+
+        delete playlists[k + 1];
+
+        window.localStorage.setItem('playlists', JSON.stringify(playlists.filter((i: PlaylistT) => i !== null)));
+
+        window.dispatchEvent(new Event('playlistsUpdated'));
+
+        setArtistModalOpened(true);
+
+        setArtist(playlists[0]);
     }
     
     return (
@@ -119,6 +146,24 @@ export const Player = () => {
                     />
             }
 
+            {
+                favoritesModalOpened &&
+                    <FavoritesModal
+                        setFavoritesModalOpened={ setFavoritesModalOpened }
+                        setCurrentAudio={ setCurrentAudio }
+                        setCurrentStats={ setCurrentStats }
+                    />
+            }
+
+            {
+                artistModalOpened &&
+                    <ArtistModal
+                        artist={ artist }
+                        setArtist={ setArtist }
+                        setArtistModalOpened={ setArtistModalOpened }
+                    />
+            }
+
             <Container style={{ paddingTop: videos && videos.length > 0 ? '3rem' : '2rem' }}>
                 <Header
                     setVideos={ setVideos }
@@ -126,9 +171,17 @@ export const Player = () => {
                     setPlaylistsToAdd={ setPlaylistsToAdd }
                     moreOptionsOpened={ moreOptionsOpened }
                     setMoreOptionsOpened={ setMoreOptionsOpened }
+                    setArtist={ setArtist }
                 />
 
                 <div className="playlistsToAdd">
+                    { artist && artist.hasOwnProperty('name') && !loading && (
+                        <div className="artist" onClick={ () => setArtistModalOpened(true) }>
+                            <div className="background" style={{ backgroundImage: `url('${ artist.photo }')` }}></div>
+                        </div>
+                    )
+                    }
+
                     { playlistsToAdd && playlistsToAdd.length > 0 && !loading &&
                         playlistsToAdd.map((i, k) => (
                             <Playlist
@@ -158,6 +211,7 @@ export const Player = () => {
                                 setCurrentAudio={ setCurrentAudio }
                                 setCurrentStats={ setCurrentStats }
                                 position={ 0 }
+                                // @ts-ignore
                                 playlist={{}}
                             />
                         ))
@@ -165,12 +219,25 @@ export const Player = () => {
                             ? <ReactLoading type="spin" color="#999" width={ 36 } className="spinner" />
                             :  <div className="playlists">
                                 {
+                                    <div title="Favorites" className="playlist" onClick={ () => setFavoritesModalOpened(true) }>
+                                        <div className="background-favorites" style={{ backgroundImage: `url('${ FavoritesBackground }')` }} />
+                                    </div>
+                                }
+                                {
                                     playlists.length > 0
                                         && playlists.map((i, k) => (
-                                            <div title={ i.title } key={ k } className="playlist" onClick={ () => handlePlaylist(k) }>
-                                                <div className="background" style={{ backgroundImage: `url('${ i.thumb }')` }}></div>
-                                            </div>
-                                        ))
+                                            i.photo
+                                            ? (
+                                                <div title={ i.name } key={ k } className="artist" onClick={ () => handleArtist(k) }>
+                                                    <div className="background" style={{ backgroundImage: `url('${ i.photo }')` }}></div>
+                                                </div>
+                                            )
+                                            : (
+                                                <div title={ i.title } key={ k } className="playlist" onClick={ () => handlePlaylist(k) }>
+                                                    <div className="background" style={{ backgroundImage: `url('${ i.thumb }')` }}></div>
+                                                </div>
+                                            ))
+                                        )
                                 }
                                 {
                                     videos.length === 0 && !loading &&

@@ -3,7 +3,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { Downloader } from './pages/Downloader';
 import { Settings } from './pages/Settings';
 import { Player } from './pages/Player';
 
@@ -17,10 +16,6 @@ const router = createBrowserRouter([
     {
         path: "/settings",
         element: <Settings />
-    },
-    {
-        path: "/download",
-        element: <Downloader />
     },
 ]);
 

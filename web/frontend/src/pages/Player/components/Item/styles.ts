@@ -31,6 +31,7 @@ export const Container = styled.div`
         }
 
         .thumbnail {
+            background: #333;
             border-radius: 10px;
             width: 80px;
             height: 80px;

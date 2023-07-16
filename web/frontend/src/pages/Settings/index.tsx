@@ -17,7 +17,6 @@ export const Settings = () => {
     const [ settings, setSettings ] = useState<SettingsProps>({});
     const [ videoPlayerChecked, setVideoPlayerChecked ] = useState<boolean>(false);
     const [ saved, setSaved ] = useState<boolean>(true);
-    const [ queueOpened, setQueueOpened ] = useState<boolean>(false);
     const [ latestVersion, setLatestVersion ] = useState<String>();
 
     useEffect(() => {

@@ -11,12 +11,13 @@ import Clear from '../../../../assets/close.svg';
 import More from '../../../../assets/more.svg';
 import Less from '../../../../assets/less.svg';
 
-export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOpened, setMoreOptionsOpened }: {
+export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOpened, setMoreOptionsOpened, setArtist }: {
         setVideos: Function,
         setLoading: Function,
         setPlaylistsToAdd: Function,
         moreOptionsOpened: boolean,
         setMoreOptionsOpened: Function,
+        setArtist: Function,
     }) => {
 
     const handleSearch = (type: string, value: string) => {
@@ -25,10 +26,12 @@ export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOp
         
         (async () => 
             await axios.get('http://localhost:3001/' + ( type === 'search' ? `search?query=${ value }` : `video?id=${ value.substring(value.length - 11) }`))
-                .then(r => {
-                    setVideos(type === 'video' ? [ r.data.video ] : r.data.videos);
+                .then(({ data }) => {
+                    setVideos(type === 'video' ? [ data.video ] : data.videos);
 
-                    setPlaylistsToAdd(r.data.playlists);
+                    setPlaylistsToAdd(data.playlists);
+
+                    setArtist(data.artist);
                     
                     setLoading(false);
                 })
@@ -36,9 +39,11 @@ export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOp
                 .catch(() => {
                     setVideos([]);
 
-                    setLoading(false);
-
                     setPlaylistsToAdd([]);
+                    
+                    setArtist({});
+                    
+                    setLoading(false);
 
                     notificate('error', 'Failed to search, try again.');
 
@@ -85,6 +90,8 @@ export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOp
         setVideos([]);
 
         setPlaylistsToAdd([]);
+
+        setArtist({});
 
         document.querySelector<HTMLInputElement>('#bar')!.value = '';
     }

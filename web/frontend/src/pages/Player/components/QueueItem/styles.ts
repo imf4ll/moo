@@ -30,17 +30,27 @@ export const Container = styled.div`
     .thumb {
         display: flex;
         margin: 0;
-        gap: 1rem;
+        gap: 0.75rem;
         align-items: center;
 
         p {
             font-weight: 500;
         }
 
+        img {
+            transition: all ease 200ms;
+            cursor: pointer;
+
+            :hover {
+                opacity: 0.7;
+            }
+        }
+
         .thumbnail {
+            background: #333;
             border-radius: 10px;
-            width: 80px;
-            height: 80px;
+            width: 64px;
+            height: 64px;
             background-repeat: no-repeat;
             background-position: center;
             background-size: 140px;

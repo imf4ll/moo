@@ -12,7 +12,7 @@ import (
 func PlaylistController(ctx *gin.Context) {
     list := ctx.Query("list")
 
-    if list == "" || len(list) != 34 {
+    if list == "" || len(list) < 34 && len(list) > 41 {
         utils.Error(ctx, errors.New("Invalid playlist ID."));
 
         return;

@@ -62,12 +62,18 @@ export const Container = styled.div`
         align-self: flex-start;
 
         .title-thumbnail {
+            background: #333;
             width: 256px;
             height: 256px;
             background-position: center;
             background-size: 200%;
             background-repeat: no-repeat;
             border-radius: 10px;
+            transition: all ease 250ms;
+
+            :hover {
+                transform: scale(1.05);
+            }
         }
     }
 

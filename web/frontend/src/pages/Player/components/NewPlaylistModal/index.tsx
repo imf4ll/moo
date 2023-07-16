@@ -27,7 +27,7 @@ export const NewPlaylistModal = ({ setNewPlaylistModalOpened }: { setNewPlaylist
             }
         });
 
-        document.querySelector('#url')!.addEventListener('keydown', e => {
+        document.querySelector('#url')!.addEventListener('keydown', (e: any) => {
             if (e.target!.value === '') { return };
 
             if (e.key === 'Enter') {
@@ -50,7 +50,7 @@ export const NewPlaylistModal = ({ setNewPlaylistModalOpened }: { setNewPlaylist
     }, []);
 
     useEffect(() => {
-        document.querySelector('#title')!.addEventListener('input', e => {
+        document.querySelector('#title')!.addEventListener('input', (e: any) => {
             const saveBtn: HTMLInputElement = document.querySelector('#save')!;
 
             if (e.target!.value !== '') {
@@ -86,6 +86,7 @@ export const NewPlaylistModal = ({ setNewPlaylistModalOpened }: { setNewPlaylist
             }]));
         }
 
+        // @ts-ignore
         setPlaylist({});
         
         setNewPlaylistModalOpened(false);

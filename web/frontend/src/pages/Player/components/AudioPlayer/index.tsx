@@ -16,12 +16,15 @@ import Previous from '../../../../assets/previous.svg';
 import Next from '../../../../assets/next.svg';
 import Volume from '../../../../assets/volume.svg';
 import VolumeOff from '../../../../assets/volumeoff.svg';
-import Share from '../../../../assets/share.svg';
 import NoRepeat from '../../../../assets/repeat.svg';
 import Repeat from '../../../../assets/repeatactive.svg';
 import RepeatOne from '../../../../assets/repeatone.svg';
 import Random from '../../../../assets/random.svg';
 import RandomActive from '../../../../assets/randomactive.svg';
+import Save from '../../../../assets/heart.svg';
+import Saved from '../../../../assets/heartfilled.svg';
+
+import { Video } from '../../../../types';
 
 export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
         currentAudio: string,
@@ -34,6 +37,7 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
     const [ randomState, setRandomState ] = useState<boolean>(false);
     const [ duration, setDuration ] = useState<string>("");
     const [ length, setLength ] = useState<string>("");
+    const [ alreadySaved, setAlreadySaved ] = useState<boolean>(false);
 
     const handleMusic = () => {
         const audio: HTMLAudioElement = document.querySelector('#audio')!;
@@ -186,19 +190,20 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
         const rangeAudio: HTMLInputElement = document.querySelector('#rangeAudio')!;
 
         rangeAudio.addEventListener('input', () => {
-            audio.currentTime = audio.duration * (rangeAudio.value / 100);
+            audio.currentTime = audio.duration * (Number(rangeAudio.value) / 1000);
 
         });
 
         audio.addEventListener('timeupdate', () => {
-            rangeAudio.value = audio.currentTime / audio.duration * 100;
+            // @ts-ignore
+            rangeAudio.value = audio.currentTime / audio.duration * 1000;
 
             setDuration(durationFormat(audio.currentTime));
         });
 
         const rangeVolume: HTMLInputElement = document.querySelector('#rangeVolume')!;
 
-        rangeVolume.addEventListener('input', e => audio.volume = e.target!.value / 100);
+        rangeVolume.addEventListener('input', (e: any) => audio.volume = e.target!.value / 100);
 
         window.addEventListener('storage', () => {
             const songQueue = JSON.parse(window.localStorage.getItem('songqueue')!);
@@ -217,6 +222,24 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
         audio.addEventListener('playing', () => useTitle(currentStats.title + ' - '));
 
         audio.addEventListener('pause', () => useTitle(''));
+
+        const onFavorite = () => {
+            if (window.localStorage.getItem('favorites') !== null) {
+                const favorites = JSON.parse(window.localStorage.getItem('favorites')!);
+
+                if (favorites.filter((i: Video) => i.id === currentStats.id).length > 0) {
+                    setAlreadySaved(true);
+
+                } else {
+                    setAlreadySaved(false);
+
+                }
+            }
+        }
+
+        onFavorite();
+
+        window.addEventListener('favoritesUpdated', onFavorite);
 
     }, [ currentStats ]);
 
@@ -333,6 +356,47 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
         }
     }
 
+    const handleAddFavorite = () => {
+        const favs = window.localStorage.getItem('favorites');
+
+        const newFav = {
+            thumb: currentStats.thumb,
+            title: currentStats.title,
+            author: currentStats.author,
+            id: currentStats.id,
+            views: currentStats.views,
+            duration: currentStats.duration,
+        }
+
+        if (favs !== null && favs.length > 0) {
+            const favorites = JSON.parse(favs);
+
+            favorites.push(newFav);
+
+            window.localStorage.setItem('favorites', JSON.stringify(favorites));
+
+        } else {
+            window.localStorage.setItem('favorites', JSON.stringify([ newFav ]));
+
+        }
+            
+        window.dispatchEvent(new Event('favoritesUpdated'));
+
+        setAlreadySaved(true);
+    }
+
+    const handleRemoveFavorite = () => {
+        const favs = window.localStorage.getItem('favorites');
+
+        if (favs !== null && favs?.length > 0) {
+            const favorites = JSON.parse(favs!);
+
+            window.localStorage.setItem('favorites', JSON.stringify(favorites.filter((i: Video) => i.id !== currentStats.id)));
+        
+            window.dispatchEvent(new Event('favoritesUpdated'));
+        }
+    }
+
     return (
         <>
             <audio
@@ -350,7 +414,12 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                     />
 
                     <div className="title">
-                        <p title={ currentStats.title } className={ currentStats.title.length > 40 ? 'animated' : '' }>{ currentStats.title.replace("\\u0026", "&") }</p>
+                        <p
+                            title={ currentStats.title }
+                            className={ currentStats.title.length > 40 ? 'animated' : '' }
+                        >
+                            { currentStats.title.replace("\\u0026", "&") }
+                        </p>
                         
                         <p>{ currentStats.author.replace("\\u0026", "&") }</p>
                     </div>
@@ -395,11 +464,26 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                         />
                     </div>
 
-                    <input type="range" id="rangeAudio" defaultValue={ 0 } title={ `${ duration } / ${ length }` } />
+                    <input
+                        type="range"
+                        id="rangeAudio"
+                        defaultValue={ 0 }
+                        min={ 0 }
+                        max={ 1000 }
+                        title={ `${ duration } / ${ length }` }
+                    />
                 </div>
 
+                <div className="otherbuttons">
+                    <img
+                        src={ alreadySaved ? Saved : Save }
+                        width={ 24 }
+                        onClick={ alreadySaved ? () => handleRemoveFavorite() : () => handleAddFavorite() }
+                    />
+                </div>
+                
                 <div className="volume">
-                    <img src={ Volume } width={ 24 } id="volume" onClick={ () => handleMute() } />
+                    <img src={ Volume } width={ 21 } id="volume" onClick={ () => handleMute() } />
 
                     <input type="range" id="rangeVolume" defaultValue={ 100 } step={ 10 } />
                 </div>

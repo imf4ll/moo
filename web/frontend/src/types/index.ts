@@ -29,3 +29,33 @@ export interface Empty {
     text: string;
     width: string;
 }
+
+export interface Video {
+    author: string;
+    duration: string;
+    id: string;
+    thumb: string;
+    title: string;
+    views: string;
+}
+
+export interface Playlist {
+    id: string;
+    thumb: string;
+    title: string;
+    songs: number;
+    videos: Array<Video>;
+}
+
+export interface PlaylistSearch {
+    id: string;
+    songs: number;
+    thumb: string;
+    title: string;
+}
+
+export interface Artist {
+    name: string;
+    photo: string;
+    id: string;
+}

@@ -31,14 +31,39 @@ export const Container = styled.div`
         flex-wrap: wrap;
         width: 100%;
         z-index: 0;
+
+        .artist {
+            width: 144px;
+            height: 144px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: 500;
+            font-size: 14pt;
+            cursor: pointer;
+            flex-direction: column;
+            position: relative;
+
+            .background {
+                transition: all ease 500ms;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: 100%;
+                width: 100%;
+                height: 100%;
+                border-radius: 100%;
+                position: absolute;
+            }
+        }
     }
 
     .playlists {
         position: fixed;
         display: flex;
-        top: 47.5%;
+        top: 48vh;
         left: 0.3rem;
-        height: 75vh;
+        height: 75%;
         transform: translateY(-50%);
         flex-direction: column;
         gap: 0.5rem;
@@ -46,9 +71,8 @@ export const Container = styled.div`
         overflow: auto;
         align-items: center;
         padding: 0.5rem 0;
-        border-radius: 6px;
-        background: #101010;
         z-index: 999;
+        border-right: 1px solid #111;
     
         ::-webkit-scrollbar {
             display: none;
@@ -59,7 +83,7 @@ export const Container = styled.div`
         margin-top: 1rem;
     }
 
-    .playlist {
+    .playlist, .artist {
         width: 54px;
         height: 54px;
         min-width: 54px;
@@ -75,12 +99,22 @@ export const Container = styled.div`
         cursor: pointer;
 
         .background {
-            transition: all ease 250ms;
             background-repeat: no-repeat;
             background-position: center;
             background-size: 120px;
             width: 100%;
             height: 100%;
+            position: absolute;
+            border-radius: 5px;
+        }
+
+        .background-favorites {
+            transition: all ease 150ms;
+            background-repeat: no-repeat;
+            width: 100%;
+            height: 100%;
+            background-position: center;
+            background-size: 100%;
             position: absolute;
             border-radius: 5px;
         }
@@ -114,9 +148,21 @@ export const Container = styled.div`
                 opacity: 1;
             }
 
-            .background {
+            .background, .background-favorites {
                 filter: blur(1px);
             }
+        }
+    }
+
+    .artist {
+        .background {
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 100%;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            border-radius: 100%;
         }
     }
 
@@ -139,9 +185,9 @@ export const Container = styled.div`
             }
 
             .thumbnail {
-                width: 120px;
-                height: 120px;
-                background-size: 220px;
+                width: 96px;
+                height: 96px;
+                background-size: 192px;
             }
         }
     }

@@ -12,6 +12,7 @@ export const QueueItem = ({ position, title, thumb, author, duration, id }: {
     duration: string,
     id: string,
 }) => {
+
     const handleSetMusic = (e: any) => {
         if (e.detail === 2 && position !== 0) {
             const songQueue = JSON.parse(window.localStorage.getItem('songqueue')!);
