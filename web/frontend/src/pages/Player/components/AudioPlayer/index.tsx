@@ -392,7 +392,9 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
             const favorites = JSON.parse(favs!);
 
             window.localStorage.setItem('favorites', JSON.stringify(favorites.filter((i: Video) => i.id !== currentStats.id)));
-        
+       
+            setAlreadySaved(false);
+
             window.dispatchEvent(new Event('favoritesUpdated'));
         }
     }
@@ -416,7 +418,7 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                     <div className="title">
                         <p
                             title={ currentStats.title }
-                            className={ currentStats.title.length > 40 ? 'animated' : '' }
+                            className={ currentStats.title.length > 50 ? 'animated' : '' }
                         >
                             { currentStats.title.replace("\\u0026", "&") }
                         </p>

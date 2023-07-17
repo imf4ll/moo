@@ -89,8 +89,8 @@ export const Player = () => {
         const handleNewMusic = () => setQueue(JSON.parse(window.localStorage.getItem('songqueue')!));
 
         window.addEventListener('newqueue', () => handleNewMusic());
-
         window.addEventListener('musicended', () => handleNewMusic());
+        window.addEventListener('queueUpdated', () => handleNewMusic());
 
     }, []);
 
@@ -159,7 +159,6 @@ export const Player = () => {
                 artistModalOpened &&
                     <ArtistModal
                         artist={ artist }
-                        setArtist={ setArtist }
                         setArtistModalOpened={ setArtistModalOpened }
                     />
             }
@@ -175,7 +174,7 @@ export const Player = () => {
                 />
 
                 <div className="playlistsToAdd">
-                    { artist && artist.hasOwnProperty('name') && !loading && (
+                    { artist && playlistsToAdd && playlistsToAdd.length > 0 && !loading && (
                         <div className="artist" onClick={ () => setArtistModalOpened(true) }>
                             <div className="background" style={{ backgroundImage: `url('${ artist.photo }')` }}></div>
                         </div>

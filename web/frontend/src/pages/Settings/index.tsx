@@ -83,7 +83,7 @@ export const Settings = () => {
         <>
             <Back
                 src={ BackImage }
-                onClick={ () => history.back() }
+                onClick={ () => window.location.href = '/' }
                 width={ 24 }
             />
 

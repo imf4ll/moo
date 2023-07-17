@@ -2,6 +2,7 @@ package services
 
 import (
     "errors"
+    "net/http"
 
     "github.com/kkdai/youtube/v2"
 )
@@ -15,7 +16,14 @@ func GetAudioService(id string) (string, error) {
 
     }
 
-    audio, err := client.GetStreamURL(video, video.Formats.FindByItag(140));
+    for {
+        audio, err := client.GetStreamURL(video, video.Formats.FindByItag(140));
+        if err != nil { continue }
 
-    return audio, nil;
+        data, _ := http.Get(audio);
+        if data.StatusCode == 200 { 
+            return audio, nil;
+
+        }
+    }
 }

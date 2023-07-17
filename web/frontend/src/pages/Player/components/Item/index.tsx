@@ -37,6 +37,9 @@ export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudi
                 if (JSON.parse(favs).filter((i: Video) => i.id === id).length > 0) {
                     setAlreadySaved(true);
 
+                } else {
+                    setAlreadySaved(false);
+
                 }
             }
         }
@@ -139,6 +142,8 @@ export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudi
             window.dispatchEvent(new Event('newqueue'));
         }
 
+        window.dispatchEvent(new Event('queueUpdated'));
+
         const addButton: HTMLImageElement = document.querySelector(`.addToQueue-${ id }`)!;
 
         addButton.style.scale = '1.3';
@@ -170,6 +175,8 @@ export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudi
 
         }
 
+        setAlreadySaved(true);
+
         window.dispatchEvent(new Event('favoritesUpdated'));
     }
 
@@ -181,6 +188,8 @@ export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudi
 
             window.localStorage.setItem('favorites', JSON.stringify(favorites.filter((i: Video) => i.id !== id)));
         
+            setAlreadySaved(false);
+            
             window.dispatchEvent(new Event('favoritesUpdated'));
         }
     }

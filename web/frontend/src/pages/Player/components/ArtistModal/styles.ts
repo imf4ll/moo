@@ -53,7 +53,7 @@ export const Container = styled.div`
         align-items: center;
     }
 
-    .title-playlist {
+    .title-artist {
         display: flex;
         align-items: center;
         gap: 1.5rem;
@@ -61,6 +61,14 @@ export const Container = styled.div`
         margin-top: 3rem;
         margin-bottom: 1rem;
         align-self: flex-start;
+
+        h1 {
+            font-size: 20pt;
+        }
+
+        p {
+            font-size: 12pt;
+        }
 
         .title-thumbnail {
             background: #333;

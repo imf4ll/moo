@@ -9,7 +9,7 @@ export const Container = styled.div`
     right: 50%;
     transform: translateX(-50%);
     width: 100%;
-    height: 3.5rem;
+    height: 3.25rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -20,6 +20,7 @@ export const Container = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
+        margin-right: 0.5rem;
 
         img {
             cursor: pointer;
@@ -35,7 +36,7 @@ export const Container = styled.div`
         display: flex;
         justify-content: center;
         transition: all ease 350ms;
-        margin-left: 0.25rem;
+        margin-left: 0.5rem;
 
         :hover {
             transform: scale(1.1);
@@ -70,7 +71,7 @@ export const Container = styled.div`
         align-items: center;
         background-color: #181818;
         border-radius: 20px;
-        padding: 0.5rem 0.75rem;
+        padding: 0.4rem 0.6rem;
         width: 40%;
         position: absolute;
         right: 50%;
@@ -83,8 +84,7 @@ export const Container = styled.div`
             background-color: transparent;
             width: 100%;
             color: white;
-            font-family: 'Inter', sans-serif;
-            font-size: 12pt;
+            font-size: 11pt;
         }
     }
 

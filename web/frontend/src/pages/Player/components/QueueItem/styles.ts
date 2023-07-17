@@ -35,6 +35,8 @@ export const Container = styled.div`
 
         p {
             font-weight: 500;
+            min-width: 20px;
+            max-width: 20px;
         }
 
         img {

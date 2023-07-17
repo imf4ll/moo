@@ -14,9 +14,8 @@ import { ArtistPlaylist } from '../ArtistPlaylist';
 
 import { Video, PlaylistSearch, Playlist } from '../../../../types';
 
-export const ArtistModal = ({ setArtistModalOpened, setArtist, artist }: {
+export const ArtistModal = ({ setArtistModalOpened, artist }: {
     setArtistModalOpened: Function,
-    setArtist: Function,
     artist: {
         id: string,
         photo: string,
@@ -54,7 +53,7 @@ export const ArtistModal = ({ setArtistModalOpened, setArtist, artist }: {
 
     const load = (p: PlaylistSearch) => {
         if (allPlaylists.length < playlistsCount) {
-            axios.get(`http://localhost:3001/playlist?list=${ p.id }`)
+            axios.get(`http://localhost:3001/playlist?id=${ p.id }`)
                 .then(({ data }) => {
                     if (data.videos.length > 0) {
                         setAllPlaylists(playlist => [...playlist, {
@@ -74,14 +73,14 @@ export const ArtistModal = ({ setArtistModalOpened, setArtist, artist }: {
     }
 
     useEffect(() => {
-        playlists.splice(0, 5).forEach((i: PlaylistSearch) => load(i));
+        playlists.splice(0, 3).forEach((i: PlaylistSearch) => load(i));
 
     }, [ playlists ]);
 
     const handleScroll = (e: any) => {
         if (e.target.scrollHeight - e.target.scrollTop === document.documentElement.scrollHeight) {
             if (allPlaylists.length < playlistsCount) {
-                playlists.splice(0, 5).forEach(i => load(i));
+                playlists.splice(0, 3).forEach(i => load(i));
 
                 e.target.scrollTo(0, e.target.scrollTop - 250);
             }
@@ -128,15 +127,10 @@ export const ArtistModal = ({ setArtistModalOpened, setArtist, artist }: {
         <Container onScroll={ e => handleScroll(e) }>
             <div className="background" style={{ backgroundImage: `url("${ artist.photo }")` }}></div>
             
-            <img id="back" src={ Back } width={ 20 } onClick={ () => {
-                setArtistModalOpened(false);
-
-                setArtist({});
-            }}
-            />
+            <img id="back" src={ Back } width={ 20 } onClick={ () => setArtistModalOpened(false) } />
             
             <div className="content">
-                <div className="title-playlist">
+                <div className="title-artist">
                     <div className="title-thumbnail" style={{ backgroundImage: `url("${ artist.photo }")` }} />
 
                     <div className="stats">
@@ -148,7 +142,7 @@ export const ArtistModal = ({ setArtistModalOpened, setArtist, artist }: {
                             <img
                                 src={ artistAlreadySaved ? Saved : Save }
                                 id="save"
-                                width={ 28 }
+                                width={ 24 }
                                 style={{ padding: '0.65rem' }}
                                 onClick={ artistAlreadySaved ? () => handleRemoveArtist() : () => handleSaveArtist() }
                             />

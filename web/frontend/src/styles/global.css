@@ -1,6 +1,6 @@
 *::-webkit-scrollbar {
     background-color: rgb(12, 12, 12);
-    width: 4px;
+    width: 5px;
 }
 
 *::-webkit-scrollbar-thumb {
@@ -8,7 +8,7 @@
 }
 
 * {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 html, body {
@@ -16,7 +16,7 @@ html, body {
     margin: 0;
     height: 100%;
     width: 100%;
-    overflow-x: hidden;
+    overflow-x: auto;
     user-select: none;
     -webkit-user-select: none;
 }

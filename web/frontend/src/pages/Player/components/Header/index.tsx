@@ -104,7 +104,7 @@ export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOp
             </div>
 
             <div className="searchBar">
-                <input type="text" id="bar" placeholder="Search for a music or artist" />
+                <input type="text" id="bar" placeholder="Search" />
 
                 <div className="bar-buttons">
                     <img src={ Search } id="search" width={ 24 } />

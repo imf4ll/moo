@@ -13,7 +13,7 @@ export const Playlist = ({ title, thumb, songs, id, setPlaylistModalOpened, setC
     setCurrentPlaylist: Function,
 }) => {
     const handlePlaylistNotAdded = () => {
-        axios.get(`http://localhost:3001/playlist?list=${ id }`)
+        axios.get(`http://localhost:3001/playlist?id=${ id }`)
             .then(({ data }) => {
                 setCurrentPlaylist({
                         title,

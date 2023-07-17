@@ -8,77 +8,87 @@ export const Background = styled.div`
     height: 100%;
     background: #000;
     opacity: 0.7;
-    z-index: 999;
+    z-index: 1000;
 `;
 
 export const Container = styled.div`
-    z-index: 1000;
+    z-index: 1001;
     position: absolute;
     top: 50%;
     left: 50%;
     right: 50%;
     transform: translate(-50%, -50%);
-    width: 50%;
     background: #121212;
-    padding: 1rem 0;
-    border-radius: 8px;
+    width: fit-content;
+    height: fit-content;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    background-color: rgba(15, 15, 15, 90%);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
+    border-radius: 8px;
+    padding: 0.75rem;
 
-    img {
-        border-radius: 8px;
+    .background {
+        background: #333;
+        width: 210px;
+        height: 210px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 380px;
+        border-radius: 6px;
     }
+
+    .textboxes {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    input[type="text"] {
+        font-size: 11pt;
+        color: white;
+        border: none;
+        background: #202020;
+        padding: 0.5rem;
+        outline: none;
+        width: 30rem;
+        border-radius: 6px;
+    }
+
+    .buttons {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 0.75rem;
+        align-self: flex-end;
+    }
+
 
     input[type="button"] {
-        padding: 0.7rem 1rem;
-        font-family: 'Inter', sans-serif;
         color: white;
-        outline: none;
+        width: 4.5rem;
+        height: 2.25rem;
         border: none;
-        border-radius: 6px;
-        background: #AC6AFF;
-        font-size: 11pt;
+        border-radius: 5px;
+        font-size: 9pt;
         font-weight: 500;
-        margin-top: 0.5rem;
-        transition: all ease 300ms;
+        outline: none;
         cursor: pointer;
+        transition: all ease 150ms;
 
         :hover {
-            opacity: 0.8;
-        }
-
-        :disabled {
-            opacity: 0.5;
+            opacity: 0.6;
         }
     }
 
-    div {
-        display: flex;
-        align-items: center;
-        gap: 0.6rem ;
-        justify-content: center;
-        width: 100%;
+    #save {
+        background: #AC6AFF;
 
-        p {
-            color: white;
+        :disabled {
+            opacity: 0.7;
         }
+    }
 
-        input {
-            background: #252525;
-            outline: none;
-            border: none;
-            font-family: 'Inter', sans-serif;
-            font-size: 11pt;
-            color: white;
-            padding: 0.5rem;
-            border-radius: 5px;
-            width: 77.5%;
-        }
+    #cancel {
+        background: #FF6464;
     }
 `;

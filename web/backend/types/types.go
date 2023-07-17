@@ -30,3 +30,13 @@ type Artist struct {
     Name string `json:"name"`
     ID string `json:"id"`
 }
+
+type Cache struct {
+    ID string `json:"id"`
+    Name string `json:"name"`
+    Photo string `json:"photo"`
+    Playlists []PlaylistSearch `json:"playlists"`
+    Videos []Video `json:"videos"`
+    Audio string `json:"audio"`
+    Timestamp int64 `json:"timestamp"`
+}

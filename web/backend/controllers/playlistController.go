@@ -1,29 +1,42 @@
-package controllers;
+package controllers
 
 import (
+    "encoding/json"
     "errors"
+    "time"
 
-    "github.com/imf4ll/moo-web/backend/utils"
     "github.com/imf4ll/moo-web/backend/services"
+    "github.com/imf4ll/moo-web/backend/utils"
+    "github.com/imf4ll/moo-web/backend/types"
 
     "github.com/gin-gonic/gin"
 )
 
-func PlaylistController(ctx *gin.Context) {
-    list := ctx.Query("list")
+type CachePlaylist struct {
+    ID string `json:"id"`
+    Videos []types.PlaylistVideo `json:"videos"`
+    Timestamp int64 `json:"timestamp"`
+}
 
-    if list == "" || len(list) < 34 && len(list) > 41 {
+func PlaylistController(ctx *gin.Context) {
+    id := ctx.Query("id")
+
+    if id == "" || len(id) != 34 && len(id) != 41 {
         utils.Error(ctx, errors.New("Invalid playlist ID."));
 
         return;
     }
 
-    videos, err := services.PlaylistService(list);
+    videos, err := services.PlaylistService(id);
     if err != nil {
         utils.Error(ctx, errors.New("Failed to get playlist videos."));
 
         return;
     }
+
+    data, _ := json.Marshal(CachePlaylist{ID:id, Videos: videos, Timestamp: time.Now().UnixMilli()});
+
+    utils.WriteCache(data, ctx);
 
     ctx.JSON(200, gin.H {
         "videos": videos,
