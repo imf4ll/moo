@@ -55,12 +55,12 @@ export const Container = styled.div`
 
     .title-artist {
         display: flex;
-        align-items: center;
         gap: 1.5rem;
-        margin-left: 4rem;
         margin-top: 3rem;
         margin-bottom: 1rem;
         align-self: flex-start;
+        width: 90vw;
+        align-self: center;
 
         h1 {
             font-size: 20pt;

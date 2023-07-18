@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Container } from './styles';
 import { notificate } from '../../../../utils/notifications';
@@ -10,15 +10,18 @@ import Search from '../../../../assets/search.svg';
 import Clear from '../../../../assets/close.svg';
 import More from '../../../../assets/more.svg';
 import Less from '../../../../assets/less.svg';
+import Idle from '../../../../assets/idle.svg';
+import Downloading from '../../../../assets/downloading.svg';
 
 export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOpened, setMoreOptionsOpened, setArtist }: {
-        setVideos: Function,
-        setLoading: Function,
-        setPlaylistsToAdd: Function,
-        moreOptionsOpened: boolean,
-        setMoreOptionsOpened: Function,
-        setArtist: Function,
-    }) => {
+    setVideos: Function,
+    setLoading: Function,
+    setPlaylistsToAdd: Function,
+    moreOptionsOpened: boolean,
+    setMoreOptionsOpened: Function,
+    setArtist: Function,
+}) => {
+    const [ downloading, setDownloading ] = useState<boolean>(false);
 
     const handleSearch = (type: string, value: string) => {
         setVideos([]);
@@ -83,6 +86,9 @@ export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOp
 
             }
         });
+        
+        window.addEventListener('downloading', () => setDownloading(true));
+        window.addEventListener('idle', () => setDownloading(false));
 
     }, []);
 
@@ -113,6 +119,8 @@ export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOp
             </div>
 
             <div className="buttons">
+                <img src={ downloading ? Downloading : Idle } id={ downloading ? 'downloading' : '' } width={ 24 } />
+
                 <img src={ moreOptionsOpened ? Less : More } width={ 32 } onClick={ () => setMoreOptionsOpened(!moreOptionsOpened) } />
             </div>
         </Container>

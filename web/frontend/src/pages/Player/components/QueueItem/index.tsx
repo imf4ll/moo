@@ -46,7 +46,7 @@ export const QueueItem = ({ position, title, thumb, author, duration, id }: {
                     <div style={{ backgroundImage: `url('${ thumb }')` }} className="thumbnail" />
                 </div>
 
-                <p title={ title }>{ title.length > 80 ? title.replace("\\u0026", "&").substring(0, 79) + '...' : title.replace("\\u0026", "&") } ·
+                <p title={ title }>{ title && title.length > 80 ? title.replace("\\u0026", "&").substring(0, 79) + '...' : title.replace("\\u0026", "&") } ·
                     <span> { author.replace("\\u0026", "&") }</span>
                 </p>
             </div>

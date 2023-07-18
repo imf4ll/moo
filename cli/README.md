@@ -1,8 +1,29 @@
-## 📖 Changelog (v0.1.1):
+## ❗️ Install:
 
-- Added --first to download very first result
+#### 🐧 Linux
+```bash
+$ cd cli/
 
-<br /><br />
+$ make install
+```
+
+<br />
+
+### 🪟 Windows
+1. Setup installer:
+```bash
+$ cd cli/
+
+$ pip3 install -r requirements.txt
+
+$ pip3 install -U pyinstaller
+
+$ pyinstaller --onefile src/moo.py
+```
+
+2. Move the builded .EXE to executables folder and use from console (Check your Environment Variables).
+
+<hr />
 
 ## ❓Arguments:
 

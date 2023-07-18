@@ -52,21 +52,28 @@ export const Container = styled.div`
         gap: 0.75rem;
         padding-bottom: 6rem;
         align-items: center;
+
+
     }
 
     .title-playlist {
         display: flex;
         align-items: center;
         gap: 1.5rem;
-        margin-left: 4rem;
         margin-top: 3rem;
         margin-bottom: 1rem;
         align-self: flex-start;
+        align-self: center;
+        width: 90vw;
+
+        h1 {
+            font-size: 18pt;
+        }
 
         .title-thumbnail {
             background: #333;
-            width: 256px;
-            height: 256px;
+            width: 230px;
+            height: 230px;
             background-position: center;
             background-size: 100%;
             background-repeat: no-repeat;

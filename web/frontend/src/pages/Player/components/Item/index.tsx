@@ -12,6 +12,7 @@ import Play from '../../../../assets/play.svg';
 import AddToQueue from '../../../../assets/addtoqueue.svg';
 import Save from '../../../../assets/heart.svg';
 import Saved from '../../../../assets/heartfilled.svg';
+import Download from '../../../../assets/download.svg';
 
 import { Video, Playlist } from '../../../../types';
 
@@ -58,7 +59,7 @@ export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudi
 
                     setCurrentAudio(data.audio);
 
-                    window.localStorage.setItem('lastsong', JSON.stringify({
+                    const song = {
                         thumb,
                         title,
                         author,
@@ -66,9 +67,11 @@ export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudi
                         views,
                         duration,
                         audio: data.audio,
-                    }));
+                    }
 
-                    window.localStorage.setItem('songqueue', JSON.stringify([]));
+                    window.localStorage.setItem('lastsong', JSON.stringify(song));
+
+                    window.localStorage.setItem('songqueue', JSON.stringify([ song ]));
 
                     window.dispatchEvent(new Event('newqueue'));
                     
@@ -96,7 +99,7 @@ export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudi
                             return;
                         }
                     }
-
+ 
                     window.localStorage.setItem('songqueue', JSON.stringify([
                         ...playlist.videos.slice(position, playlist.videos.length),
                         ...playlist.videos.slice(0, position),
@@ -193,6 +196,33 @@ export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudi
             window.dispatchEvent(new Event('favoritesUpdated'));
         }
     }
+
+    const handleDownload = () => {
+        const settings = window.localStorage.getItem('settings');
+
+        window.dispatchEvent(new Event('downloading'));
+
+        if (settings !== null) {
+            axios.get(`http://localhost:3001/download?url=https://www.youtube.com/watch?v=${ id }&path=${ JSON.parse(settings).path }`)
+                .then(({ data }) => {
+                    if (data.success) {
+                        notificate('success', 'Download successfully');
+                        
+                    } else {
+                        notificate('error', 'Failed to download music.');
+
+                    }
+                        
+                    window.dispatchEvent(new Event('idle'));
+                })
+
+                .catch(() => {
+                    notificate('error', 'Failed to download music.');
+
+                    window.dispatchEvent(new Event('idle'));
+                });
+        }
+    }
     
     return (
         <Container onClick={ e => e.detail === 2 && handleSetAudio() } onContextMenu={ e => copy(e, id) }>
@@ -213,21 +243,26 @@ export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudi
                     style={{ marginRight: '0.3rem' }}
                     onClick={ () => handleAddToQueue() }
                     className={ `addToQueue-${ id }` }
-                />
+                /> 
 
                 <div className="thumbnail" style={{ backgroundImage: `url('${ thumb }')` }} />
 
                 <p title={ title }>{ title.length >= 80 ? title.replace("\\u0026", "&").substring(0, 79) + '...' : title.replace("\\u0026", "&") } · <span>{ author.replace("\\u0026", "&") }</span></p>
             </div>
             
-            <div className="stats">
-                {
-                    <>
-                        <p>{ views }</p>
+            <div className="right-side">
+                <div className="stats">
+                    <p>{ views }</p>
 
-                        <p>{ duration.includes(':') ? duration : durationFormat(Number(duration)) }</p>
-                    </>
-                }
+                    <p>{ duration.includes(':') ? duration : durationFormat(Number(duration)) }</p>
+                </div>
+
+                <img
+                    src={ Download }
+                    width={ 24 }
+                    id="control"
+                    onClick={ () => handleDownload() }
+                />
             </div>
         </Container>
     );

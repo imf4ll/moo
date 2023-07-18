@@ -27,11 +27,10 @@ import Saved from '../../../../assets/heartfilled.svg';
 import { Video } from '../../../../types';
 
 export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
-        currentAudio: string,
-        currentStats: ItemProps,
-        setCurrentStats: Function,
-    }) => {
-
+    currentAudio: string,
+    currentStats: ItemProps,
+    setCurrentStats: Function,
+}) => {
     const [ songQueue, setSongQueue ] = useState<Array<any>>([]);
     const [ repeatState, setRepeatState ] = useState<string>('no');
     const [ randomState, setRandomState ] = useState<boolean>(false);
@@ -46,28 +45,37 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
             const songQueue: Array<any> = JSON.parse(window.localStorage.getItem('songqueue')!);
 
             if (songQueue.length > 0) {
-                axios.get(`http://localhost:3001/audio?id=${ songQueue[0].id }`)
-                    .then(r => {
-                        audio.src = r.data.audio;
+                if (songQueue[0].id !== '') {
+                    axios.get(`http://localhost:3001/audio?id=${ songQueue[0].id }`)
+                        .then(r => {
+                            audio.src = r.data.audio;
 
-                        audio.play();
+                            audio.play();
 
-                        setCurrentStats(songQueue[0]);
-                    })
+                            setCurrentStats(songQueue[0]);
+                        })
 
-                    .catch(() => {
-                        notificate('error', 'Failed to get audio, maybe caused by age restriction.');
+                        .catch(() => {
+                            notificate('error', 'Failed to get audio, maybe caused by age restriction.');
 
-                        songQueue.shift();
+                            songQueue.shift();
 
-                        window.localStorage.setItem('songqueue', JSON.stringify(songQueue));
+                            window.localStorage.setItem('songqueue', JSON.stringify(songQueue));
 
-                        window.dispatchEvent(new Event('musicended'));
+                            window.dispatchEvent(new Event('musicended'));
 
-                        handleMusic();
-                    });
-                    
+                            handleMusic();
+                        });
+                        
                     setSongQueue(songQueue);
+                
+                } else {
+                    audio.src = songQueue[0].audio;
+
+                    audio.play();
+
+                    setCurrentStats(songQueue[0]);
+                }
 
             } else {
                 axios.get(`http://localhost:3001/audio?id=${ currentStats.id }`)
@@ -100,25 +108,32 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
 
         if (window.localStorage.getItem('songqueue') !== null && JSON.parse(window.localStorage.getItem('songqueue')!).length > 0) {
             const songQueue = JSON.parse(window.localStorage.getItem('songqueue')!);
+            
+            if (songQueue[0].id !== '') {
+                axios.get(`http://localhost:3001/audio?id=${ songQueue[0].id }`)
+                    .then(r => {
+                        audio.src = r.data.audio;
 
-            axios.get(`http://localhost:3001/audio?id=${ songQueue[0].id }`)
-                .then(r => {
-                    audio.src = r.data.audio;
+                        setCurrentStats(songQueue[0]);
+                    })
 
-                    setCurrentStats(songQueue[0]);
-                })
+                    .catch(() => {
+                        notificate('warning', 'Trying to get audio...');
 
-                .catch(() => {
-                    notificate('warning', 'Trying to get audio...');
+                        songQueue.shift();
 
-                    songQueue.shift();
+                        window.localStorage.setItem('songqueue', JSON.stringify(songQueue));
 
-                    window.localStorage.setItem('songqueue', JSON.stringify(songQueue));
+                        window.dispatchEvent(new Event('musicended'));
 
-                    window.dispatchEvent(new Event('musicended'));
+                        handleMusic();
+                    });        
+            
+            } else {
+                audio.src = songQueue[0].audio;
 
-                    handleMusic();
-                });
+                setCurrentStats(songQueue[0]);
+            }
         }
         
         const playPauseButton: HTMLImageElement = document.querySelector('#playpause')!;
@@ -224,15 +239,17 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
         audio.addEventListener('pause', () => useTitle(''));
 
         const onFavorite = () => {
-            if (window.localStorage.getItem('favorites') !== null) {
-                const favorites = JSON.parse(window.localStorage.getItem('favorites')!);
+            if (currentStats) {
+                if (window.localStorage.getItem('favorites') !== null) {
+                    const favorites = JSON.parse(window.localStorage.getItem('favorites')!);
 
-                if (favorites.filter((i: Video) => i.id === currentStats.id).length > 0) {
-                    setAlreadySaved(true);
+                    if (favorites.filter((i: Video) => i.id === currentStats.id).length > 0) {
+                        setAlreadySaved(true);
 
-                } else {
-                    setAlreadySaved(false);
+                    } else {
+                        setAlreadySaved(false);
 
+                    }
                 }
             }
         }
@@ -412,18 +429,18 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                 <div className="stats">
                     <div
                         className="thumbnail"
-                        style={{ backgroundImage: `url('${ currentStats.thumb }')` }}
+                        style={ currentStats ? { backgroundImage: `url('${ currentStats.thumb }')` } : { background: '#333' }}
                     />
 
                     <div className="title">
                         <p
-                            title={ currentStats.title }
-                            className={ currentStats.title.length > 50 ? 'animated' : '' }
+                            title={ currentStats ? currentStats.title : '' }
+                            className={ currentStats ? currentStats.title.length > 50 ? 'animated' : '' : '' }
                         >
-                            { currentStats.title.replace("\\u0026", "&") }
+                            { currentStats ? currentStats.title.replace("\\u0026", "&") : 'Not playing' }
                         </p>
                         
-                        <p>{ currentStats.author.replace("\\u0026", "&") }</p>
+                        <p>{ currentStats ? currentStats.author.replace("\\u0026", "&") : '' }</p>
                     </div>
                 </div>
 
@@ -477,11 +494,14 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                 </div>
 
                 <div className="otherbuttons">
-                    <img
-                        src={ alreadySaved ? Saved : Save }
-                        width={ 24 }
-                        onClick={ alreadySaved ? () => handleRemoveFavorite() : () => handleAddFavorite() }
-                    />
+                    {
+                        currentStats && currentStats.id !== '' &&
+                            <img
+                                src={ alreadySaved ? Saved : Save }
+                                width={ 24 }
+                                onClick={ alreadySaved ? () => handleRemoveFavorite() : () => handleAddFavorite() }
+                            />
+                    }
                 </div>
                 
                 <div className="volume">

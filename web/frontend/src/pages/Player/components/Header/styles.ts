@@ -16,22 +16,6 @@ export const Container = styled.div`
     align-items: center;
     z-index: 999;
 
-    .buttons {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 0.5rem;
-
-        img {
-            cursor: pointer;
-            transition: all ease 300ms;
-
-            :hover {
-                opacity: 0.7;
-            }
-        }
-    }
-
     .logo {
         display: flex;
         justify-content: center;
@@ -98,6 +82,41 @@ export const Container = styled.div`
 
             :hover {
                 opacity: 0.7;
+            }
+        }
+    }
+
+    .buttons {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 0.5rem;
+        gap: 0.5rem;
+
+        img {
+            cursor: pointer;
+            transition: all ease 300ms;
+
+            :hover {
+                opacity: 0.7;
+            }
+        }
+
+        #downloading {
+            animation: infinite linear downloading 2s;
+        }
+
+        @keyframes downloading {
+            50% {
+                transform: rotate(-360deg);
+            }
+
+            80% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
             }
         }
     }

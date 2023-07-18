@@ -10,16 +10,16 @@ import (
 )
 
 func DownloadController(ctx *gin.Context) {
-    id := ctx.Query("id");
+    url := ctx.Query("url");
     path := ctx.Query("path");
 
-    if id == "" || len(id) != 11 ||  path == "" {
+    if url == "" || path == "" {
         utils.Error(ctx, errors.New("Invalid ID or path provided."));
 
         return;
     }
 
-    downloaded, err := services.DownloadService(id, path);
+    downloaded, err := services.DownloadService(url, path);
     if err != nil {
         utils.Error(ctx, err);
 

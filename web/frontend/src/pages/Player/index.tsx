@@ -7,8 +7,8 @@ import { ItemProps } from '../../types';
 
 import Add from '../../assets/add.svg';
 
-import ImageBackground from '../../assets/background.jpg';
 import FavoritesBackground from '../../assets/favorites.png';
+import LocalBackground from '../../assets/local.png';
 
 import { Header } from './components/Header';
 import { AudioPlayer } from './components/AudioPlayer';
@@ -21,6 +21,7 @@ import { QueueItem } from './components/QueueItem';
 import { PlaylistModal } from './components/PlaylistModal';
 import { FavoritesModal } from './components/FavoritesModal';
 import { ArtistModal } from './components/ArtistModal';
+import { LocalModal } from './components/LocalModal';
 
 import { Playlist as PlaylistT, Artist } from '../../types';
 
@@ -35,19 +36,14 @@ export const Player = () => {
     const [ moreOptionsOpened, setMoreOptionsOpened ] = useState<boolean>(false);
     const [ favoritesModalOpened, setFavoritesModalOpened ] = useState<boolean>(false);
     const [ artistModalOpened, setArtistModalOpened ] = useState<boolean>(false);
+    const [ localModalOpened, setLocalModalOpened ] = useState<boolean>(false);
     // @ts-ignore
     const [ artist, setArtist ] = useState<Artist>({});
     const [ currentAudio, setCurrentAudio ] = useState<string>("");
     // @ts-ignore
     const [ currentPlaylist, setCurrentPlaylist ] = useState<PlaylistT>({});
     // @ts-ignore
-    const [ currentStats, setCurrentStats ] = useState<ItemProps>({
-        thumb: ImageBackground,
-        id: '',
-        title: '',
-        author: '',
-        duration: '',
-    });
+    const [ currentStats, setCurrentStats ] = useState<ItemProps>();
 
     useEffect(() => {
         if (window.localStorage.getItem('songqueue') === null || JSON.parse(window.localStorage.getItem('songqueue')!).length === 0) {
@@ -55,7 +51,15 @@ export const Player = () => {
                 const lastSong = JSON.parse(window.localStorage.getItem('lastsong')!);
 
                 setCurrentAudio(lastSong.audio);
-                setCurrentStats(lastSong);
+
+                setCurrentStats({
+                    title: lastSong.title,
+                    author: lastSong.author,
+                    duration: lastSong.duration,
+                    thumb: lastSong.thumb,
+                    id: '',
+                    views: '',
+                });
             }
 
         } else {
@@ -163,6 +167,15 @@ export const Player = () => {
                     />
             }
 
+            {
+                localModalOpened &&
+                    <LocalModal
+                        setLocalModalOpened={ setLocalModalOpened }
+                        setCurrentStats={ setCurrentStats }
+                        setCurrentAudio={ setCurrentAudio }
+                    />
+            }
+
             <Container style={{ paddingTop: videos && videos.length > 0 ? '3rem' : '2rem' }}>
                 <Header
                     setVideos={ setVideos }
@@ -174,7 +187,7 @@ export const Player = () => {
                 />
 
                 <div className="playlistsToAdd">
-                    { artist && playlistsToAdd && playlistsToAdd.length > 0 && !loading && (
+                    { artist && artist.photo !== '' && playlistsToAdd && playlistsToAdd.length > 0 && !loading && (
                         <div className="artist" onClick={ () => setArtistModalOpened(true) }>
                             <div className="background" style={{ backgroundImage: `url('${ artist.photo }')` }}></div>
                         </div>
@@ -217,11 +230,14 @@ export const Player = () => {
                         : loading 
                             ? <ReactLoading type="spin" color="#999" width={ 36 } className="spinner" />
                             :  <div className="playlists">
-                                {
-                                    <div title="Favorites" className="playlist" onClick={ () => setFavoritesModalOpened(true) }>
-                                        <div className="background-favorites" style={{ backgroundImage: `url('${ FavoritesBackground }')` }} />
-                                    </div>
-                                }
+                                <div title="Favorites" className="playlist" onClick={ () => setFavoritesModalOpened(true) }>
+                                    <div className="backgrounds" style={{ backgroundImage: `url('${ FavoritesBackground }')` }} />
+                                </div>
+    
+                                <div title="Local" className="playlist" onClick={ () => setLocalModalOpened(true) }>
+                                    <div className="backgrounds" style={{ backgroundImage: `url('${ LocalBackground }')` }} />
+                                </div>
+
                                 {
                                     playlists.length > 0
                                         && playlists.map((i, k) => (
@@ -241,7 +257,7 @@ export const Player = () => {
                                 {
                                     videos.length === 0 && !loading &&
                                         <div className="playlist" onClick={ () => setNewPlaylistModalOpened(true) }>
-                                            <div className="background" style={{ backgroundImage: `url('${ ImageBackground }')` }}></div>
+                                            <div className="background"></div>
                                             
                                             <div className="buttons">
                                                 <img src={ Add } width={ 28 } />
@@ -267,7 +283,7 @@ export const Player = () => {
                                         id={ i.id }
                                     />
                                 ))
-                                : currentStats && currentStats.duration !== ''
+                                : currentStats && currentStats.title !== ''
                                     ? <QueueItem 
                                             position={ 0 }
                                             title={ currentStats.title }
@@ -283,7 +299,7 @@ export const Player = () => {
                 
                 <AudioPlayer
                     currentAudio={ currentAudio }
-                    currentStats={ currentStats }
+                    currentStats={ currentStats! }
                     setCurrentStats={ setCurrentStats }
                 />
             </Container>

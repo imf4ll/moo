@@ -93,7 +93,7 @@ export const FavoritesModal = ({ setFavoritesModalOpened, setCurrentAudio, setCu
                                 />
                             ))
                             : (
-                                <h1>Teste</h1>
+                                <></>
                             )
                     }
                 </div>

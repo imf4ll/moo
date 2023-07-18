@@ -5,7 +5,11 @@ import 'react-dragswitch/dist/index.css'
 
 import BackImage from '../../assets/back.svg';
 
-import { Back, Container, TextOption, SwitchOption, ButtonOption } from './styles';
+import { Back, Container } from './styles';
+
+import { TextOption } from './components/TextOption';
+import { InfoOption } from './components/InfoOption';
+import { SwitchOption } from './components/SwitchOption';
 
 import { Settings as SettingsProps } from '../../types';
 
@@ -13,8 +17,7 @@ import { version as current } from '../../../package.json';
 import { checkUpdate } from '../../utils/update';
 
 export const Settings = () => {
-    // @ts-ignore
-    const [ settings, setSettings ] = useState<SettingsProps>({});
+    const [ settings, setSettings ] = useState<SettingsProps>({ path: '', videoplayer: false });
     const [ videoPlayerChecked, setVideoPlayerChecked ] = useState<boolean>(false);
     const [ saved, setSaved ] = useState<boolean>(true);
     const [ latestVersion, setLatestVersion ] = useState<String>();
@@ -40,7 +43,6 @@ export const Settings = () => {
 
         if (path.value === '') {
             path.focus();
-            // If empty, red
 
         } else {
             setSettings({
@@ -59,22 +61,12 @@ export const Settings = () => {
 
     const handleSaved = (e: any, name: string) => {
         if (name === "path" && e.target.value === settings.path
-            || name === "allformats" && e === settings.allformats
             || name === "videoplayer" && e === settings.videoplayer)
         {
             setSaved(true);
 
         } else {
             setSaved(false);
-
-        }
-    }
-
-    const handleClear = () => {
-        const queue = JSON.parse(window.localStorage.getItem('queue')!);
-
-        if (queue.length !== 0) {
-            window.localStorage.setItem('queue', JSON.stringify([]));
 
         }
     }
@@ -91,68 +83,36 @@ export const Settings = () => {
                 <div className="options">
                     <h3>General</h3>
 
-                    <TextOption>
-                        <div>
-                            <p className="name">Downloads location:</p>
+                    <TextOption
+                        name="Downloads location:"
+                        help="Path where downloads will be saved."
+                        defaultValue={ settings.path }
+                    />
 
-                            <p className="help">🛈 Path where downloads will be saved. </p>
-                        </div>
+                    <InfoOption name="Version:" help="Moo's versioning system.">
+                        <p>Current: { current }</p>
 
-                        <input
-                            type="text"
-                            id="download-path"
-                            defaultValue={ settings.path }
-                            onChange={ (e) => handleSaved(e, "path") }
-                        />
-                    </TextOption>
-
-                    <ButtonOption>
-                        <div>
-                            <p className="name">Clear queue</p>
-
-                            <p className="help">🛈 Clear the entire download queue.</p>
-                        </div>
-
-                        <input type="button" value="Clear" onClick={ handleClear } />
-                    </ButtonOption>
-
-                    <TextOption>
-                        <div>
-                            <p className="name">Version:</p>
-                            
-                            <p className="help">🛈 Moo's versioning system.</p>
-                        </div>
-
-                        <div className="version">
-                            <p>Current: { current }</p>
-
-                            <p>Latest: { latestVersion } {
-                                current === latestVersion
-                                    ? <span className="uptodate">(Up to date)</span>
-                                    : <a className="update" href="https://github.com/imf4ll/moo/blob/master/README.md#updating"><span className="update">(New update available)</span></a>
-                                }
-                            </p>
-                        </div>
-                    </TextOption>
+                        <p>Latest: { latestVersion } {
+                            current === latestVersion
+                                ? <span className="uptodate">(Up to date)</span>
+                                : <a className="update" href="https://github.com/imf4ll/moo/blob/master/README.md#updating"><span className="update">(New update available)</span></a>
+                            }
+                        </p>
+                    </InfoOption>
 
                     <h3>Functionalities</h3>
 
-                    <SwitchOption>
-                        <div>
-                            <p className="name">Video Player</p>
-
-                            <p className="help">🛈 When pressing thumbnail, a video player opens (click on details to download). </p>
-                        </div>
-
+                    <SwitchOption name="Video Player" help="When pressing thumbnail, a video player opens (click on details to download).">
                         <ToggleSwitch
                             checked={ videoPlayerChecked }
-                            onChange={ (e) => {
+                            onChange={ e => {
                                 setVideoPlayerChecked(!videoPlayerChecked);
 
                                 handleSaved(e, "videoplayer");
                             }}
-                            onColor="#9361FF"
+                            onColor="#ac6aff"
                             offColor="#1A1A1A"
+                            disabled
                         />
                     </SwitchOption>
                 </div>

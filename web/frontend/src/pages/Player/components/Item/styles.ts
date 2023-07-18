@@ -39,24 +39,30 @@ export const Container = styled.div`
             background-position: center;
             background-size: 140px;
         }
-   
-        #control {
-            cursor: pointer;
-            transition: all ease 300ms;
-            
-            :hover {
-                opacity: 0.7;
-            }
-        }
 
         span {
             font-weight: 400;
             color: #AAA;
         }
     }
+   
+    #control {
+        cursor: pointer;
+        transition: all ease 300ms;
+        
+        :hover {
+            opacity: 0.7;
+        }
+    }
 
-    .stats {
+    .right-side {
         display: flex;
-        gap: 5rem;
+        gap: 1.5rem;
+        align-items: center;
+
+        .stats {
+            display: flex;
+            gap: 4rem;
+        }
     }
 `;

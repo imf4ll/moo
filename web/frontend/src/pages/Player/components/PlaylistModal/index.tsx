@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
+
+import { notificate } from '../../../../utils/notifications';
 
 import { Container } from './styles';
 
@@ -6,6 +9,7 @@ import Back from '../../../../assets/back.svg';
 import Play from '../../../../assets/play.svg';
 import Save from '../../../../assets/heart.svg';
 import Saved from '../../../../assets/heartfilled.svg';
+import Download from '../../../../assets/download.svg';
 
 import { Item } from '../../components/Item';
 
@@ -30,6 +34,33 @@ export const PlaylistModal = ({ currentPlaylist, setPlaylistModalOpened, setCurr
         }
 
     }, []);
+
+    const handleDownload = () => {
+        const settings = window.localStorage.getItem('settings');
+
+        window.dispatchEvent(new Event('downloading'));
+
+        if (settings !== null) {
+            axios.get(`http://localhost:3001/download?url=https://www.youtube.com/playlist?list=${ currentPlaylist.id }&path=${ JSON.parse(settings).path }`)
+                .then(({ data }) => {
+                    if (data.success) {
+                        notificate('success', 'Download successfully');
+                        
+                    } else {
+                        notificate('error', 'Failed to download music.');
+
+                    }
+                        
+                    window.dispatchEvent(new Event('idle'));
+                })
+
+                .catch(() => {
+                    notificate('error', 'Failed to download music.');
+
+                    window.dispatchEvent(new Event('idle'));
+                });
+        }
+    }
 
     const handlePlaylist = () => {
         let playlist = Object.assign({}, currentPlaylist);
@@ -107,8 +138,15 @@ export const PlaylistModal = ({ currentPlaylist, setPlaylistModalOpened, setCurr
                                 src={ alreadySaved ? Saved : Save }
                                 id="save"
                                 width={ 28 }
-                                style={{ padding: '0.65rem' }}
+                                style={{ padding: '0.7rem 0.65rem 0.65rem 0.65rem' }}
                                 onClick={ alreadySaved ? () => handleRemovePlaylist() : () => handleSavePlaylist() }
+                            />
+
+                            <img
+                                src={ Download }
+                                width={ 28 }
+                                style={{ padding: '0.65rem' }}
+                                onClick={ () => handleDownload() }
                             />
                         </div>
                     </div>

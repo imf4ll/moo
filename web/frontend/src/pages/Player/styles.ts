@@ -99,6 +99,7 @@ export const Container = styled.div`
         cursor: pointer;
 
         .background {
+            background: #333;
             background-repeat: no-repeat;
             background-position: center;
             background-size: 120px;
@@ -108,7 +109,7 @@ export const Container = styled.div`
             border-radius: 5px;
         }
 
-        .background-favorites {
+        .backgrounds {
             transition: all ease 150ms;
             background-repeat: no-repeat;
             width: 100%;
@@ -148,7 +149,7 @@ export const Container = styled.div`
                 opacity: 1;
             }
 
-            .background, .background-favorites {
+            .background, .background {
                 filter: blur(1px);
             }
         }

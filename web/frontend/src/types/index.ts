@@ -5,7 +5,6 @@ export interface ItemProps {
     views: string;
     duration: string;
     id: string;
-    queueOpened: Function;
 }
 
 export interface QueueItemProps {
@@ -20,7 +19,6 @@ export interface QueueItemProps {
 
 export interface Settings {
     path: string;
-    allformats?: boolean;
     videoplayer?: boolean;
 }
 

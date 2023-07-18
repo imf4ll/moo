@@ -56,15 +56,20 @@ export const Container = styled.div`
         display: flex;
         align-items: center;
         gap: 1.5rem;
-        margin-left: 4rem;
         margin-top: 3rem;
         margin-bottom: 1rem;
         align-self: flex-start;
+        width: 90vw;
+        align-self: center;
+
+        h1 {
+            font-size: 20pt;
+        }
 
         .title-thumbnail {
             background: #333;
-            width: 256px;
-            height: 256px;
+            min-width: 230px;
+            min-height: 230px;
             background-position: center;
             background-size: 200%;
             background-repeat: no-repeat;
