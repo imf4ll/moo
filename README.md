@@ -36,6 +36,8 @@ and Golang on backend.
 
 <br />
 
+<hr />
+
 <div align="center">
   <h3>Web (UNDER DEVELOPMENT)</h3>
 
