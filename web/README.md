@@ -1,3 +1,5 @@
+<img src="./assets/showcase.png" />
+
 ## ❗️ Install:
 
 #### 🐧 Linux
