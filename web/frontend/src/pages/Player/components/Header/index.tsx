@@ -1,8 +1,9 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import { Container } from './styles';
+
 import { notificate } from '../../../../utils/notifications';
+import { api } from '../../../../utils/api';
 
 import Logo from '../../../../../public/icon.png';
 import LogoBackground from '../../../../../public/iconbackground.png';
@@ -22,69 +23,88 @@ export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOp
     setArtist: Function,
 }) => {
     const [ downloading, setDownloading ] = useState<boolean>(false);
+    const [ searchHistory, setSearchHistory ] = useState<Array<string>>([]);
+    const barRef = useRef<HTMLInputElement>(null);
+    const searchRef = useRef<HTMLImageElement>(null);
 
-    const handleSearch = (type: string, value: string) => {
+    const handleSearch = (value: string) => {
         setVideos([]);
         setLoading(true);
         
-        (async () => 
-            await axios.get('http://localhost:3001/' + ( type === 'search' ? `search?query=${ value }` : `video?id=${ value.substring(value.length - 11) }`))
-                .then(({ data }) => {
-                    setVideos(type === 'video' ? [ data.video ] : data.videos);
+        api.get(`/search?query=${ value }`)
+            .then(({ data }) => {
+                setVideos(data.videos);
 
-                    setPlaylistsToAdd(data.playlists);
+                setPlaylistsToAdd(data.playlists);
 
-                    setArtist(data.artist);
-                    
-                    setLoading(false);
-                })
+                setArtist(data.artist);
+                
+                setLoading(false);
 
-                .catch(() => {
-                    setVideos([]);
+                setSearchHistory(p => [ ...p.filter(i => i !== value), value.trim() ]);
+            })
 
-                    setPlaylistsToAdd([]);
-                    
-                    setArtist({});
-                    
-                    setLoading(false);
+            .catch(() => {
+                setVideos([]);
 
-                    notificate('error', 'Failed to search, try again.');
+                setPlaylistsToAdd([]);
+                
+                setArtist({});
+                
+                setLoading(false);
 
-                    window.dispatchEvent(new Event('newnotification'));
-                })
-        )();
+                notificate('error', 'Failed to search, try again.');
+
+                window.dispatchEvent(new Event('newnotification'));
+            });
     }
 
     useEffect(() => {
-        const bar = document.querySelector<HTMLInputElement>('#bar')!;
-        const search = document.querySelector<HTMLImageElement>('#search')!;
+        const searchHist = window.localStorage.getItem('searchhistory');
 
-        bar.addEventListener('keydown', (e: any) => {
-            if (e.target.value === '') return;
+        if (barRef.current!.value !== '') {
+            if (searchHist !== null) {
+                const hist = JSON.parse(searchHist).filter((i: string) => i !== barRef.current!.value);
 
-            if (e.key === 'Enter') {
-                if (e.target.value.includes('youtube.com/watch?v=') || e.target.value.includes('youtu.be')) {
-                    handleSearch('video', e.target.value);
-                
-                } else {
-                    handleSearch('search', e.target.value);
+                hist.unshift(barRef.current!.value.trim());
 
-                }
+                window.localStorage.setItem('searchhistory', JSON.stringify(hist.splice(0, 11)));
+
+            } else {
+                window.localStorage.setItem('searchhistory', JSON.stringify([ barRef.current!.value ]));
+
+            }
+    }
+
+    }, [ searchHistory ]);
+
+    useEffect(() => {
+        if (window.localStorage.getItem('searchhistory') !== null) {
+            setSearchHistory(JSON.parse(window.localStorage.getItem('searchhistory')!));
+
+        }
+
+        barRef.current!.addEventListener('input', (e: any) => {
+            if (e.target!.value === '') {
+                setVideos([]);
+
+                setPlaylistsToAdd([]);
             }
         });
 
-        search.addEventListener('click', () => {
-            const bar = document.querySelector<HTMLInputElement>('#bar')!.value;
-            
-            if (bar === '') return;
+        barRef.current!.addEventListener('keydown', (e: any) => {
+            if (e.target.value === '') return;
 
-            if (bar.includes('youtube.com/watch?v=') || bar.includes('youtu.be')) {
-                handleSearch('video', bar);
-
-            } else {
-                handleSearch('search', bar);
+            if (e.key === 'Enter') {
+                handleSearch(barRef.current!.value);
 
             }
+        });
+
+        searchRef.current!.addEventListener('click', () => {
+            if (barRef.current!.value === '') return;
+
+            handleSearch(barRef.current!.value);
         });
         
         window.addEventListener('downloading', () => setDownloading(true));
@@ -99,7 +119,7 @@ export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOp
 
         setArtist({});
 
-        document.querySelector<HTMLInputElement>('#bar')!.value = '';
+        barRef.current!.value = '';
     }
 
     return (
@@ -110,10 +130,17 @@ export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOp
             </div>
 
             <div className="searchBar">
-                <input type="text" id="bar" placeholder="Search" />
+                <input type="text" id="bar" ref={ barRef } placeholder="Search" list="list" autoComplete="off" />
+
+                <datalist id="list">
+                    {
+                        searchHistory && searchHistory.length > 0
+                            && searchHistory.map((i, k) => (<option key={ k }>{ i }</option>))
+                    }
+                </datalist>
 
                 <div className="bar-buttons">
-                    <img src={ Search } id="search" width={ 24 } />
+                    <img src={ Search } ref={ searchRef } id="search" width={ 24 } />
                     <img src={ Clear } width={ 26 } onClick={ () => { handleClear() } } />
                 </div>
             </div>

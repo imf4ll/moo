@@ -1,13 +1,12 @@
 package services
 
 import (
-    // "errors"
     "net/http"
     "fmt"
     "io/ioutil"
     "strings"
 
-    "github.com/imf4ll/moo-web/backend/types"
+    "github.com/imf4ll/moo/backend/types"
 )
 
 func PlaylistService(id string) ([]types.PlaylistVideo, error) {

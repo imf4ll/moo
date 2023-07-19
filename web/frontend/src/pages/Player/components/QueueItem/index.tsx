@@ -1,7 +1,7 @@
 import { Container } from './styles';
 
 import { copy } from '../../../../utils/copy';
-
+import { decode } from '../../../../utils/decode';
 import { duration as durationFormat } from '../../../../utils/time';
 
 export const QueueItem = ({ position, title, thumb, author, duration, id }: {
@@ -12,7 +12,6 @@ export const QueueItem = ({ position, title, thumb, author, duration, id }: {
     duration: string,
     id: string,
 }) => {
-
     const handleSetMusic = (e: any) => {
         if (e.detail === 2 && position !== 0) {
             const songQueue = JSON.parse(window.localStorage.getItem('songqueue')!);
@@ -46,8 +45,8 @@ export const QueueItem = ({ position, title, thumb, author, duration, id }: {
                     <div style={{ backgroundImage: `url('${ thumb }')` }} className="thumbnail" />
                 </div>
 
-                <p title={ title }>{ title && title.length > 80 ? title.replace("\\u0026", "&").substring(0, 79) + '...' : title.replace("\\u0026", "&") } ·
-                    <span> { author.replace("\\u0026", "&") }</span>
+                <p title={ title }>{ title && title.length > 80 ? decode(title).substring(0, 79) + '...' : decode(title) } ·
+                    <span> { decode(author) }</span>
                 </p>
             </div>
             

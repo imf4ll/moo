@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import ReactLoading from 'react-loading';
 
 import Back from '../../../../assets/back.svg';
@@ -7,6 +6,7 @@ import Save from '../../../../assets/heart.svg';
 import Saved from '../../../../assets/heartfilled.svg';
 
 import { notificate } from '../../../../utils/notifications';
+import { api } from '../../../../utils/api';
 
 import { Container } from './styles';
 
@@ -26,6 +26,7 @@ export const ArtistModal = ({ setArtistModalOpened, artist }: {
     const [ allPlaylists, setAllPlaylists ] = useState<Array<Playlist>>([]);
     const [ artistAlreadySaved, setArtistAlreadySaved ] = useState<boolean>(false);
     const [ playlistsCount, setPlaylistsCount ] = useState<number>(0);
+    const saveRef = useRef<HTMLImageElement>(null);
 
     useEffect(() => {
         const playlists = window.localStorage.getItem('playlists');
@@ -37,7 +38,7 @@ export const ArtistModal = ({ setArtistModalOpened, artist }: {
             }
         }
 
-        axios.get(`http://localhost:3001/artist?id=${ artist.id }`)
+        api.get(`/artist?id=${ artist.id }`)
             .then(({ data }) => {
                 setPlaylists(data.playlists);
 
@@ -53,7 +54,7 @@ export const ArtistModal = ({ setArtistModalOpened, artist }: {
 
     const load = (p: PlaylistSearch) => {
         if (allPlaylists.length < playlistsCount) {
-            axios.get(`http://localhost:3001/playlist?id=${ p.id }`)
+            api.get(`/playlist?id=${ p.id }`)
                 .then(({ data }) => {
                     if (data.videos.length > 0) {
                         setAllPlaylists(playlist => [...playlist, {
@@ -104,7 +105,7 @@ export const ArtistModal = ({ setArtistModalOpened, artist }: {
             }]));
         }
 
-        document.querySelector<HTMLImageElement>('#save')!.src = Saved;
+        saveRef.current!.src = Saved;
 
         setArtistAlreadySaved(true);
         
@@ -118,7 +119,7 @@ export const ArtistModal = ({ setArtistModalOpened, artist }: {
 
         window.dispatchEvent(new Event('playlistsaved'));
     
-        document.querySelector<HTMLImageElement>('#save')!.src = Save;
+        saveRef.current!.src = Save;
     
         setArtistAlreadySaved(false);
     }
@@ -142,6 +143,7 @@ export const ArtistModal = ({ setArtistModalOpened, artist }: {
                             <img
                                 src={ artistAlreadySaved ? Saved : Save }
                                 id="save"
+                                ref={ saveRef }
                                 width={ 24 }
                                 style={{ padding: '0.65rem' }}
                                 onClick={ artistAlreadySaved ? () => handleRemoveArtist() : () => handleSaveArtist() }

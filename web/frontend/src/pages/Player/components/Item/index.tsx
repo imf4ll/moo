@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect, useState, useRef } from 'react';
 
 import { Container } from './styles';
 
 import { notificate } from '../../../../utils/notifications';
 import { copy } from '../../../../utils/copy';
+import { api } from '../../../../utils/api';
+import { decode } from '../../../../utils/decode';
 
 import { duration as durationFormat } from '../../../../utils/time';
 
@@ -29,6 +30,7 @@ export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudi
     playlist: Playlist,
 }) => {
     const [ alreadySaved, setAlreadySaved ] = useState<boolean>(false);
+    const addToQueueRef = useRef<HTMLImageElement>(null);
 
     useEffect(() => {
         const onFavorite = () => {
@@ -52,7 +54,7 @@ export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudi
     }, []);
 
     const handleSetAudio = () => {
-        axios.get(`http://localhost:3001/audio?id=${ id }`)
+        api.get(`/audio?id=${ id }`)
             .then(({ data }) => {
                 if (!playlist.videos) {
                     setCurrentStats({ thumb, title, author, id, duration });
@@ -147,11 +149,9 @@ export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudi
 
         window.dispatchEvent(new Event('queueUpdated'));
 
-        const addButton: HTMLImageElement = document.querySelector(`.addToQueue-${ id }`)!;
+        addToQueueRef.current!.style.scale = '1.3';
 
-        addButton.style.scale = '1.3';
-        
-        setTimeout(() => addButton.style.scale = '1', 300);
+        setTimeout(() => addToQueueRef.current!.style.scale = '1', 300);
     }
 
     const handleAddFavorite = () => {
@@ -203,7 +203,7 @@ export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudi
         window.dispatchEvent(new Event('downloading'));
 
         if (settings !== null) {
-            axios.get(`http://localhost:3001/download?url=https://www.youtube.com/watch?v=${ id }&path=${ JSON.parse(settings).path }`)
+            api.get(`/download?url=https://www.youtube.com/watch?v=${ id }&path=${ JSON.parse(settings).path }`)
                 .then(({ data }) => {
                     if (data.success) {
                         notificate('success', 'Download successfully');
@@ -242,12 +242,12 @@ export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudi
                     id="control"
                     style={{ marginRight: '0.3rem' }}
                     onClick={ () => handleAddToQueue() }
-                    className={ `addToQueue-${ id }` }
+                    ref={ addToQueueRef }
                 /> 
 
                 <div className="thumbnail" style={{ backgroundImage: `url('${ thumb }')` }} />
 
-                <p title={ title }>{ title.length >= 80 ? title.replace("\\u0026", "&").substring(0, 79) + '...' : title.replace("\\u0026", "&") } · <span>{ author.replace("\\u0026", "&") }</span></p>
+                <p title={ title }>{ title.length >= 80 ? decode(title).substring(0, 79) + '...' : decode(title) } · <span>{ decode(author) }</span></p>
             </div>
             
             <div className="right-side">

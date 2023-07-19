@@ -1,8 +1,7 @@
-import axios from 'axios';
-
 import { Container } from './styles';
 
 import { notificate } from '../../../../utils/notifications';
+import { api } from '../../../../utils/api';
 
 export const Playlist = ({ title, thumb, songs, id, setPlaylistModalOpened, setCurrentPlaylist }: {
     title: string,
@@ -13,7 +12,7 @@ export const Playlist = ({ title, thumb, songs, id, setPlaylistModalOpened, setC
     setCurrentPlaylist: Function,
 }) => {
     const handlePlaylistNotAdded = () => {
-        axios.get(`http://localhost:3001/playlist?id=${ id }`)
+        api.get(`/playlist?id=${ id }`)
             .then(({ data }) => {
                 setCurrentPlaylist({
                         title,

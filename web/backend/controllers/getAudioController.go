@@ -5,8 +5,8 @@ import (
     "errors"
     "time"
 
-    "github.com/imf4ll/moo-web/backend/services"
-    "github.com/imf4ll/moo-web/backend/utils"
+    "github.com/imf4ll/moo/backend/services"
+    "github.com/imf4ll/moo/backend/utils"
 
     "github.com/gin-gonic/gin"
 )

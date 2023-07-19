@@ -1,14 +1,19 @@
 import styled from 'styled-components';
 
-export const Back = styled.img`
+export const Back = styled.input`
     position: absolute;
-    top: 1rem;
-    left: 0.75rem;
-    transition: all ease 300ms;
+    top: 0.75rem;
+    left: 0.5rem;
+    background: transparent;
+    transition: all ease 250ms;
     cursor: pointer;
+    outline: none;
+    border: none;
+    font-weight: 500;
+    font-size: 12pt;
 
     :hover {
-        opacity: 0.6;
+        opacity: 0.7;
     }
 `;
 

@@ -82,14 +82,6 @@ export const Player = () => {
 
         });
 
-        document.querySelector('#bar')!.addEventListener('input', (e: any) => {
-            if (e.target!.value === '') {
-                setVideos([]);
-
-                setPlaylistsToAdd([]);
-            }
-        });
-
         const handleNewMusic = () => setQueue(JSON.parse(window.localStorage.getItem('songqueue')!));
 
         window.addEventListener('newqueue', () => handleNewMusic());

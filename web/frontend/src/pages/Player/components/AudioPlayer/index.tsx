@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect, useState, useRef } from 'react';
 
 import { Container } from './styles';
 
@@ -7,6 +6,8 @@ import { useTitle } from '../../../../hooks/useTitle';
 
 import { notificate } from '../../../../utils/notifications';
 import { duration as durationFormat } from '../../../../utils/time';
+import { api } from '../../../../utils/api';
+import { decode } from '../../../../utils/decode';
 
 import { ItemProps } from '../../../../types';
 
@@ -37,20 +38,25 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
     const [ duration, setDuration ] = useState<string>("");
     const [ length, setLength ] = useState<string>("");
     const [ alreadySaved, setAlreadySaved ] = useState<boolean>(false);
+    const audioRef = useRef<HTMLAudioElement>(null);
+    const playPauseRef = useRef<HTMLImageElement>(null);
+    const rangeAudioRef = useRef<HTMLInputElement>(null);
+    const rangeVolumeRef = useRef<HTMLInputElement>(null);
+    const volumeRef = useRef<HTMLImageElement>(null);
+    const repeatRef = useRef<HTMLImageElement>(null);
+    const randomRef = useRef<HTMLImageElement>(null);
 
     const handleMusic = () => {
-        const audio: HTMLAudioElement = document.querySelector('#audio')!;
-        
         if (window.localStorage.getItem('songqueue') !== null) {
             const songQueue: Array<any> = JSON.parse(window.localStorage.getItem('songqueue')!);
 
             if (songQueue.length > 0) {
                 if (songQueue[0].id !== '') {
-                    axios.get(`http://localhost:3001/audio?id=${ songQueue[0].id }`)
+                    api.get(`/audio?id=${ songQueue[0].id }`)
                         .then(r => {
-                            audio.src = r.data.audio;
+                            audioRef.current!.src = r.data.audio;
 
-                            audio.play();
+                            audioRef.current!.play();
 
                             setCurrentStats(songQueue[0]);
                         })
@@ -70,30 +76,23 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                     setSongQueue(songQueue);
                 
                 } else {
-                    audio.src = songQueue[0].audio;
+                    audioRef.current!.src = songQueue[0].audio;
 
-                    audio.play();
+                    audioRef.current!.play();
 
                     setCurrentStats(songQueue[0]);
                 }
-
-            } else {
-                axios.get(`http://localhost:3001/audio?id=${ currentStats.id }`)
-                    .then(r => {
-                        audio.src = r.data.audio;
-
-                        audio.play();
-                    })
             }
-        
-        } else {
-            axios.get(`http://localhost:3001/audio?id=${ currentStats.id }`)
-                .then(r => {
-                    audio.src = r.data.audio;
-
-                    audio.play();
-                });
         }
+
+        api.get(`/audio?id=${ currentStats.id }`)
+            .then(r => {
+                audioRef.current!.src = r.data.audio;
+
+                audioRef.current!.play();
+            })
+
+            .catch(() => notificate('error', 'Failed to get audio.'));
     }
 
     useEffect(() => {
@@ -104,15 +103,13 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
             setRandomState(playerSettings.random);
         }
 
-        const audio: HTMLAudioElement = document.querySelector('#audio')!;
-
         if (window.localStorage.getItem('songqueue') !== null && JSON.parse(window.localStorage.getItem('songqueue')!).length > 0) {
             const songQueue = JSON.parse(window.localStorage.getItem('songqueue')!);
             
             if (songQueue[0].id !== '') {
-                axios.get(`http://localhost:3001/audio?id=${ songQueue[0].id }`)
+                api.get(`/audio?id=${ songQueue[0].id }`)
                     .then(r => {
-                        audio.src = r.data.audio;
+                        audioRef.current!.src = r.data.audio;
 
                         setCurrentStats(songQueue[0]);
                     })
@@ -130,40 +127,47 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                     });        
             
             } else {
-                audio.src = songQueue[0].audio;
+                audioRef.current!.src = songQueue[0].audio;
 
                 setCurrentStats(songQueue[0]);
             }
         }
-        
-        const playPauseButton: HTMLImageElement = document.querySelector('#playpause')!;
-
+       
         window.addEventListener('keydown', e => {
-            if (e.code === 'Space') {
-                if (document.activeElement?.tagName !== 'INPUT') {
-                    if (audio.paused) {
-                        audio.play();
+            if (document.activeElement?.tagName !== 'INPUT') {
+                if (e.code === 'Space') {
+                    e.preventDefault();
 
-                        playPauseButton.src = Pause;
+                    if (audioRef.current!.paused) {
+                        audioRef.current!.play();
+
+                        playPauseRef.current!.src = Pause;
 
                     } else {
-                        audio.pause();
+                        audioRef.current!.pause();
 
-                        playPauseButton.src = Play;
-                    }    
+                        playPauseRef.current!.src = Play;
+                    }
+                
+                } else if (e.code === 'ArrowLeft') {
+                    handleSkip(e, 'previous');
+
+                } else if (e.code === 'ArrowRight') {
+                    handleSkip(e, 'next');
+
                 }
             }
         });
 
-        audio.addEventListener('durationchange', () => {
-            setLength(durationFormat(audio.duration));
+        audioRef.current!.addEventListener('durationchange', () => {
+            setLength(durationFormat(audioRef.current!.duration));
 
-            playPauseButton.src = Pause;
+            playPauseRef.current!.src = Pause;
 
-            audio.play();
+            audioRef.current!.play();
         });
 
-        audio.addEventListener('ended', () => {
+        audioRef.current!.addEventListener('ended', () => {
             const repeat = JSON.parse(window.localStorage.getItem('playersettings')!).repeat;
             const songQueue = JSON.parse(window.localStorage.getItem('songqueue')!);
 
@@ -187,38 +191,34 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                     setSongQueue(songQueue);
 
                 } else {
-                    audio.play();
+                    audioRef.current!.play();
 
                 }
 
             } else {
                 if (repeat === 'yes' || repeat === 'one') {
-                    audio.play();
+                    audioRef.current!.play();
 
                 } else {
-                    playPauseButton.src = Play
+                    playPauseRef.current!.src = Play
                     
                 }
             }
         });
 
-        const rangeAudio: HTMLInputElement = document.querySelector('#rangeAudio')!;
-
-        rangeAudio.addEventListener('input', () => {
-            audio.currentTime = audio.duration * (Number(rangeAudio.value) / 1000);
+        rangeAudioRef.current!.addEventListener('input', () => {
+            audioRef.current!.currentTime = audioRef.current!.duration * (Number(rangeAudioRef.current!.value) / 1000);
 
         });
 
-        audio.addEventListener('timeupdate', () => {
+        audioRef.current!.addEventListener('timeupdate', () => {
             // @ts-ignore
             rangeAudio.value = audio.currentTime / audio.duration * 1000;
 
-            setDuration(durationFormat(audio.currentTime));
+            setDuration(durationFormat(audioRef.current!.currentTime));
         });
 
-        const rangeVolume: HTMLInputElement = document.querySelector('#rangeVolume')!;
-
-        rangeVolume.addEventListener('input', (e: any) => audio.volume = e.target!.value / 100);
+        rangeVolumeRef.current!.addEventListener('input', (e: any) => audioRef.current!.volume = e.target!.value / 100);
 
         window.addEventListener('storage', () => {
             const songQueue = JSON.parse(window.localStorage.getItem('songqueue')!);
@@ -232,11 +232,9 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
     }, []);
 
     useEffect(() => {
-        const audio: HTMLAudioElement = document.querySelector('#audio')!;
+        audioRef.current!.addEventListener('playing', () => useTitle(currentStats.title + ' - '));
 
-        audio.addEventListener('playing', () => useTitle(currentStats.title + ' - '));
-
-        audio.addEventListener('pause', () => useTitle(''));
+        audioRef.current!.addEventListener('pause', () => useTitle(''));
 
         const onFavorite = () => {
             if (currentStats) {
@@ -272,29 +270,36 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
     }, [ repeatState, randomState ]);
 
     const handlePlayPause = () => {
-        const audio: HTMLAudioElement = document.querySelector('#audio')!;
-        const playPauseButton: HTMLImageElement = document.querySelector('#playpause')!;
+        if (audioRef.current!.paused) {
+            playPauseRef.current!.src = Pause;
 
-        if (audio.paused) {
-            playPauseButton.src = Pause;
-
-            audio.play();
+            audioRef.current!.play();
         
         } else {
-            playPauseButton.src = Play;
+            playPauseRef.current!.src = Play;
 
-            audio.pause();
+            audioRef.current!.pause();
         }
     }
 
-    const handleSkip = (type: string) => {
-        const audio: HTMLAudioElement = document.querySelector('#audio')!;
+    const handleSkip = ({ detail }: any, type: string) => {
         const repeat = JSON.parse(window.localStorage.getItem('playersettings')!).repeat;
         const songQueue = JSON.parse(window.localStorage.getItem('songqueue')!);
 
         if (type === 'previous' || songQueue === null || songQueue.length <= 0) {
-            audio.currentTime = 0;
-        
+            if (detail === 1 && audioRef.current!.currentTime > 3) {
+                audioRef.current!.currentTime = 0;
+            
+            } else {
+                songQueue.unshift(songQueue.pop());
+
+                window.localStorage.setItem('songqueue', JSON.stringify(songQueue));
+
+                window.dispatchEvent(new Event('newqueue'));
+
+                setSongQueue(songQueue);
+            }
+
         } else {
             if (songQueue !== null && songQueue.length > 0) {
                 if (repeat === 'no' || repeat === 'one') {
@@ -320,56 +325,49 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
     }
 
     const handleMute = () => {
-        const audio: HTMLAudioElement = document.querySelector('#audio')!;
-        const volume: HTMLImageElement = document.querySelector('#volume')!;
+        if (audioRef.current!.muted) {
+            volumeRef.current!.src = Volume;
 
-        if (audio.muted) {
-            volume.src = Volume;
-
-            audio.muted = false;
+            audioRef.current!.muted = false;
 
             return;
         }
 
-        if (audio.volume != 0) {
-            volume.src = VolumeOff;
+        if (audioRef.current!.volume != 0) {
+            volumeRef.current!.src = VolumeOff;
 
-            audio.muted = true;
+            audioRef.current!.muted = true;
         }
     }
 
     const handleRepeat = () => {
-        const repeatImg: HTMLImageElement = document.querySelector('#repeat')!;
-
         if (repeatState === 'no') {
             setRepeatState('yes');
 
-            repeatImg.src = Repeat;
+            repeatRef.current!.src = Repeat;
 
         } else if (repeatState === 'yes') {
             setRepeatState('one');
             
-            repeatImg.src = RepeatOne;
+            repeatRef.current!.src = RepeatOne;
 
         } else {
             setRepeatState('no');
 
-            repeatImg.src = NoRepeat;
+            repeatRef.current!.src = NoRepeat;
         }
     }
     
     const handleRandom = () => {
-        const randomImg: HTMLImageElement = document.querySelector('#random')!;
-
         if (randomState) {
             setRandomState(false);
 
-            randomImg.src = Random;
+            randomRef.current!.src = Random;
         
         } else {
             setRandomState(true);
 
-            randomImg.src = RandomActive;
+            randomRef.current!.src = RandomActive;
         }
     }
 
@@ -423,6 +421,7 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                 id="audio"
                 onError={ () => handleMusic() }
                 style={{ pointerEvents: 'none' }}
+                ref={ audioRef }
             />
 
             <Container>
@@ -437,10 +436,10 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                             title={ currentStats ? currentStats.title : '' }
                             className={ currentStats ? currentStats.title.length > 50 ? 'animated' : '' : '' }
                         >
-                            { currentStats ? currentStats.title.replace("\\u0026", "&") : 'Not playing' }
+                            { currentStats ? decode(currentStats.title) : 'Not playing' }
                         </p>
                         
-                        <p>{ currentStats ? currentStats.author.replace("\\u0026", "&") : '' }</p>
+                        <p>{ currentStats ? decode(currentStats.author) : '' }</p>
                     </div>
                 </div>
 
@@ -450,6 +449,7 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                             src={ randomState ? RandomActive : Random }
                             width={ 24 }
                             id="random"
+                            ref={ randomRef }
                             onClick={ () => handleRandom() }
                         />
 
@@ -457,7 +457,7 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                             <img
                                 src={ Previous }
                                 width={ 28 }
-                                onClick={ () => handleSkip('previous') }
+                                onClick={ e => handleSkip(e, 'previous') }
                             />
 
                             <img
@@ -465,12 +465,13 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                                 width={ 42 }
                                 onClick={ () => handlePlayPause() }
                                 id="playpause"
+                                ref={ playPauseRef }
                             />
 
                             <img
                                 src={ Next }
                                 width={ 28 }
-                                onClick={ () => handleSkip('next') }
+                                onClick={ e => handleSkip(e, 'next') }
                                 title={ songQueue.length > 1 ? songQueue[1].title : '' }
                             />
                         </div>
@@ -479,6 +480,7 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                             src={ repeatState === 'no' ? NoRepeat : repeatState === 'yes' ? Repeat : RepeatOne }
                             width={ 24 }
                             id="repeat"
+                            ref={ repeatRef }
                             onClick={ () => handleRepeat() }
                         />
                     </div>
@@ -490,6 +492,7 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                         min={ 0 }
                         max={ 1000 }
                         title={ `${ duration } / ${ length }` }
+                        ref={ rangeAudioRef }
                     />
                 </div>
 
@@ -505,9 +508,9 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                 </div>
                 
                 <div className="volume">
-                    <img src={ Volume } width={ 21 } id="volume" onClick={ () => handleMute() } />
+                    <img src={ Volume } ref={ volumeRef } width={ 21 } id="volume" onClick={ () => handleMute() } />
 
-                    <input type="range" id="rangeVolume" defaultValue={ 100 } step={ 10 } />
+                    <input type="range" id="rangeVolume" ref={ rangeVolumeRef } defaultValue={ 100 } step={ 10 } />
                 </div>
             </Container>
         </>

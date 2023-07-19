@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 
-import { ToggleSwitch } from 'react-dragswitch';
 import 'react-dragswitch/dist/index.css'
 
 import BackImage from '../../assets/back.svg';
@@ -9,16 +8,16 @@ import { Back, Container } from './styles';
 
 import { TextOption } from './components/TextOption';
 import { InfoOption } from './components/InfoOption';
-import { SwitchOption } from './components/SwitchOption';
+import { ButtonOption } from './components/ButtonOption';
 
 import { Settings as SettingsProps } from '../../types';
 
 import { version as current } from '../../../package.json';
 import { checkUpdate } from '../../utils/update';
+import { notificate } from '../../utils/notifications';
 
 export const Settings = () => {
     const [ settings, setSettings ] = useState<SettingsProps>({ path: '', videoplayer: false });
-    const [ videoPlayerChecked, setVideoPlayerChecked ] = useState<boolean>(false);
     const [ saved, setSaved ] = useState<boolean>(true);
     const [ latestVersion, setLatestVersion ] = useState<String>();
 
@@ -27,16 +26,24 @@ export const Settings = () => {
             const settings: SettingsProps = JSON.parse(window.localStorage.getItem('settings')!);
 
             setSettings(settings);
-
-            if (settings.videoplayer) {
-                setVideoPlayerChecked(settings.videoplayer);
-
-            }
         }
 
         (async () => setLatestVersion(await checkUpdate()))();
 
     }, []);
+
+    useEffect(() => {
+        window.addEventListener('valuechanged', ({ detail }: any) => {
+            if (detail.name === "path" && detail.value === settings.path) {
+                setSaved(true);
+
+            } else {
+                setSaved(false);
+
+            }
+        });
+
+    }, [ settings ]);
 
     const handleSave = () => {
         const path = document.querySelector<HTMLInputElement>('#download-path')!;
@@ -47,37 +54,63 @@ export const Settings = () => {
         } else {
             setSettings({
                 path: path.value,
-                videoplayer: videoPlayerChecked,
             });
 
             setSaved(true);
 
             window.localStorage.setItem('settings', JSON.stringify({
                 path: path.value,
-                videoplayer: videoPlayerChecked,
             }));
         }
     }
 
-    const handleSaved = (e: any, name: string) => {
-        if (name === "path" && e.target.value === settings.path
-            || name === "videoplayer" && e === settings.videoplayer)
-        {
-            setSaved(true);
+    const handleCopy = () => {
+        // @ts-ignore
+        navigator.permissions.query({ name: 'clipboard-write' }).then(r => {
+            if (r.state === 'granted' || r.state === 'prompt') {
+                navigator.clipboard.writeText(JSON.stringify(window.localStorage));
 
-        } else {
-            setSaved(false);
+                notificate('success', 'Copied to clipboard.');
+            }
+        });
+    }
 
+    const handlePaste = () => {
+        // @ts-ignore
+        navigator.permissions.query({ name: 'clipboard-read' }).then(r => {
+            if (r.state === 'granted' || r.state === 'prompt') {
+                navigator.clipboard.readText()
+                    .then(r => {
+                        const clipboard: Object = JSON.parse(r);
+
+                        window.localStorage.clear();
+
+                        Object.entries(clipboard).forEach(([k, v]) => {
+                            window.localStorage.setItem(k, v);
+
+                        });
+
+                        notificate('success', 'Storage set succesfully.');
+                    })
+                    
+                    .catch(() => notificate('error', 'Failed to paste from clipboard.'));
+            }
+        });
+    }
+
+    const handleClear = () => {
+        if (window.localStorage.getItem('searchhistory') !== null) {
+            window.localStorage.setItem('searchhistory', '[]');
+
+            notificate('success', 'Search history cleared.');
         }
     }
 
     return (
         <>
-            <Back
-                src={ BackImage }
-                onClick={ () => window.location.href = '/' }
-                width={ 24 }
-            />
+            <Back type="button" style={{ color: 'white' }} value="Back" onClick={
+                history.length > 1 ? () => history.back() : () => window.location.href = '/'
+            } />
 
             <Container>
                 <div className="options">
@@ -100,21 +133,14 @@ export const Settings = () => {
                         </p>
                     </InfoOption>
 
-                    <h3>Functionalities</h3>
+                    <ButtonOption name="Storage" help="Set or copy all local storage settings (includes all data)">
+                        <input type="button" value="Copy" style={{ color: "#AC6AFF" }} onClick={ () => handleCopy() } />
+                        <input type="button" value="Paste" style={{ color: "#AC6AFF" }} onClick={ () => handlePaste() } />
+                    </ButtonOption>
 
-                    <SwitchOption name="Video Player" help="When pressing thumbnail, a video player opens (click on details to download).">
-                        <ToggleSwitch
-                            checked={ videoPlayerChecked }
-                            onChange={ e => {
-                                setVideoPlayerChecked(!videoPlayerChecked);
-
-                                handleSaved(e, "videoplayer");
-                            }}
-                            onColor="#ac6aff"
-                            offColor="#1A1A1A"
-                            disabled
-                        />
-                    </SwitchOption>
+                    <ButtonOption name="Search history" help="Clear search history (only 10 lasts searchs are storaged)">
+                        <input type="button" value="Clear" style={{ color: '#FF5C5C' }} onClick={ () => handleClear() } />
+                    </ButtonOption>
                 </div>
 
                 <input type="button" disabled={ saved } className="save" value="Save" onClick={ handleSave } />

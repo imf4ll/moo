@@ -40,3 +40,11 @@ type Cache struct {
     Audio string `json:"audio"`
     Timestamp int64 `json:"timestamp"`
 }
+
+type LocalSong struct {
+    Title string `json:"title"`
+    Duration string `json:"duration"`
+    Thumb string `json:"thumb"`
+    Author string `json:"author"`
+    Path string `json:"path"`
+}

@@ -61,9 +61,9 @@ WantedBy=multi-user.target
 ```sh
 $ chmod 644 /etc/systemd/system/moo.service
 
-$ systemctl enable moo.service
+$ sudo systemctl enable moo.service
 
-$ systemctl start moo.service
+$ sudo systemctl start moo.service
 ```
 
 4. OPCIONAL: If you want to check if is everything ok, you could run `systemctl status moo`

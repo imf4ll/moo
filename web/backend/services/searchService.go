@@ -7,7 +7,7 @@ import (
     "strings"
     "strconv"
 
-    "github.com/imf4ll/moo-web/backend/types"
+    "github.com/imf4ll/moo/backend/types"
 )
 
 func SearchService(query string) ([]types.Video, []types.PlaylistSearch, types.Artist, error) {
@@ -28,7 +28,7 @@ func SearchService(query string) ([]types.Video, []types.PlaylistSearch, types.A
 
     videos := []types.Video{};
 
-    for _, video := range all_videos[1:17] {
+    for _, video := range all_videos[1:13] {
         if strings.Contains(video, `"iconType":"LIVE"`) { continue }
 
         title := strings.Split(strings.Split(video, `{"text":"`)[1], `"}]`)[0];

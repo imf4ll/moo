@@ -1,9 +1,9 @@
 import { Container } from './styles';
 
-export const ButtonOption = ({ name, help, handle }: {
+export const ButtonOption = ({ children, name, help }: {
+    children: JSX.Element | JSX.Element[];
     name: string;
     help: string;
-    handle: Function
 }) => {
     return (
         <Container>
@@ -12,8 +12,10 @@ export const ButtonOption = ({ name, help, handle }: {
 
                 <p className="help">🛈 { help }</p>            
             </div>
-                
-            <input type="button" value="Clear" onClick={ () => handle() } />
+
+            <div className="buttons">
+                { children }
+            </div>
         </Container>
     );
 }

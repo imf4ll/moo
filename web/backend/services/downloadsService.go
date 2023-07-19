@@ -6,22 +6,18 @@ import (
     "strings"
     "os/exec"
     "strconv"
+
+    "github.com/imf4ll/moo/backend/types"
 )
 
-type LocalSong struct {
-    Title string `json:"title"`
-    Duration string `json:"duration"`
-    Thumb string `json:"thumb"`
-    Author string `json:"author"`
-    Path string `json:"path"`
-}
 
-func DownloadsService(path string) ([]LocalSong, error) {
-    var songs []LocalSong
+
+func DownloadsService(path string) ([]types.LocalSong, error) {
+    var songs []types.LocalSong
 
     files, err := os.ReadDir(path)
     if err != nil {
-        return []LocalSong{}, err;
+        return []types.LocalSong{}, err;
 
     }
 
@@ -39,7 +35,7 @@ func DownloadsService(path string) ([]LocalSong, error) {
             duration, err := exec.Command("/bin/sh", "-c", fmt.Sprintf(`ffmpeg -i "%s/%s" -f null - 2>&1 | awk '{split($0,a,"time=");print a[3]}' | awk '{split($0,a," ");print a[1]}' | xargs`, path, f.Name())).Output()
             if err != nil { continue };
             
-            songs = append(songs, LocalSong {
+            songs = append(songs, types.LocalSong {
                 Title: title,
                 Author: author,
                 Thumb: fmt.Sprintf("%s/%s.%s", path, filename, thumbFileType),

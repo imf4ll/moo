@@ -4,7 +4,7 @@ import (
     "errors"
     "io/ioutil"
 
-    "github.com/imf4ll/moo-web/backend/utils"
+    "github.com/imf4ll/moo/backend/utils"
 
     "github.com/gin-gonic/gin"
 )

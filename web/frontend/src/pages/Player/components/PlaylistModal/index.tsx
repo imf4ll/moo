@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect, useState, useRef } from 'react';
 
 import { notificate } from '../../../../utils/notifications';
+import { api } from '../../../../utils/api';
+import { decode } from '../../../../utils/decode';
 
 import { Container } from './styles';
 
@@ -22,6 +23,7 @@ export const PlaylistModal = ({ currentPlaylist, setPlaylistModalOpened, setCurr
     setCurrentStats: Function,
 }) => {
     const [ alreadySaved, setAlreadySaved ] = useState<boolean>(false);
+    const saveRef = useRef<HTMLImageElement>(null);
 
     useEffect(() => {
         const playlists = window.localStorage.getItem('playlists');
@@ -41,7 +43,7 @@ export const PlaylistModal = ({ currentPlaylist, setPlaylistModalOpened, setCurr
         window.dispatchEvent(new Event('downloading'));
 
         if (settings !== null) {
-            axios.get(`http://localhost:3001/download?url=https://www.youtube.com/playlist?list=${ currentPlaylist.id }&path=${ JSON.parse(settings).path }`)
+            api.get(`/download?url=https://www.youtube.com/playlist?list=${ currentPlaylist.id }&path=${ JSON.parse(settings).path }`)
                 .then(({ data }) => {
                     if (data.success) {
                         notificate('success', 'Download successfully');
@@ -97,7 +99,7 @@ export const PlaylistModal = ({ currentPlaylist, setPlaylistModalOpened, setCurr
             }]));
         }
 
-        document.querySelector<HTMLImageElement>('#save')!.src = Saved;
+        saveRef.current!.src = Saved;
 
         setAlreadySaved(true);
         
@@ -111,7 +113,7 @@ export const PlaylistModal = ({ currentPlaylist, setPlaylistModalOpened, setCurr
 
         window.dispatchEvent(new Event('playlistsaved'));
     
-        document.querySelector<HTMLImageElement>('#save')!.src = Save;
+        saveRef.current!.src = Save;
     
         setAlreadySaved(false);
     }
@@ -127,7 +129,7 @@ export const PlaylistModal = ({ currentPlaylist, setPlaylistModalOpened, setCurr
                     <div className="title-thumbnail" style={{ backgroundImage: `url("${ currentPlaylist.thumb }")` }} />
 
                     <div className="stats">
-                        <h1>{ currentPlaylist.title }</h1>
+                        <h1>{ decode(currentPlaylist.title) }</h1>
                     
                         <p>{ currentPlaylist.videos.length } songs</p>
 
@@ -137,6 +139,7 @@ export const PlaylistModal = ({ currentPlaylist, setPlaylistModalOpened, setCurr
                             <img
                                 src={ alreadySaved ? Saved : Save }
                                 id="save"
+                                ref={ saveRef }
                                 width={ 28 }
                                 style={{ padding: '0.7rem 0.65rem 0.65rem 0.65rem' }}
                                 onClick={ alreadySaved ? () => handleRemovePlaylist() : () => handleSavePlaylist() }

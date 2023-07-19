@@ -17,7 +17,7 @@ export const TextOption = ({ name, help, defaultValue }: {
                 type="text"
                 id="download-path"
                 defaultValue={ defaultValue }
-                onChange={ e => window.dispatchEvent(new Event('valuechanged', e)) }
+                onChange={ e => window.dispatchEvent(new CustomEvent('valuechanged', { detail: { value: e.target.value, name: 'path' }})) }
             />
         </Container>
     );

@@ -1,8 +1,8 @@
 package routes
 
 import (
-    "github.com/imf4ll/moo-web/backend/controllers"
-    "github.com/imf4ll/moo-web/backend/middlewares"
+    "github.com/imf4ll/moo/backend/controllers"
+    "github.com/imf4ll/moo/backend/middlewares"
 
     "github.com/gin-gonic/gin"
 )

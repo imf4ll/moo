@@ -7,7 +7,7 @@ import (
     "strconv"
     "strings"
 
-    "github.com/imf4ll/moo-web/backend/types"
+    "github.com/imf4ll/moo/backend/types"
 )
 
 func ArtistService(id string) (types.Artist, []types.PlaylistSearch, error) {

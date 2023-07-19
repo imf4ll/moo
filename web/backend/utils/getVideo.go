@@ -4,7 +4,7 @@ import (
     "errors"
     "fmt"
 
-    "github.com/imf4ll/moo-web/backend/types"
+    "github.com/imf4ll/moo/backend/types"
 
     "github.com/kkdai/youtube/v2"
 )

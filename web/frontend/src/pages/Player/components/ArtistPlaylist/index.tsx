@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import { Container } from './styles';
 
@@ -10,10 +10,13 @@ import { Item } from '../Item';
 
 import { Playlist } from '../../../../types';
 
+import { decode } from '../../../../utils/decode';
+
 export const ArtistPlaylist = ({ playlist }: {
     playlist: Playlist,
 }) => {
     const [ playlistAlreadySaved, setPlaylistAlreadySaved ] = useState<boolean>(false);
+    const saveRef = useRef<HTMLImageElement>(null);
 
     useEffect(() => {
         const playlists = window.localStorage.getItem('playlists');
@@ -62,7 +65,7 @@ export const ArtistPlaylist = ({ playlist }: {
             }]));
         }
 
-        document.querySelector<HTMLImageElement>('#save')!.src = Saved;
+        saveRef.current!.src = Saved;
 
         setPlaylistAlreadySaved(true);
         
@@ -76,7 +79,7 @@ export const ArtistPlaylist = ({ playlist }: {
 
         window.dispatchEvent(new Event('playlistsaved'));
     
-        document.querySelector<HTMLImageElement>('#save')!.src = Save;
+        saveRef.current!.src = Save;
     
         setPlaylistAlreadySaved(false);
     }
@@ -90,7 +93,7 @@ export const ArtistPlaylist = ({ playlist }: {
                     <div className="background-album" style={{ backgroundImage: `url('${ playlist.thumb }')` }}></div>
 
                     <div>
-                        <h1>{ playlist.title }</h1>
+                        <h1>{ decode(playlist.title) }</h1>
 
                         <p>{ playlist.songs } songs · { playlist.songs === 1 ? 'Single' : playlist.songs <= 4 ? 'EP' : 'Album' }</p>
 
@@ -100,6 +103,7 @@ export const ArtistPlaylist = ({ playlist }: {
                             <img
                                 src={ playlistAlreadySaved ? Saved : Save }
                                 id="save"
+                                ref={ saveRef }
                                 width={ 28 }
                                 style={{ padding: '0.65rem' }}
                                 onClick={ playlistAlreadySaved ? () => handleRemovePlaylist() : () => handleSavePlaylist() }

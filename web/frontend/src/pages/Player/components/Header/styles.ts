@@ -86,6 +86,11 @@ export const Container = styled.div`
         }
     }
 
+    input[type="text"]::-webkit-calendar-picker-indicator {
+        display: none;
+        opacity: 0;
+    }
+
     .buttons {
         display: flex;
         align-items: center;

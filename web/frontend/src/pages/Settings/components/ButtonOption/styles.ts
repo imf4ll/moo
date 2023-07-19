@@ -16,11 +16,15 @@ export const Container = styled.div`
         font-size: 10.5pt;
     }
 
+    .buttons {
+        display: flex;
+        gap: 1.5rem;
+    }
+
     input[type="button"] {
         background: transparent;
         border: none;
         padding: 0;
-        color: #FF5C5C;
         font-weight: 500;
         font-size: 11pt;
         transition: all ease 300ms;

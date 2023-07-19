@@ -4,7 +4,7 @@ import (
     "os"
     "encoding/json"
     
-    "github.com/imf4ll/moo-web/backend/types"
+    "github.com/imf4ll/moo/backend/types"
     
     "github.com/gin-gonic/gin"
 )

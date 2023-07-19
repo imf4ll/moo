@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import ReactLoading from 'react-loading';
 
 import Play from '../../../../assets/play.svg';
 import Back from '../../../../assets/back.svg';
 
 import { duration as durationFormat } from '../../../../utils/time';
-
+import { decode } from '../../../../utils/decode';
 import { notificate } from '../../../../utils/notifications';
+import { api } from '../../../../utils/api';
 
 import { Container } from './styles';
 
@@ -31,7 +31,7 @@ export const LocalModal = ({ setLocalModalOpened, setCurrentStats, setCurrentAud
         const settings = window.localStorage.getItem('settings');
 
         if (settings !== null) {
-            axios.get(`http://localhost:3001/downloads?path=${ JSON.parse(settings).path }`)
+            api.get(`/downloads?path=${ JSON.parse(settings).path }`)
                 .then(({ data }) => setSongs(data.files))
                 .catch(() => {
                     setLocalModalOpened(false);
@@ -44,11 +44,11 @@ export const LocalModal = ({ setLocalModalOpened, setCurrentStats, setCurrentAud
 
     const handleSetAudio = (position: number, song: LocalSong) => {
         if (songs.length === 1) {
-            const thumb = `http://localhost:3001/files?path=${ song.thumb }`;
-            const audio = `http://localhost:3001/files?path=${ song.path }`;
+            const thumb = `${ api.defaults.baseURL }/files?path=${ song.thumb }`;
+            const audio = `${ api.defaults.baseURL }/files?path=${ song.path }`;
 
             setCurrentStats({
-                thumb: thumb,
+                thumb,
                 title: song.title,
                 author: song.author,
                 duration: song.duration,
@@ -77,13 +77,13 @@ export const LocalModal = ({ setLocalModalOpened, setCurrentStats, setCurrentAud
             const songsArr: Array<any> = [];
 
             songs.forEach(song => songsArr.push({
-                thumb: `http://localhost:3001/files?path=${ song.thumb }`,
+                thumb: `${ api.defaults.baseURL }/files?path=${ song.thumb }`,
                 title: song.title,
                 author: song.author,
                 duration: song.duration,
                 id: '',
                 views: '',
-                audio: `http://localhost:3001/files?path=${ song.path }`,
+                audio: `${ api.defaults.baseURL }/files?path=${ song.path }`,
             }));
 
             if (window.localStorage.getItem('playersettings') !== null) {
@@ -123,13 +123,13 @@ export const LocalModal = ({ setLocalModalOpened, setCurrentStats, setCurrentAud
         let songsArr: Array<any> = [];
 
         songs.forEach(song => songsArr.push({
-            thumb: `http://localhost:3001/files?path=${ song.thumb }`,
+            thumb: `${ api.defaults.baseURL }/files?path=${ song.thumb }`,
             title: song.title,
             author: song.author,
             duration: song.duration,
             id: '',
             views: '',
-            audio: `http://localhost:3001/files?path=${ song.path }`,
+            audio: `${ api.defaults.baseURL }/files?path=${ song.path }`,
         }));
 
         if (window.localStorage.getItem('playersettings') !== null) {
@@ -177,9 +177,9 @@ export const LocalModal = ({ setLocalModalOpened, setCurrentStats, setCurrentAud
                                     <div className="title">
                                         <img src={ Play } width={ 28 } onClick={ () => handleSetAudio(k, i) } id="control" />
 
-                                        <div className="thumbnail" style={{ backgroundImage: `url('http://localhost:3001/files?path=${ i.thumb }')` }} />
+                                        <div className="thumbnail" style={{ backgroundImage: `url('${ api.defaults.baseURL }/files?path=${ i.thumb }')` }} />
 
-                                        <p title={ i.title }>{ i.title.length >= 80 ? i.title.replace("\\u0026", "&").substring(0, 79) + '...' : i.title.replace("\\u0026", "&") } · <span>{ i.author.replace("\\u0026", "&") }</span></p>
+                                        <p title={ i.title }>{ i.title.length >= 80 ? decode(i.title).substring(0, 79) + '...' : decode(i.title) } · <span>{ decode(i.author) }</span></p>
                                     </div>
                                     
                                     <div className="right-side">
