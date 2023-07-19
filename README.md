@@ -4,9 +4,9 @@
   <h1>Moo...</h1>
 </div>
 
-If you are tired from abusive ads, web downloaders being seized or related, give a chance to MOO!!!
-Lightweight, simple and objective, with the web application you can play local musics (you can download too)
-or stream musics directly from YouTube, save playlists and sync your own playlists.
+<p align="center">
+If you are tired of abusive ads, web downloaders being seized or reported, give MOO a chance!!! Lightweight, simple and objective, with the web application you can play local songs (you can download them too) or stream songs directly from YouTube, save playlists and sync your own playlists.
+</p>
 
 <div align="center">
     <img src="./web/assets/showcase.png" width="800" />
@@ -44,4 +44,12 @@ or stream musics directly from YouTube, save playlists and sync your own playlis
 1. Move to a directory before project directory (ex: Project directory is "/path/to/project", move to "/path/to/").
 2. Run `git clone https://github.com/imf4ll/moo` to download latest version.
 
-**If you want versions without being latest, check "Releases" page.**
+1. Move to root directory of moo
+2. Pull and rebuild
+```
+$ git pull origin master
+
+$ yarn run build
+```
+
+3. ONLY IF USED AS SERVICE OF SYSTEMD: `sudo systemctl restart moo.service`
