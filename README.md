@@ -14,16 +14,6 @@ or stream musics directly from YouTube, save playlists and sync your own playlis
 
 <br />
 
-## 📜 Requirements:
-- Python (<a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a> -> REQUIRED FOR DOWNLOADING) 
-- Node.JS
-- Go
-- Yarn (needed to work with workspaces)
-
-<br />
-
-<hr />
-
 <div align="center">
   <h3>Web</h3>
 
@@ -37,6 +27,14 @@ or stream musics directly from YouTube, save playlists and sync your own playlis
   
   <a href="https://github.com/imf4ll/moo/tree/master/cli">How to install and use</a>
 </div>
+
+<hr />
+
+## 📜 Requirements:
+- Python (<a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a> -> REQUIRED FOR DOWNLOADING) 
+- Node.JS
+- Go
+- Yarn (needed to work with workspaces)
 
 <br />
 
