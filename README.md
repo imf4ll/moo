@@ -41,9 +41,6 @@ If you are tired of abusive ads, web downloaders being seized or reported, give 
 <a id="updating"></a>
 ## ♻️ Updating
 
-1. Move to a directory before project directory (ex: Project directory is "/path/to/project", move to "/path/to/").
-2. Run `git clone https://github.com/imf4ll/moo` to download latest version.
-
 1. Move to root directory of moo
 2. Pull and rebuild
 ```
