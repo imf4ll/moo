@@ -4,27 +4,13 @@
   <h1>Moo...</h1>
 </div>
 
-<br />
+If you are tired from abusive ads, web downloaders being seized or related, give a chance to MOO!!!
+Lightweight, simple and objective, with the web application you can play local musics (you can download too)
+or stream musics directly from YouTube, save playlists and sync your own playlists.
 
-**Mobile version coming soon**
-
-<br />
-
-<a id="updating"></a>
-## ♻️ Updating
-
-1. Move to a directory before project directory (ex: Project directory is "/path/to/project", move to "/path/to/").
-2. Run `git clone https://github.com/imf4ll/moo` to download latest version.
-
-**If you want versions without being latest, check "Releases" page.**
-
-<br />
-
-## 😎 About
-If you're tired of searching for downloaders across the internet cause the domain was been seized,
-here are my solution, a CLI and a self-hosted service to avoid these problems, just install and download
-videos from your terminal or in-browser running the self-hosted service powered by React, Vite on frontend
-and Golang on backend.
+<div align="center">
+    <img src="./web/assets/showcase.png" width="800" />
+</div>
 
 <br />
 
@@ -39,7 +25,7 @@ and Golang on backend.
 <hr />
 
 <div align="center">
-  <h3>Web (UNDER DEVELOPMENT)</h3>
+  <h3>Web</h3>
 
   <a href="https://github.com/imf4ll/moo/tree/master/web">How to install and use</a>
 </div>
@@ -51,3 +37,13 @@ and Golang on backend.
   
   <a href="https://github.com/imf4ll/moo/tree/master/cli">How to install and use</a>
 </div>
+
+<br />
+
+<a id="updating"></a>
+## ♻️ Updating
+
+1. Move to a directory before project directory (ex: Project directory is "/path/to/project", move to "/path/to/").
+2. Run `git clone https://github.com/imf4ll/moo` to download latest version.
+
+**If you want versions without being latest, check "Releases" page.**
