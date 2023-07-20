@@ -32,7 +32,6 @@ func main() {
                 DisableResize: false,
                 Fullscreen: false,
                 WindowStartState: options.Maximised,
-                HideWindowOnClose: true,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
