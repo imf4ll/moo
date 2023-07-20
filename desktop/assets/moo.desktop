@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Moo
+GenericName=Stream musics directly from YouTube
+Comment=Stream musics directly from YouTube
+Icon=moo
+Exec=/usr/bin/moo
+Categories=Music Player;
+StartupWMClass=jive

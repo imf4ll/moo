@@ -1,4 +1,11 @@
-## ❗️ Install:
+## ❗️ Install (requires all dependencies listed on main README):
+
+#### Linux:
+```
+sudo make install
+```
+
+## ❗️ Building from scratch:
 
 #### Linux, Windows and MacOS
 1. Move to desktop/ directory
