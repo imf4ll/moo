@@ -5,6 +5,30 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
 
+    .empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        right: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        height: 100%;
+        margin-top: 2.5rem;
+
+        img {
+            width: 25rem;
+        }
+
+        h3 {
+            color: white;
+            font-weight: 500;    
+        }
+    }
+
     .items {
         width: 98%;
         display: flex;

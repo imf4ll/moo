@@ -11,6 +11,7 @@ export const Back = styled.input`
     border: none;
     font-weight: 500;
     font-size: 12pt;
+    z-index: 2002;
 
     :hover {
         opacity: 0.7;
@@ -18,10 +19,16 @@ export const Back = styled.input`
 `;
 
 export const Container = styled.div`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100%;
+    z-index: 2001;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 1rem;
+    background: #000;
 
     .title {
         display: flex;

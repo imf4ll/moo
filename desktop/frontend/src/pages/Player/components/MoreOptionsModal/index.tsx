@@ -1,15 +1,14 @@
-import { useNavigate } from 'react-router-dom';
-
 import { Container } from './styles';
 
 import Settings from '../../../../assets/settings.svg';
 
-export const MoreOptionsModal = () => {
-    const navigate = useNavigate();
-
+export const MoreOptionsModal = ({ setMoreOptionsOpened, setSettingsModalOpened }: {
+    setMoreOptionsOpened: Function;
+    setSettingsModalOpened: Function;
+}) => {
     return (
         <Container>
-            <div onClick={ () => navigate("/settings") }>
+            <div onClick={ () => { setSettingsModalOpened(true); setMoreOptionsOpened(false) } }>
                 <img src={ Settings } width={ 24 } />
 
                 <p>Settings</p>

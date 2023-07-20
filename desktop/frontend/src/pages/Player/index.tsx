@@ -6,6 +6,7 @@ import { Container } from './styles';
 import { ItemProps } from '../../types';
 
 import Add from '../../assets/add.svg';
+import QueueEmpty from '../../assets/musicplayerempty.svg';
 
 import FavoritesBackground from '../../assets/favorites.png';
 import LocalBackground from '../../assets/local.png';
@@ -14,7 +15,6 @@ import { Header } from './components/Header';
 import { AudioPlayer } from './components/AudioPlayer';
 import { Item } from './components/Item';
 import { NewPlaylistModal } from './components/NewPlaylistModal';
-import { Empty } from '../../components/Empty';
 import { Playlist } from './components/Playlist';
 import { MoreOptionsModal } from './components/MoreOptionsModal';
 import { QueueItem } from './components/QueueItem';
@@ -22,6 +22,7 @@ import { PlaylistModal } from './components/PlaylistModal';
 import { FavoritesModal } from './components/FavoritesModal';
 import { ArtistModal } from './components/ArtistModal';
 import { LocalModal } from './components/LocalModal';
+import { Settings } from './components/Settings';
 
 import { Playlist as PlaylistT, Artist } from '../../types';
 
@@ -37,6 +38,7 @@ export const Player = () => {
     const [ favoritesModalOpened, setFavoritesModalOpened ] = useState<boolean>(false);
     const [ artistModalOpened, setArtistModalOpened ] = useState<boolean>(false);
     const [ localModalOpened, setLocalModalOpened ] = useState<boolean>(false);
+    const [ settingsModalOpened, setSettingsModalOpened ] = useState<boolean>(false);
     // @ts-ignore
     const [ artist, setArtist ] = useState<Artist>({});
     const [ currentAudio, setCurrentAudio ] = useState<string>("");
@@ -138,7 +140,11 @@ export const Player = () => {
     return (
         <>
             { 
-                moreOptionsOpened && <MoreOptionsModal />
+                moreOptionsOpened &&
+                    <MoreOptionsModal
+                        setSettingsModalOpened={ setSettingsModalOpened }
+                        setMoreOptionsOpened={ setMoreOptionsOpened }
+                    />
             }
 
             {
@@ -178,6 +184,13 @@ export const Player = () => {
                         setLocalModalOpened={ setLocalModalOpened }
                         setCurrentStats={ setCurrentStats }
                         setCurrentAudio={ setCurrentAudio }
+                    />
+            }
+
+            {
+                settingsModalOpened &&
+                    <Settings
+                        setSettingsModalOpened={ setSettingsModalOpened }
                     />
             }
 
@@ -297,7 +310,11 @@ export const Player = () => {
                                             duration={ currentStats.duration }
                                             id={ currentStats.id }
                                         />
-                                    : <Empty type="musicplayer" />         
+                                    : <div className="empty">
+                                        <img src={ QueueEmpty } />
+
+                                        <h3>Queue empty, try to search for a song or play a list. :)</h3>
+                                    </div>
                         )
                     }
                 </div>

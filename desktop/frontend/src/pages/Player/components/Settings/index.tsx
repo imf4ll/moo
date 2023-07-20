@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import 'react-dragswitch/dist/index.css'
 
@@ -9,17 +8,18 @@ import { TextOption } from './components/TextOption';
 import { InfoOption } from './components/InfoOption';
 import { ButtonOption } from './components/ButtonOption';
 
-import { Settings as SettingsProps } from '../../types';
+import { Settings as SettingsProps } from '../../../../types';
 
-import { version as current } from '../../../package.json';
-import { checkUpdate } from '../../utils/update';
-import { notificate } from '../../utils/notifications';
+import { version as current } from '../../../../../package.json';
+import { checkUpdate } from '../../../../utils/update';
+import { notificate } from '../../../../utils/notifications';
 
-export const Settings = () => {
+export const Settings = ({ setSettingsModalOpened }: {
+    setSettingsModalOpened: Function;
+}) => {
     const [ settings, setSettings ] = useState<SettingsProps>({ path: '', videoplayer: false });
     const [ saved, setSaved ] = useState<boolean>(true);
     const [ latestVersion, setLatestVersion ] = useState<String>();
-    const navigate = useNavigate();
 
     useEffect(() => {
         if (window.localStorage.getItem('settings') !== null) {
@@ -95,7 +95,6 @@ export const Settings = () => {
             Object.entries(clipboard).forEach(([k, v]) => window.localStorage.setItem(k, v));
 
             notificate('success', 'Storage set successfully');
-
         }
 
         try {
@@ -128,9 +127,7 @@ export const Settings = () => {
 
     return (
         <>
-            <Back type="button" style={{ color: 'white' }} value="Back" onClick={
-                () => navigate("/")
-            } />
+            <Back type="button" style={{ color: 'white' }} value="Back" onClick={ () => setSettingsModalOpened(false) } />
 
             <Container>
                 <div className="options">
