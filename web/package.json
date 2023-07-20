@@ -1,18 +1,14 @@
 {
   "name": "web",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
-  "workspaces": [
-    "./frontend"
-  ],
   "repository": "https://github.com/imf4ll/moo.git",
   "author": "z3oxs <z3ox1s@protonmail.com>",
   "license": "MIT",
-  "packageManager": "yarn@2.4.3",
   "scripts": {
-    "dev": "concurrently \"cd frontend; yarn run dev\"  \"cd backend; go run main.go\"",
-    "build": "yarn workspace frontend run build; cd backend && go build",
-    "start": "concurrently \"yarn workspace frontend run start\" \"cd backend; ./backend\""
+    "dev": "concurrently \"cd frontend; pnpm run dev\"  \"cd backend; go run main.go\"",
+    "build": "cd frontend; pnpm run build; cd ../ && cd backend; go build",
+    "start": "concurrently \"cd frontend; npm run start\" \"cd backend; ./backend\""
   },
   "dependencies": {
     "concurrently": "^8.0.1"

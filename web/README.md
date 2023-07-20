@@ -1,28 +1,25 @@
 ## ❗️ Install:
 
 #### 🐧 Linux
-1. Install yarn (if you don't have installed):
+1. Move to web/ directory
+
+2. Setup pnpm environment:
 ```bash
-$ npm install --global yarn
+$ pnpm install && cd frontend; pnpm install
 ```
 
-2. Setup yarn enviroment:
+3. Build and run:
 ```bash
-$ yarn set version latest # (will be needed to work with workspaces properly)
+# The step above will move your directory, take a step back to run all properly
+$ cd ../
 
-$ yarn install
+# If you wanna run in development mode, just run `pnpm run dev`
+$ pnpm run build
+
+$ pnpm run start # By default web interface's location is http://localhost:3000/
 ```
 
-3. Build:
-```bash
-$ cd web
-
-# If you wanna run in development mode, just run `yarn run dev`
-
-$ yarn run build
-```
-
-**Creating a shell script to automate deploy**
+### Creating a shell script to automate deploy on system startup
 
 4. Move the directory for a most positional location or still using the same (I personally recommend moving to "/opt").
 
@@ -36,10 +33,10 @@ $ yarn run build
 cd PATHYOUCHOSE/moo/web
 
 # Make sure you builded backend and frontend!!!
-yarn run start
+pnpm run start
 ```
 
-7. Now you can use that shell script to run the server on computer startup.
+- Now you can use that shell script to run the server on computer startup.
 
 Example with systemd:
 
@@ -65,3 +62,32 @@ $ sudo systemctl start moo.service
 ```
 
 4. OPCIONAL: If you want to check if is everything ok, you could run `systemctl status moo`
+
+<br />
+
+#### 🪟 Windows
+1. Move to web/
+
+2. Setup pnpm environment:
+```bash
+$ pnpm install
+
+$ cd frontend
+
+$ pnpm install
+```
+
+4. Build and run:
+```bash
+# The step above will move your directory, take a step back to run all properly
+$ cd ../
+
+# If you wanna run in development mode, just run `pnpm run dev`
+$ pnpm run build
+
+$ pnpm run start # By default web interface's location is http://localhost:3000/
+```
+
+**I can't provide a guide to run on startup cause I don't have access to a Windows system.
+Maybe any guide of how to run scripts/programs on Windows startup can serve your desires. (Feel free to made a PR 
+implementing a guide!!)**
