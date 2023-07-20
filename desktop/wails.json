@@ -1,0 +1,11 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "Moo",
+  "outputfilename": "moo",
+  "frontend:install": "pnpm install",
+  "frontend:build": "pnpm run build",
+  "author": {
+    "name": "z3oxs",
+    "email": "z3ox1s@protonmail.com"
+  }
+}
