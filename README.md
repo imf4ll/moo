@@ -18,8 +18,8 @@ If you are tired of abusive ads, web downloaders being seized or reported, give 
 
   | OS | Binary |
   |-------|------|
-  | Linux | [Download](https://github.com/imf4ll/moo/releases/download/v0.1.4/moo-linux.zip) |
-  | Windows | [Download](https://github.com/imf4ll/moo/releases/download/v0.1.4/moo-windows.zip) |
+  | Linux | [Download](https://github.com/imf4ll/moo/releases/download/v0.1.4-rc1/moo-linux.zip) |
+  | Windows | [Download](https://github.com/imf4ll/moo/releases/download/v0.1.4-rc1/moo-windows.zip) |
   | MacOS | Currently not supported by Wails, follow the [steps](https://github.com/imf4ll/moo/tree/master/desktop/README.md) to build  |
 
   **If any of these pre-builded binaries fail to run, you'll need to build manually following the [steps](https://github.com/imf4ll/moo/tree/master/desktop).**
