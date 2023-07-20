@@ -11,7 +11,6 @@ import Search from '../../../../assets/search.svg';
 import Clear from '../../../../assets/close.svg';
 import More from '../../../../assets/more.svg';
 import Less from '../../../../assets/less.svg';
-import Idle from '../../../../assets/idle.svg';
 import Downloading from '../../../../assets/downloading.svg';
 
 export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOpened, setMoreOptionsOpened, setArtist }: {
@@ -160,7 +159,7 @@ export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOp
             </div>
 
             <div className="buttons">
-                <img src={ downloading ? Downloading : Idle } id={ downloading ? 'downloading' : '' } width={ 24 } />
+                <img src={ downloading && Downloading } id="downloading" width={ 24 } />
 
                 <img src={ moreOptionsOpened ? Less : More } width={ 32 } onClick={ () => setMoreOptionsOpened(!moreOptionsOpened) } />
             </div>

@@ -11,3 +11,14 @@ export const notificate = (type: string, title: string) => {
         position: 'top-right',
     });
 }
+
+export const confirm = (title: string, handler: Function) => {
+    toast.warn(title, {
+        draggable: false,
+        theme: 'dark',
+        closeOnClick: true,
+        autoClose: 30000,
+        position: 'top-right',
+        onClick: () => handler(),
+    });
+}

@@ -112,4 +112,14 @@ export const Container = styled.div`
             }
         }
     }
+
+    .syncing {
+        animation: 750ms linear infinite syncing;
+    }
+
+    @keyframes syncing {
+        100% {
+            transform: rotate(180deg);
+        }
+    }
 `;

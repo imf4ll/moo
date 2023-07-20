@@ -7,12 +7,10 @@ import { api } from '../../../../utils/api';
 
 export const NewPlaylistModal = ({ setNewPlaylistModalOpened }: { setNewPlaylistModalOpened: Function }) => {
     const [ title, setTitle ] = useState<string>('');
-    const [ thumb, setThumb ] = useState<string>('');
-    const [ playlist, setPlaylist ] = useState<{ thumb: string, title: string, id: string, author: string }>({
+    const [ playlist, setPlaylist ] = useState<{ thumb: string, id: string, title?: string }>({
         title: '',
         thumb: '',
         id: '',
-        author: '',
     });
     const saveRef = useRef<HTMLInputElement>(null);
     const urlRef = useRef<HTMLInputElement>(null);
@@ -29,38 +27,34 @@ export const NewPlaylistModal = ({ setNewPlaylistModalOpened }: { setNewPlaylist
         // @ts-ignore
         window.removeEventListener('keydown', onKeydown);
 
-        const onURLKeydown = urlRef.current!.addEventListener('keydown', (e: any) => {
-            if (e.target!.value === '') { return };
-
-            if (e.key === 'Enter') {
-                api.get(`/playlist?id=${ e.target!.value.split("list=")[1] }`)
-                    .then(({ data }) => {
-                        setPlaylist(data.videos);
-
-                        setThumb(data.videos[0].thumb);
-                    })
-
-                    .catch(() => notificate('error', 'Failed to get playlist.'));
+        const onURLKeydown = urlRef.current!.addEventListener('input', (e: any) => {
+            if (e.target!.value === '') {
+                // @ts-ignore
+                setPlaylist({});
             }
+
+            if (!e.target!.value.includes("/playlist?list=")) return;
+
+            const id = e.target!.value.split("list=")[1];
+
+            api.get(`/playlist?id=${ id }`)
+                .then(({ data }) => {
+                    setPlaylist({
+                        id,
+                        thumb: data.videos[0].thumb,
+                    });
+                })
+
+                .catch(() => notificate('error', 'Failed to get playlist.'));
         });
 
         // @ts-ignore
-        urlRef.current!.removeEventListener('keydown', onURLKeydown);
+        urlRef.current!.removeEventListener('input', onURLKeydown);
 
     }, []);
 
     useEffect(() => {
-        const onTitleInput = titleRef.current!.addEventListener('input', (e: any) => {
-            if (e.target!.value !== '') {
-                saveRef.current!.disabled = false;
-
-            } else {
-                saveRef.current!.disabled = true;
-
-            }
-            
-            setTitle(e.target!.value);
-        });
+        const onTitleInput = titleRef.current!.addEventListener('input', (e: any) => setTitle(e.target!.value !== '' ? e.target!.value : ''));
 
         // @ts-ignore
         titleRef.current!.removeEventListener('input', onTitleInput);
@@ -72,18 +66,18 @@ export const NewPlaylistModal = ({ setNewPlaylistModalOpened }: { setNewPlaylist
             const playlists = JSON.parse(window.localStorage.getItem('playlists')!);
 
             playlists.unshift({
-                videos: playlist,
+                ...playlist,
                 title,
-                thumb,
+                type: 'custom',
             });
 
             window.localStorage.setItem('playlists', JSON.stringify(playlists));
 
         } else {
             window.localStorage.setItem('playlists', JSON.stringify([{
-                videos: playlist,
+                ...playlist,
                 title,
-                thumb,
+                type: 'custom',
             }]));
         }
 
@@ -106,12 +100,12 @@ export const NewPlaylistModal = ({ setNewPlaylistModalOpened }: { setNewPlaylist
                     <input type="text" id="title" ref={ titleRef } maxLength={ 24 } placeholder="Title" />
                 </div>
 
-                <div style={{ backgroundImage: `url('${ thumb }')` }} className="background"></div>
+                <div style={{ backgroundImage: `url('${ playlist && playlist.thumb }')` }} className="background"></div>
 
                 <div className="buttons">
                     <input type="button" id="cancel" value="Cancel" onClick={ () => setNewPlaylistModalOpened(false) } />
                     
-                    <input type="button" id="save" ref={ saveRef } className="save" value="Save" onClick={ () => handleSave() } />
+                    <input type="button" id="save" disabled={ title === '' } ref={ saveRef } className="save" value="Save" onClick={ () => handleSave() } />
                 </div>
             </Container>
         </>

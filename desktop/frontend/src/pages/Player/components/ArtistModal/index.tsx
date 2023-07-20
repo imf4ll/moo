@@ -63,6 +63,7 @@ export const ArtistModal = ({ setArtistModalOpened, artist }: {
                             thumb: p.thumb,
                             songs: p.songs,
                             id: p.id,
+                            type: 'standard',
                         }]);
                     }
 

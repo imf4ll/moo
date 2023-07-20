@@ -132,6 +132,17 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                 setCurrentStats(songQueue[0]);
             }
         }
+
+        const onLoad = window.addEventListener('load', () => {
+            if (audioRef.current!.src !== '') {
+                audioRef.current!.pause();
+
+                playPauseRef.current!.src = Play;
+            }
+        });
+
+        // @ts-ignore
+        window.removeEventListener('load', onLoad);
        
         const onKeydown = window.addEventListener('keydown', e => {
             if (document.activeElement?.tagName !== 'INPUT') {

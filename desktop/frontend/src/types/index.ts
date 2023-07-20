@@ -43,6 +43,7 @@ export interface Playlist {
     title: string;
     songs: number;
     videos: Array<Video>;
+    type: string;
 }
 
 export interface PlaylistSearch {

@@ -11,29 +11,45 @@ import Play from '../../../../assets/play.svg';
 import Save from '../../../../assets/heart.svg';
 import Saved from '../../../../assets/heartfilled.svg';
 import Download from '../../../../assets/download.svg';
+import Sync from '../../../../assets/sync.svg';
 
 import { Item } from '../../components/Item';
 
 import { Video, Playlist } from '../../../../types';
 
-export const PlaylistModal = ({ currentPlaylist, setPlaylistModalOpened, setCurrentAudio, setCurrentStats }: {
+export const PlaylistModal = ({ currentPlaylist, setCurrentPlaylist, setPlaylistModalOpened, setCurrentAudio, setCurrentStats }: {
     currentPlaylist: Playlist,
+    setCurrentPlaylist: Function,
     setPlaylistModalOpened: Function,
     setCurrentAudio: Function,
     setCurrentStats: Function,
 }) => {
     const [ alreadySaved, setAlreadySaved ] = useState<boolean>(false);
+    const [ isCustom, setIsCustom ] = useState<boolean>(false);
     const saveRef = useRef<HTMLImageElement>(null);
+    const syncRef = useRef<HTMLImageElement>(null);
 
     useEffect(() => {
         const playlists = window.localStorage.getItem('playlists');
 
         if (playlists !== null) {
-            if (JSON.parse(playlists).filter((i: Video) => i.id === currentPlaylist.id).length > 0) {
-                setAlreadySaved(true);
+            const playlist = JSON.parse(playlists).filter((i: Playlist) => i.id === currentPlaylist.id);
+            
+            if (playlist.length > 0) setAlreadySaved(true);
 
-            }
+            if (playlist[0].type === 'custom') setIsCustom(true);
         }
+
+        api.get(`/playlist?id=${ currentPlaylist.id }`)
+            .then(({ data }) => setCurrentPlaylist((p: Playlist) => ({ ...p, videos: data.videos })))
+            
+            .catch(() => {
+                notificate('error', 'Failed to get playlist.');
+
+                setCurrentPlaylist({});
+
+                setPlaylistModalOpened(false);
+            });
 
     }, []);
 
@@ -118,6 +134,15 @@ export const PlaylistModal = ({ currentPlaylist, setPlaylistModalOpened, setCurr
         setAlreadySaved(false);
     }
 
+    const handleSync = () => {
+        syncRef.current!.className = 'syncing';
+
+        api.get(`/sync?id=${ currentPlaylist.id }`)
+            .then(({ data }) => setCurrentPlaylist((p: Playlist) => ({ ...p, videos: data.videos })))
+            .catch(() => notificate('error', 'Failed to force syncing'))
+            .finally(() => syncRef.current!.className = '');
+    }
+
     return (
         <Container>
             <div className="background" style={{ backgroundImage: `url("${ currentPlaylist.thumb }")` }}></div>
@@ -131,7 +156,7 @@ export const PlaylistModal = ({ currentPlaylist, setPlaylistModalOpened, setCurr
                     <div className="stats">
                         <h1>{ decode(currentPlaylist.title) }</h1>
                     
-                        <p>{ currentPlaylist.videos.length } songs</p>
+                        <p>{ currentPlaylist.videos && currentPlaylist.videos.length } songs</p>
 
                         <div className="buttons">
                             <img src={ Play } width={ 32 } onClick={ () => handlePlaylist() } />
@@ -151,13 +176,25 @@ export const PlaylistModal = ({ currentPlaylist, setPlaylistModalOpened, setCurr
                                 style={{ padding: '0.65rem' }}
                                 onClick={ () => handleDownload() }
                             />
+
+                            {
+                                isCustom &&
+                                    <img
+                                        src={ Sync }
+                                        width={ 28 }
+                                        onClick={ () => handleSync() }
+                                        title="Forces sync"
+                                        style={{ padding: '0.65rem' }}
+                                        ref={ syncRef }
+                                    />
+                            }
                         </div>
                     </div>
                 </div>
 
                 <div className="items">
                     {
-                        currentPlaylist.videos.map((i, k) => (
+                        currentPlaylist.videos && currentPlaylist.videos.map((i, k) => (
                             <Item
                                 key={ k }
                                 title={ i.title }

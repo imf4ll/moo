@@ -15,10 +15,10 @@ export const Playlist = ({ title, thumb, songs, id, setPlaylistModalOpened, setC
         api.get(`/playlist?id=${ id }`)
             .then(({ data }) => {
                 setCurrentPlaylist({
-                        title,
-                        videos: data.videos,
-                        id,
-                        thumb,
+                    title,
+                    videos: data.videos,
+                    id,
+                    thumb,
                 });
 
                 setPlaylistModalOpened(true);

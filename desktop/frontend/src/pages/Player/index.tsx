@@ -5,7 +5,7 @@ import { Container } from './styles';
 
 import { ItemProps } from '../../types';
 
-import Add from '../../assets/add.svg';
+import AddToQueue from '../../assets/addtoqueue.svg';
 import QueueEmpty from '../../assets/musicplayerempty.svg';
 
 import FavoritesBackground from '../../assets/favorites.png';
@@ -155,6 +155,7 @@ export const Player = () => {
                 playlistModalOpened &&
                     <PlaylistModal
                         currentPlaylist={ currentPlaylist }
+                        setCurrentPlaylist={ setCurrentPlaylist }
                         setPlaylistModalOpened={ setPlaylistModalOpened }
                         setCurrentAudio={ setCurrentAudio }
                         setCurrentStats={ setCurrentStats }
@@ -278,7 +279,7 @@ export const Player = () => {
                                             <div className="background"></div>
                                             
                                             <div className="buttons">
-                                                <img src={ Add } width={ 28 } />
+                                                <img src={ AddToQueue } width={ 28 } />
                                             </div>
                                         </div>
                                 }

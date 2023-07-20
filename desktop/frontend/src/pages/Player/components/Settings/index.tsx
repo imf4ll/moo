@@ -12,7 +12,7 @@ import { Settings as SettingsProps } from '../../../../types';
 
 import { version as current } from '../../../../../package.json';
 import { checkUpdate } from '../../../../utils/update';
-import { notificate } from '../../../../utils/notifications';
+import { notificate, confirm } from '../../../../utils/notifications';
 
 export const Settings = ({ setSettingsModalOpened }: {
     setSettingsModalOpened: Function;
@@ -94,6 +94,8 @@ export const Settings = ({ setSettingsModalOpened }: {
 
             Object.entries(clipboard).forEach(([k, v]) => window.localStorage.setItem(k, v));
 
+            window.location.reload();
+
             notificate('success', 'Storage set successfully');
         }
 
@@ -125,6 +127,12 @@ export const Settings = ({ setSettingsModalOpened }: {
         }
     }
 
+    const handleWipe = () => confirm('Click here to confirm WIPE.', () => {
+        window.localStorage.clear();
+
+        window.location.reload();
+    });
+
     return (
         <>
             <Back type="button" style={{ color: 'white' }} value="Back" onClick={ () => setSettingsModalOpened(false) } />
@@ -153,6 +161,7 @@ export const Settings = ({ setSettingsModalOpened }: {
                     <ButtonOption name="Storage" help="Set or copy all local storage settings (includes all data)">
                         <input type="button" value="Copy" style={{ color: "#AC6AFF" }} onClick={ () => handleCopy() } />
                         <input type="button" value="Paste" style={{ color: "#AC6AFF" }} onClick={ () => handlePaste() } />
+                        <input type="button" value="Wipe" style={{ color: '#FF6464' }} onClick={ () => handleWipe() } />
                     </ButtonOption>
 
                     <ButtonOption name="Search history" help="Clear search history (only 10 lasts searchs are storaged)">
