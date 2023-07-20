@@ -49,7 +49,10 @@ export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudi
 
         onFavorite();
 
-        window.addEventListener('favoritesUpdated', onFavorite);
+        const onFavoritesUpdate = window.addEventListener('favoritesUpdated', onFavorite);
+
+        // @ts-ignore
+        window.removeEventListener('favoritesUpdated', onFavoritesUpdate);
 
     }, []);
 

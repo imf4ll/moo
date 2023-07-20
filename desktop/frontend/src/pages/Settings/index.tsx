@@ -33,7 +33,7 @@ export const Settings = () => {
     }, []);
 
     useEffect(() => {
-        window.addEventListener('valuechanged', ({ detail }: any) => {
+        const onValueChange = window.addEventListener('valuechanged', ({ detail }: any) => {
             if (detail.name === "path" && detail.value === settings.path) {
                 setSaved(true);
 
@@ -42,6 +42,9 @@ export const Settings = () => {
 
             }
         });
+
+        // @ts-ignore
+        window.removeEventListener('valuechanged', onValueChange);
 
     }, [ settings ]);
 

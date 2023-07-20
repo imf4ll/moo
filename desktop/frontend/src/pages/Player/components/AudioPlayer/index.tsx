@@ -133,7 +133,7 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
             }
         }
        
-        window.addEventListener('keydown', e => {
+        const onKeydown = window.addEventListener('keydown', e => {
             if (document.activeElement?.tagName !== 'INPUT') {
                 if (e.code === 'Space') {
                     e.preventDefault();
@@ -159,7 +159,10 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
             }
         });
 
-        audioRef.current!.addEventListener('durationchange', () => {
+        // @ts-ignore
+        window.removeEventListener('keydown', onKeydown);
+
+        const onDurationChange = audioRef.current!.addEventListener('durationchange', () => {
             setLength(durationFormat(audioRef.current!.duration));
 
             playPauseRef.current!.src = Pause;
@@ -167,7 +170,10 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
             audioRef.current!.play();
         });
 
-        audioRef.current!.addEventListener('ended', () => {
+        // @ts-ignore
+        audioRef.current!.removeEventListener('durationchange', onDurationChange);
+
+        const onEnded = audioRef.current!.addEventListener('ended', () => {
             const repeat = JSON.parse(window.localStorage.getItem('playersettings')!).repeat;
             const songQueue = JSON.parse(window.localStorage.getItem('songqueue')!);
 
@@ -206,35 +212,60 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
             }
         });
 
-        rangeAudioRef.current!.addEventListener('input', () => {
+        // @ts-ignore
+        audioRef.current!.removeEventListener('ended', onEnded);
+
+        const onAudioInput = rangeAudioRef.current!.addEventListener('input', () => {
             audioRef.current!.currentTime = audioRef.current!.duration * (Number(rangeAudioRef.current!.value) / 1000);
 
         });
 
-        audioRef.current!.addEventListener('timeupdate', () => {
+        // @ts-ignore
+        audioRef.current!.removeEventListener('input', onAudioInput);
+
+        const onTimeUpdate = audioRef.current!.addEventListener('timeupdate', () => {
             // @ts-ignore
             rangeAudio.value = audio.currentTime / audio.duration * 1000;
 
             setDuration(durationFormat(audioRef.current!.currentTime));
         });
 
-        rangeVolumeRef.current!.addEventListener('input', (e: any) => audioRef.current!.volume = e.target!.value / 100);
+        // @ts-ignore
+        audioRef.current!.removeEventListener('timeupdate', onTimeUpdate);
 
-        window.addEventListener('storage', () => {
+        const onVolumeInput = rangeVolumeRef.current!.addEventListener('input', (e: any) => audioRef.current!.volume = e.target!.value / 100);
+
+        // @ts-ignore
+        rangeVolumeRef.current!.removeEventListener('input', onVolumeInput);
+
+        const onStorage = window.addEventListener('storage', () => {
             const songQueue = JSON.parse(window.localStorage.getItem('songqueue')!);
 
             setSongQueue(songQueue);
         });
 
-        window.addEventListener('musicended', handleMusic);
-        window.addEventListener('newqueue', handleMusic);
+        const onMusicEnded = window.addEventListener('musicended', handleMusic);
+        const onNewQueue = window.addEventListener('newqueue', handleMusic);
+
+        // @ts-ignore
+        window.removeEventListener('storage', onStorage);
+        // @ts-ignore
+        window.removeEventListener('musicended', onMusicEnded);
+        // @ts-ignore
+        window.removeEventListener('newqueue', onNewQueue);
 
     }, []);
 
     useEffect(() => {
-        audioRef.current!.addEventListener('playing', () => useTitle(currentStats.title + ' - '));
+        const onPlaying = audioRef.current!.addEventListener('playing', () => useTitle(currentStats.title + ' - '));
+        
+        // @ts-ignore
+        window.removeEventListener('playing', onPlaying);
 
-        audioRef.current!.addEventListener('pause', () => useTitle(''));
+        const onPause = audioRef.current!.addEventListener('pause', () => useTitle(''));
+        
+        // @ts-ignore
+        window.removeEventListener('pause', onPause);
 
         const onFavorite = () => {
             if (currentStats) {
@@ -254,7 +285,10 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
 
         onFavorite();
 
-        window.addEventListener('favoritesUpdated', onFavorite);
+        const onFavoritesUpdate = window.addEventListener('favoritesUpdated', onFavorite);
+
+        // @ts-ignore
+        window.removeEventListener('favoritesUpdated', onFavoritesUpdate);
 
     }, [ currentStats ]);
 

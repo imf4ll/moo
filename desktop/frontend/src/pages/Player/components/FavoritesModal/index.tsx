@@ -28,7 +28,10 @@ export const FavoritesModal = ({ setFavoritesModalOpened, setCurrentAudio, setCu
 
         onFavorite();
 
-        window.addEventListener('favoritesUpdated', onFavorite);
+        const onFavoritesUpdate = window.addEventListener('favoritesUpdated', onFavorite);
+
+        // @ts-ignore
+        window.removeEventListener('favoritesUpdated', onFavoritesUpdate);
     }, []);
 
     const handlePlaylist = () => {

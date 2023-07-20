@@ -19,14 +19,17 @@ export const NewPlaylistModal = ({ setNewPlaylistModalOpened }: { setNewPlaylist
     const titleRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        window.addEventListener('keydown', e => {
+        const onKeydown = window.addEventListener('keydown', e => {
             if (e.key === 'Escape') {
                 setNewPlaylistModalOpened(false);
 
             }
         });
 
-        urlRef.current!.addEventListener('keydown', (e: any) => {
+        // @ts-ignore
+        window.removeEventListener('keydown', onKeydown);
+
+        const onURLKeydown = urlRef.current!.addEventListener('keydown', (e: any) => {
             if (e.target!.value === '') { return };
 
             if (e.key === 'Enter') {
@@ -41,10 +44,13 @@ export const NewPlaylistModal = ({ setNewPlaylistModalOpened }: { setNewPlaylist
             }
         });
 
+        // @ts-ignore
+        urlRef.current!.removeEventListener('keydown', onURLKeydown);
+
     }, []);
 
     useEffect(() => {
-        titleRef.current!.addEventListener('input', (e: any) => {
+        const onTitleInput = titleRef.current!.addEventListener('input', (e: any) => {
             if (e.target!.value !== '') {
                 saveRef.current!.disabled = false;
 
@@ -55,6 +61,9 @@ export const NewPlaylistModal = ({ setNewPlaylistModalOpened }: { setNewPlaylist
             
             setTitle(e.target!.value);
         });
+
+        // @ts-ignore
+        titleRef.current!.removeEventListener('input', onTitleInput);
 
     }, [ playlist ]);
 

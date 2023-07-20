@@ -84,15 +84,18 @@ export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOp
 
         }
 
-        barRef.current!.addEventListener('input', (e: any) => {
+        const onBarInput = barRef.current!.addEventListener('input', (e: any) => {
             if (e.target!.value === '') {
                 setVideos([]);
 
                 setPlaylistsToAdd([]);
             }
         });
+        
+        // @ts-ignore
+        barRef.current!.removeEventListener('input', onBarInput);
 
-        barRef.current!.addEventListener('keydown', (e: any) => {
+        const onBarKeydown = barRef.current!.addEventListener('keydown', (e: any) => {
             if (e.target.value === '') return;
 
             if (e.key === 'Enter') {
@@ -101,15 +104,26 @@ export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOp
             }
         });
 
-        searchRef.current!.addEventListener('click', () => {
+        // @ts-ignore
+        barRef.current!.removeEventListener('keydown', onBarKeydown);
+
+        const onSearchClick = searchRef.current!.addEventListener('click', () => {
             if (barRef.current!.value === '') return;
 
             handleSearch(barRef.current!.value);
         });
-        
-        window.addEventListener('downloading', () => setDownloading(true));
-        window.addEventListener('idle', () => setDownloading(false));
 
+        // @ts-ignore
+        searchRef.current!.removeEventListener('click', onSearchClick);
+        
+        const onDownloading = window.addEventListener('downloading', () => setDownloading(true));
+        const onIdle = window.addEventListener('idle', () => setDownloading(false));
+
+        // @ts-ignore
+        window.removeEventListener('downloading', onDownloading);
+        // @ts-ignore
+        window.removeEventListener('idle', onIdle);
+    
     }, []);
 
     const handleClear = () => {

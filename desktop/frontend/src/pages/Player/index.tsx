@@ -71,22 +71,35 @@ export const Player = () => {
             if (JSON.parse(window.localStorage.getItem('playlists')!).length > 0) {
                 const updatePlaylist = () => setPlaylists(JSON.parse(window.localStorage.getItem('playlists')!));
 
-                window.addEventListener('playlistsUpdated', () => updatePlaylist());
+                const onPlaylistsUpdate = window.addEventListener('playlistsUpdated', () => updatePlaylist());
+
+                // @ts-ignore
+                window.removeEventListener('playlistsUpdated', onPlaylistsUpdate);
 
                 updatePlaylist();
             }
         }
 
-        window.addEventListener('playlistsaved', () => {
+        const onPlaylistSave = window.addEventListener('playlistsaved', () => {
             setPlaylists(JSON.parse(window.localStorage.getItem('playlists')!));
 
         });
 
+        // @ts-ignore
+        window.removeEventListener('playlistsaved', onPlaylistSave);
+
         const handleNewMusic = () => setQueue(JSON.parse(window.localStorage.getItem('songqueue')!));
 
-        window.addEventListener('newqueue', () => handleNewMusic());
-        window.addEventListener('musicended', () => handleNewMusic());
-        window.addEventListener('queueUpdated', () => handleNewMusic());
+        const onNewQueue = window.addEventListener('newqueue', () => handleNewMusic());
+        const onMusicEnded = window.addEventListener('musicended', () => handleNewMusic());
+        const onQueueUpdate = window.addEventListener('queueUpdated', () => handleNewMusic());
+
+        // @ts-ignore
+        window.removeEventListener('newqueue', onNewQueue);
+        // @ts-ignore
+        window.removeEventListener('musicended', onMusicEnded);
+        // @ts-ignore
+        window.removeEventListener('queueUpdated', onQueueUpdate);
 
     }, []);
 
