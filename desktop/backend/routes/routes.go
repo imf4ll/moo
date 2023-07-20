@@ -14,6 +14,7 @@ func Routes(app gin.Engine) *gin.RouterGroup {
         api.GET("/download", controllers.DownloadController)
         api.GET("/downloads", controllers.DownloadsController)
         api.GET("/files", controllers.ServeController)
+        api.GET("/sync", controllers.PlaylistController)
         api.GET("/playlist", middlewares.CacheMiddleware, controllers.PlaylistController)
         api.GET("/audio", middlewares.CacheMiddleware, controllers.GetAudioController)
         api.GET("/artist", middlewares.CacheMiddleware, controllers.ArtistController)
