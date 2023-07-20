@@ -35,9 +35,11 @@ export const PlaylistModal = ({ currentPlaylist, setCurrentPlaylist, setPlaylist
         if (playlists !== null) {
             const playlist = JSON.parse(playlists).filter((i: Playlist) => i.id === currentPlaylist.id);
             
-            if (playlist.length > 0) setAlreadySaved(true);
+            if (playlist.length > 0) {
+                setAlreadySaved(true);
 
-            if (playlist[0].type === 'custom') setIsCustom(true);
+                if (playlist[0].type === 'custom') setIsCustom(true);
+            }
         }
 
         api.get(`/playlist?id=${ currentPlaylist.id }`)

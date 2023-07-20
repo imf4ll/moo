@@ -19,6 +19,7 @@ export const Playlist = ({ title, thumb, songs, id, setPlaylistModalOpened, setC
                     videos: data.videos,
                     id,
                     thumb,
+                    custom: false,
                 });
 
                 setPlaylistModalOpened(true);
