@@ -1,16 +1,11 @@
 <div align="center">
-  <img src="./icon.png" width="128" />
-  
-  <h1>Moo...</h1>
+    <img src="./mockup.png" />
 </div>
 
 <p align="center">
 If you are tired of abusive ads, web downloaders being seized or reported, give MOO a chance!!! Lightweight, simple and objective, with the web application you can play local songs (you can download them too) or stream songs directly from YouTube, save playlists and sync your own playlists.
 </p>
 
-<div align="center">
-    <img src="./web/assets/showcase.png" width="800" />
-</div>
 
 <br />
 
@@ -25,7 +20,7 @@ If you are tired of abusive ads, web downloaders being seized or reported, give 
   |-------|------|
   | Linux | [Download](https://github.com/imf4ll/moo/releases/download/v0.1.4/moo-linux.zip) |
   | Windows | [Download](https://github.com/imf4ll/moo/releases/download/v0.1.4/moo-windows.zip) |
-  | MacOS (x86_64) | Currently not supported by Wails, follow the [steps of Linux](https://github.com/imf4ll/moo/tree/master/desktop/README.md) to build  |
+  | MacOS | Currently not supported by Wails, follow the [steps](https://github.com/imf4ll/moo/tree/master/desktop/README.md) to build  |
 
   **If any of these pre-builded binaries fail to run, you'll need to build manually following the [steps](https://github.com/imf4ll/moo/tree/master/desktop).**
 </div>
