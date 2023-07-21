@@ -4,16 +4,24 @@
 
 <br />
 
-<div align="center">
-    <img src="./mockup.png" width="100%" />
+<div>
+  <div align="center">
+  <img src="./mockup.png" width="100%" />
 
   <br />
   <br />
   
-  <p>If you are tired of abusive ads, web downloaders being seized or reported, give MOO a chance!!! Lightweight, simple and objective, with the web application you can play local songs (you can download them too) or stream songs directly from YouTube, save playlists and sync your own playlists.
+  <p>If you are tired of abusive ads while listening and web downloaders being seized, give MOO a chance!!! Lightweight, simple and objective.
   </p>
-</div>
+  </div>
 
+  <br />
+
+  - **Play local songs:** Access and play your locally stored music files effortlessly, ensuring quick access to your favorite tracks.
+  - **Download songs:** Keep your favorite songs for offline listening by easily downloading them through Moo.
+  - **Stream from YouTube:** Discover a vast collection of songs on YouTube, and with Moo, you can stream them directly without any hassle.
+  - **Playlist management:** Organize and save playlists with ease. Create your customized playlists, add songs from your local library or YouTube, and manage them just the way you like.
+</div>
 
 <br />
 
@@ -48,6 +56,8 @@
   
   <a href="https://github.com/imf4ll/moo/tree/master/cli">How to install and use</a>
 </div>
+
+<br />
 
 <hr /> 
 
