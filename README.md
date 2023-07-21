@@ -1,10 +1,18 @@
 <div align="center">
-    <img src="./mockup.png" />
+  Maybe Windows users will face problems in downloads, i'm currently testing compatibility fixes on that
 </div>
 
-<p align="center">
-If you are tired of abusive ads, web downloaders being seized or reported, give MOO a chance!!! Lightweight, simple and objective, with the web application you can play local songs (you can download them too) or stream songs directly from YouTube, save playlists and sync your own playlists.
-</p>
+<br />
+
+<div align="center">
+    <img src="./mockup.png" width="100%" />
+
+  <br />
+  <br />
+  
+  <p>If you are tired of abusive ads, web downloaders being seized or reported, give MOO a chance!!! Lightweight, simple and objective, with the web application you can play local songs (you can download them too) or stream songs directly from YouTube, save playlists and sync your own playlists.
+  </p>
+</div>
 
 
 <br />
