@@ -104,7 +104,7 @@ export const Settings = ({ setSettingsModalOpened }: {
             window.runtime.ClipboardGetText()
                 .then((r: string) => paste(r))
                 
-                .catch(() => notificate('error', 'Failed to paste from clipboard.'));
+                .catch(() => notificate('error', 'Failed to paste from clipboard, maybe invalid configuration was pasted.'));
 
         } catch {
             // @ts-ignore
@@ -113,7 +113,7 @@ export const Settings = ({ setSettingsModalOpened }: {
                     navigator.clipboard.readText()
                         .then(r => paste(r))
                         
-                        .catch(() => notificate('error', 'Failed to paste from clipboard.'));
+                        .catch(() => notificate('error', 'Failed to paste from clipboard, maybe invalid configuration was pasted.'));
                 }
             });    
         }

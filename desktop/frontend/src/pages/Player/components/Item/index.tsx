@@ -114,7 +114,7 @@ export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudi
                 }
             })
 
-            .catch(() => notificate('warning', 'Trying to get audio...'));
+            .catch(() => notificate('error', 'Error trying to get audio.'));
     }
 
     const handleAddToQueue = () => {
@@ -212,7 +212,7 @@ export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudi
                         notificate('success', 'Download successfully');
                         
                     } else {
-                        notificate('error', 'Failed to download music.');
+                        notificate('error', 'Failed to download music, check settings for a valid path or if \'yt-dlp\' was not installed.');
 
                     }
                         
@@ -220,7 +220,7 @@ export const Item = ({ thumb, title, author, views, duration, id, setCurrentAudi
                 })
 
                 .catch(() => {
-                    notificate('error', 'Failed to download music.');
+                    notificate('error', 'Failed to download music, check settings for a valid path or if \'yt-dlp\' was not installed.');
 
                     window.dispatchEvent(new Event('idle'));
                 });

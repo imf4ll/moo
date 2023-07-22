@@ -5,6 +5,9 @@ import { Container } from './styles';
 
 import { ItemProps } from '../../types';
 
+import { api } from '../../utils/api';
+import { notificate } from '../../utils/notifications';
+
 import AddToQueue from '../../assets/addtoqueue.svg';
 import QueueEmpty from '../../assets/musicplayerempty.svg';
 
@@ -48,6 +51,12 @@ export const Player = () => {
     const [ currentStats, setCurrentStats ] = useState<ItemProps>();
 
     useEffect(() => {
+        if (window.localStorage.getItem('settings') === null) {
+            setSettingsModalOpened(true);
+
+            notificate('warning', 'First, you need to setup all settings, mainly download path to avoid any problems with downloads and local songs problems.', 10000);
+        }
+
         if (window.localStorage.getItem('songqueue') === null || JSON.parse(window.localStorage.getItem('songqueue')!).length === 0) {
             if (window.localStorage.getItem('lastsong') !== null) {
                 const lastSong = JSON.parse(window.localStorage.getItem('lastsong')!);
@@ -112,13 +121,23 @@ export const Player = () => {
 
         delete playlists[k + 1];
 
-        window.localStorage.setItem('playlists', JSON.stringify(playlists.filter((i: PlaylistT) => i !== null)));
+        api.get(`/playlist?id=${ playlists[0].id }`)
+            .then(({ data }) => {
+                setCurrentPlaylist({
+                    ...playlists[0],
+                    videos: data.videos,
+                });
 
-        window.dispatchEvent(new Event('playlistsUpdated'));
+                setPlaylistModalOpened(true);
+            })
+            
+            .catch(() => notificate('error', 'Failed to set playlist, maybe it\'s private, invalid or was deleted.'))
 
-        setPlaylistModalOpened(true);
+            .finally(() => {
+                window.localStorage.setItem('playlists', JSON.stringify(playlists.filter((i: PlaylistT) => i !== null)));
 
-        setCurrentPlaylist(playlists[0]);
+                window.dispatchEvent(new Event('playlistsUpdated'));        
+            });
     }
 
     const handleArtist = (k: number) => {
@@ -128,13 +147,37 @@ export const Player = () => {
 
         delete playlists[k + 1];
 
-        window.localStorage.setItem('playlists', JSON.stringify(playlists.filter((i: PlaylistT) => i !== null)));
+        api.get(`artist?id=${ playlists[0].id }`)
+            .then(({ data }) => {
+                setArtist({ ...data, photo: playlists[0].photo });
 
-        window.dispatchEvent(new Event('playlistsUpdated'));
+                setArtistModalOpened(true);
+            })
+            
+            .catch(() => notificate("error", "Failed to retrieve data from artist, try again."))
+            
+            .finally(() => {
+                window.localStorage.setItem('playlists', JSON.stringify(playlists.filter((i: PlaylistT) => i !== null)));
 
-        setArtistModalOpened(true);
+                window.dispatchEvent(new Event('playlistsUpdated'));
+            });
+    }
 
-        setArtist(playlists[0]);
+    const handleSearchArtist = (id: string) => {
+        api.get(`artist?id=${ id }`)
+            .then(({ data }) => {
+                setArtist(a => ({ ...data, photo: a.photo }));
+
+                setArtistModalOpened(true);
+            })
+            
+            .catch(() => notificate("error", "Failed to retrieve data from artist, try again."))
+            
+            .finally(() => {
+                window.localStorage.setItem('playlists', JSON.stringify(playlists.filter((i: PlaylistT) => i !== null)));
+
+                window.dispatchEvent(new Event('playlistsUpdated'));
+            });
     }
     
     return (
@@ -154,7 +197,7 @@ export const Player = () => {
             {
                 playlistModalOpened &&
                     <PlaylistModal
-                        currentPlaylist={ currentPlaylist }
+                        playlist={ currentPlaylist }
                         setCurrentPlaylist={ setCurrentPlaylist }
                         setPlaylistModalOpened={ setPlaylistModalOpened }
                         setCurrentAudio={ setCurrentAudio }
@@ -207,22 +250,23 @@ export const Player = () => {
 
                 <div className="playlistsToAdd">
                     { artist && artist.photo !== '' && playlistsToAdd && playlistsToAdd.length > 0 && !loading && (
-                        <div className="artist" onClick={ () => setArtistModalOpened(true) }>
+                        <div className="artist" onClick={ () => handleSearchArtist(artist.id) }>
                             <div className="background" style={{ backgroundImage: `url('${ artist.photo }')` }}></div>
                         </div>
-                    )
+                      )
                     }
 
                     { playlistsToAdd && playlistsToAdd.length > 0 && !loading &&
                         playlistsToAdd.map((i, k) => (
+                            // @ts-ignore
                             <Playlist
                                 title={ i.title }
                                 id={ i.id }
                                 songs={ i.songs }
                                 thumb={ i.thumb }
                                 setPlaylistModalOpened={ setPlaylistModalOpened }
-                                setCurrentPlaylist={ setCurrentPlaylist }
                                 key={ k }
+                                setCurrentPlaylist={ setCurrentPlaylist }
                             />
                         ))
                     }

@@ -27,37 +27,36 @@ export const Container = styled.div`
         
         .thumbnail {
             border-radius: 10px;
-            width: 72px;
+            width: 64px;
             height: 64px;
             background-repeat: no-repeat;
             background-position: center;
             background-size: 110px;
         }
-    }
 
-    .title {
-        display: flex;
-        flex-direction: column;
-        gap: -5rem;
-        font-size: 10.5pt;
-        width: 100%;
-        font-weight: 500;
-        overflow: hidden;
-        white-space: nowrap;
+        .title {
+            display: flex;
+            flex-direction: column;
+            font-size: 10.5pt;
+            font-weight: 500;
+            max-width: 80%;
+            overflow: hidden;
+            white-space: nowrap;
 
-        .animated {
-            animation: infinite 15s marquee linear;
-        }
+            .animated {
+                animation: infinite 15s marquee linear;
+            }
 
-        @keyframes marquee {
-            0% { transform: translateX(0%) }
-            100% { transform: translateX(-75%) }
-        }
+            @keyframes marquee {
+                0% { transform: translateX(0%) }
+                100% { transform: translateX(-75%) }
+            }
 
-        p:last-child {
-            color: #AAA;
-            font-size: 9pt;
-            margin-top: -0.5rem;
+            p:last-child {
+                color: #AAA;
+                font-size: 9pt;
+                margin-top: -0.5rem;
+            }
         }
     }
 
@@ -103,6 +102,8 @@ export const Container = styled.div`
 
     .volume {
         width: 15%;
+        min-width: 6rem;
+        max-width: 10rem;
         display: flex;
         align-items: center;
         justify-content: center;

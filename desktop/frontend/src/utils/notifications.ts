@@ -1,13 +1,13 @@
 import { toast } from 'react-toastify';
 
-export const notificate = (type: string, title: string) => {
+export const notificate = (type: string, title: string, close?: number) => {
     toast(title, {
         // @ts-ignore
         type,
         draggable: true,
         theme: 'dark',
         closeOnClick: true,
-        autoClose: 5000,
+        autoClose: close || 5000,
         position: 'top-right',
     });
 }
@@ -17,7 +17,7 @@ export const confirm = (title: string, handler: Function) => {
         draggable: false,
         theme: 'dark',
         closeOnClick: true,
-        autoClose: 30000,
+        autoClose: 10000,
         position: 'top-right',
         onClick: () => handler(),
     });

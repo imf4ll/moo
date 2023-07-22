@@ -20,6 +20,7 @@ export const ArtistModal = ({ setArtistModalOpened, artist }: {
         id: string,
         photo: string,
         name: string,
+        playlists: Array<Playlist>,
     },
 }) => {
     const [ playlists, setPlaylists ] = useState<Array<PlaylistSearch>>([]);
@@ -29,6 +30,17 @@ export const ArtistModal = ({ setArtistModalOpened, artist }: {
     const saveRef = useRef<HTMLImageElement>(null);
 
     useEffect(() => {
+        if (artist.playlists && artist.playlists.length > 0) {
+            setPlaylistsCount(artist.playlists.length);
+
+            setPlaylists(artist.playlists);
+
+        } else {
+            setArtistModalOpened(false);
+
+            notificate("error", "Failed to retrieve data from artist, try again.");
+        }
+
         const playlists = window.localStorage.getItem('playlists');
 
         if (playlists !== null) {
@@ -38,18 +50,6 @@ export const ArtistModal = ({ setArtistModalOpened, artist }: {
             }
         }
 
-        api.get(`/artist?id=${ artist.id }`)
-            .then(({ data }) => {
-                setPlaylists(data.playlists);
-
-                setPlaylistsCount(data.playlists.length);
-            })
-
-            .catch(() => {
-                notificate("error", "Failed to retrieve data from artist.");
-
-                setArtistModalOpened(false);
-            });
     }, []);
 
     const load = (p: PlaylistSearch) => {
@@ -70,12 +70,12 @@ export const ArtistModal = ({ setArtistModalOpened, artist }: {
                     return
                 })
 
-                .catch(() => notificate("warning", "One or more playlists cannot be listed due by error."));      
+                .catch(() => notificate("warning", "One or more playlists cannot be listed due by error, maybe timeout or scrapping fail."));      
         }
     }
 
     useEffect(() => {
-        playlists.splice(0, 3).forEach((i: PlaylistSearch) => load(i));
+        playlists.splice(0, 5).forEach((i: PlaylistSearch) => load(i));
 
     }, [ playlists ]);
 
@@ -88,7 +88,6 @@ export const ArtistModal = ({ setArtistModalOpened, artist }: {
             }
         }
     }
-
 
     const handleSaveArtist = () => {
         if (window.localStorage.getItem('playlists') !== null) {

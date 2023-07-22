@@ -92,7 +92,7 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                 audioRef.current!.play();
             })
 
-            .catch(() => notificate('error', 'Failed to get audio.'));
+            .catch(() => notificate('error', 'Failed to get audio, maybe caused by age restriction.'));
     }
 
     useEffect(() => {
@@ -115,7 +115,7 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                     })
 
                     .catch(() => {
-                        notificate('warning', 'Trying to get audio...');
+                        notificate('warning', 'Skipping current audio caused by a error.');
 
                         songQueue.shift();
 

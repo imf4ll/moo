@@ -32,11 +32,21 @@ export const LocalModal = ({ setLocalModalOpened, setCurrentStats, setCurrentAud
 
         if (settings !== null) {
             api.get(`/downloads?path=${ JSON.parse(settings).path }`)
-                .then(({ data }) => setSongs(data.files))
+                .then(({ data }) => { 
+                    if (data.files && data.files.length > 0) {
+                        setSongs(data.files);
+                        
+                    } else {
+                        setLocalModalOpened(false);
+
+                        notificate('warning', "Current path doens't not have any songs, check settings.");
+                    }
+                })
+                
                 .catch(() => {
                     setLocalModalOpened(false);
 
-                    notificate('error', 'Failed to get downloads path.');
+                    notificate('error', 'Failed to get downloads path, check settings for a valid path.');
                 });
         }
 

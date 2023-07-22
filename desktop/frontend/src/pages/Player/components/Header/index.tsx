@@ -36,7 +36,7 @@ export const Header = ({ setVideos, setLoading, setPlaylistsToAdd, moreOptionsOp
 
                 setPlaylistsToAdd(data.playlists);
 
-                setArtist(data.artist);
+                setArtist(data);
                 
                 setLoading(false);
 

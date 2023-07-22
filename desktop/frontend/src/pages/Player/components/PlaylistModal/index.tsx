@@ -17,8 +17,8 @@ import { Item } from '../../components/Item';
 
 import { Video, Playlist } from '../../../../types';
 
-export const PlaylistModal = ({ currentPlaylist, setCurrentPlaylist, setPlaylistModalOpened, setCurrentAudio, setCurrentStats }: {
-    currentPlaylist: Playlist,
+export const PlaylistModal = ({ playlist, setCurrentPlaylist, setPlaylistModalOpened, setCurrentAudio, setCurrentStats }: {
+    playlist: Playlist,
     setCurrentPlaylist: Function,
     setPlaylistModalOpened: Function,
     setCurrentAudio: Function,
@@ -30,28 +30,23 @@ export const PlaylistModal = ({ currentPlaylist, setCurrentPlaylist, setPlaylist
     const syncRef = useRef<HTMLImageElement>(null);
 
     useEffect(() => {
-        const playlists = window.localStorage.getItem('playlists');
+        if (playlist && playlist.videos === undefined) {
+            setPlaylistModalOpened(false);
 
-        if (playlists !== null) {
-            const playlist = JSON.parse(playlists).filter((i: Playlist) => i.id === currentPlaylist.id);
-            
-            if (playlist.length > 0) {
-                setAlreadySaved(true);
-
-                if (playlist[0].type === 'custom') setIsCustom(true);
-            }
+            notificate('error', 'Failed to get playlist, try again, if the problem persists, may be caused by timeout, invalid playlist or was deleted.');
         }
 
-        api.get(`/playlist?id=${ currentPlaylist.id }`)
-            .then(({ data }) => setCurrentPlaylist((p: Playlist) => ({ ...p, videos: data.videos })))
+        const playlists = window.localStorage.getItem('playlists');
+        
+        if (playlists !== null) {
+            const p = JSON.parse(playlists).filter((i: Playlist) => i.id === playlist.id);
             
-            .catch(() => {
-                notificate('error', 'Failed to get playlist.');
+            if (p.length > 0) {
+                setAlreadySaved(true);
 
-                setCurrentPlaylist({});
-
-                setPlaylistModalOpened(false);
-            });
+                if (playlist.type === 'custom') setIsCustom(true);
+            }
+        }
 
     }, []);
 
@@ -61,13 +56,13 @@ export const PlaylistModal = ({ currentPlaylist, setCurrentPlaylist, setPlaylist
         window.dispatchEvent(new Event('downloading'));
 
         if (settings !== null) {
-            api.get(`/download?url=https://www.youtube.com/playlist?list=${ currentPlaylist.id }&path=${ JSON.parse(settings).path }`)
+            api.get(`/download?url=https://www.youtube.com/playlist?list=${ playlist.id }&path=${ JSON.parse(settings).path }`)
                 .then(({ data }) => {
                     if (data.success) {
                         notificate('success', 'Download successfully');
                         
                     } else {
-                        notificate('error', 'Failed to download music.');
+                        notificate('error', 'Failed to download music, check settings for a valid path or if \'yt-dlp\' was not installed.');
 
                     }
                         
@@ -75,7 +70,7 @@ export const PlaylistModal = ({ currentPlaylist, setCurrentPlaylist, setPlaylist
                 })
 
                 .catch(() => {
-                    notificate('error', 'Failed to download music.');
+                    notificate('error', 'Failed to download music, check settings for a valid path or if \'yt-dlp\' was not installed.');
 
                     window.dispatchEvent(new Event('idle'));
                 });
@@ -83,20 +78,20 @@ export const PlaylistModal = ({ currentPlaylist, setCurrentPlaylist, setPlaylist
     }
 
     const handlePlaylist = () => {
-        let playlist = Object.assign({}, currentPlaylist);
+        let pl = Object.assign({}, playlist);
 
         if (window.localStorage.getItem('playersettings') !== null) {
             const playerSettings = JSON.parse(window.localStorage.getItem('playersettings')!);
 
             if (playerSettings.random) {
-                playlist.videos = playlist.videos
+                pl.videos = pl.videos
                     .map(i => ({ i, sort: Math.random() }))
                     .sort((a, b) => a.sort - b.sort)
                     .map(({ i }) => i);
             }
         }
 
-        window.localStorage.setItem('songqueue', JSON.stringify(playlist.videos));
+        window.localStorage.setItem('songqueue', JSON.stringify(pl.videos));
 
         window.dispatchEvent(new Event('newqueue'));
     }
@@ -106,14 +101,14 @@ export const PlaylistModal = ({ currentPlaylist, setCurrentPlaylist, setPlaylist
             const playlists = JSON.parse(window.localStorage.getItem('playlists')!);
 
             playlists.unshift({
-                ...currentPlaylist,
+                ...playlist,
             });
 
             window.localStorage.setItem('playlists', JSON.stringify(playlists));
 
         } else {
             window.localStorage.setItem('playlists', JSON.stringify([{
-                ...currentPlaylist,
+                ...playlist,
             }]));
         }
 
@@ -127,7 +122,7 @@ export const PlaylistModal = ({ currentPlaylist, setCurrentPlaylist, setPlaylist
     const handleRemovePlaylist = () => {
         const playlists = JSON.parse(window.localStorage.getItem('playlists')!);
         
-        window.localStorage.setItem('playlists', JSON.stringify(playlists.filter((i: Video) => i.id !== currentPlaylist.id)));
+        window.localStorage.setItem('playlists', JSON.stringify(playlists.filter((i: Video) => i.id !== playlist.id)));
 
         window.dispatchEvent(new Event('playlistsaved'));
     
@@ -139,26 +134,26 @@ export const PlaylistModal = ({ currentPlaylist, setCurrentPlaylist, setPlaylist
     const handleSync = () => {
         syncRef.current!.className = 'syncing';
 
-        api.get(`/sync?id=${ currentPlaylist.id }`)
+        api.get(`/sync?id=${ playlist.id }`)
             .then(({ data }) => setCurrentPlaylist((p: Playlist) => ({ ...p, videos: data.videos })))
-            .catch(() => notificate('error', 'Failed to force syncing'))
+            .catch(() => notificate('error', 'Failed to force syncing, maybe playlist is private, invalid or was deleted.'))
             .finally(() => syncRef.current!.className = '');
     }
 
     return (
         <Container>
-            <div className="background" style={{ backgroundImage: `url("${ currentPlaylist.thumb }")` }}></div>
+            <div className="background" style={{ backgroundImage: `url("${ playlist.thumb }")` }}></div>
             
             <img id="back" src={ Back } width={ 20 } onClick={ () => setPlaylistModalOpened(false) } />
             
             <div className="content">
                 <div className="title-playlist">
-                    <div className="title-thumbnail" style={{ backgroundImage: `url("${ currentPlaylist.thumb }")` }} />
+                    <div className="title-thumbnail" style={{ backgroundImage: `url("${ playlist.thumb }")` }} />
 
                     <div className="stats">
-                        <h1>{ decode(currentPlaylist.title) }</h1>
+                        <h1>{ decode(playlist.title) }</h1>
                     
-                        <p>{ currentPlaylist.videos && currentPlaylist.videos.length } songs</p>
+                        <p>{ playlist.videos && playlist.videos.length } songs</p>
 
                         <div className="buttons">
                             <img src={ Play } width={ 32 } onClick={ () => handlePlaylist() } />
@@ -196,7 +191,7 @@ export const PlaylistModal = ({ currentPlaylist, setCurrentPlaylist, setPlaylist
 
                 <div className="items">
                     {
-                        currentPlaylist.videos && currentPlaylist.videos.map((i, k) => (
+                        playlist.videos && playlist.videos.map((i, k) => (
                             <Item
                                 key={ k }
                                 title={ i.title }
@@ -208,7 +203,7 @@ export const PlaylistModal = ({ currentPlaylist, setCurrentPlaylist, setPlaylist
                                 setCurrentAudio={ setCurrentAudio }
                                 setCurrentStats={ setCurrentStats }
                                 position={ k }
-                                playlist={ currentPlaylist }
+                                playlist={ playlist }
                             />
                         ))
                     }

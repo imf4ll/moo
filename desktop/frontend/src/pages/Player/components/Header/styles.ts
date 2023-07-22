@@ -55,7 +55,7 @@ export const Container = styled.div`
         align-items: center;
         background-color: #181818;
         border-radius: 20px;
-        padding: 0.4rem 0.6rem;
+        padding: 0.3rem 0.6rem;
         width: 40%;
         position: absolute;
         right: 50%;

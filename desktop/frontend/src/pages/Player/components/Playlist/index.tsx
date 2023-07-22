@@ -19,13 +19,12 @@ export const Playlist = ({ title, thumb, songs, id, setPlaylistModalOpened, setC
                     videos: data.videos,
                     id,
                     thumb,
-                    custom: false,
                 });
 
                 setPlaylistModalOpened(true);
             })
 
-            .catch(() => notificate('error', 'Failed to set playlist.'));
+            .catch(() => notificate('error', 'Failed to set playlist, maybe it\'s private, invalid or was deleted.'));
     }
 
     return (

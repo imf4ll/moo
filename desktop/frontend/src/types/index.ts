@@ -57,4 +57,5 @@ export interface Artist {
     name: string;
     photo: string;
     id: string;
+    playlists: Array<Playlist>;
 }

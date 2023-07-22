@@ -45,7 +45,7 @@ export const NewPlaylistModal = ({ setNewPlaylistModalOpened }: { setNewPlaylist
                     });
                 })
 
-                .catch(() => notificate('error', 'Failed to get playlist.'));
+                .catch(() => notificate('error', 'Failed to get playlist, maybe it\' private.'));
         });
 
         // @ts-ignore
