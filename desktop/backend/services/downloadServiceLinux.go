@@ -1,3 +1,5 @@
+// +build linux darwin
+
 package services
 
 import (
@@ -31,7 +33,6 @@ func DownloadService(url string, path string) (bool, error) {
 
         err = exec.Command("/bin/sh", "-c", fmt.Sprintf("mv *%s.mp3 *%s.webp *%s.jpg %s/", id, id, id, path)).Run()
         if err != nil && strings.Contains(err.Error(), "exit status 2") {
-            fmt.Println(err)
             return false, errors.New("Failed to download video.");
 
         }
@@ -39,7 +40,7 @@ func DownloadService(url string, path string) (bool, error) {
     } else {
         err = exec.Command("/bin/sh", "-c", fmt.Sprintf("mv *.mp3 *.webp *.jpg %s/", path)).Run()
         if err != nil && strings.Contains(err.Error(), "exit status 2") {
-            return false, errors.New("Failed to download video.");
+            return false, errors.New("Failed to download playlist.");
 
         }
     }

@@ -21,7 +21,7 @@ type CachePlaylist struct {
 func PlaylistController(ctx *gin.Context) {
     id := ctx.Query("id")
 
-    if id == "" || len(id) != 34 && len(id) != 41 {
+    if id == "" {
         utils.Error(ctx, errors.New("Invalid playlist ID."));
 
         return;
