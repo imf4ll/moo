@@ -1,9 +1,3 @@
-<div align="center">
-  Maybe Windows users will face problems in downloads, i'm currently testing compatibility fixes on that
-</div>
-
-<br />
-
 <div>
   <div align="center">
   <img src="./mockup.png" width="100%" />
@@ -11,8 +5,7 @@
   <br />
   <br />
   
-  <p>If you are tired of abusive ads while listening and web downloaders being seized, give MOO a chance!!! Lightweight, simple and objective.
-  </p>
+  <p>If you are tired of abusive ads while listening and web downloaders being seized, give MOO a chance!!! Lightweight, simple and objective.</p>
   </div>
 
   <br />
@@ -34,8 +27,8 @@
 
   | OS | Binary |
   |-------|------|
-  | Linux | [Download](https://github.com/imf4ll/moo/releases/download/v0.1.4-rc2/moo-linux.zip) |
-  | Windows | [Download](https://github.com/imf4ll/moo/releases/download/v0.1.4-rc2/moo-windows.zip) |
+  | Linux | [Download](https://github.com/imf4ll/moo/releases/download/v0.1.4-rc3/moo-linux.zip) |
+  | Windows | [Download](https://github.com/imf4ll/moo/releases/download/v0.1.4-rc3/moo-windows.zip) |
   | MacOS | Currently not supported by Wails, follow the [steps](https://github.com/imf4ll/moo/tree/master/desktop/README.md) to build  |
 
   **If any of these pre-builded binaries fail to run, you'll need to build manually following the [steps](https://github.com/imf4ll/moo/tree/master/desktop).**
