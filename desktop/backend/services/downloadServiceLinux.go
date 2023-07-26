@@ -11,13 +11,13 @@ import (
 
 func DownloadService(url string, path string) (bool, error) {
     command := strings.Split (
-        fmt.Sprintf(`yt-dlp -x --audio-format mp3 -f 140 -o %%(title)s[.]%%(uploader)s.%%(ext)s --write-thumbnail -o thumbnail:%%(title)s[.]%%(uploader)s.%%(ext)s %s`, url),
+        fmt.Sprintf(`yt-dlp -x --audio-format mp3 --audio-quality 128K -o %%(title)s[.]%%(uploader)s.%%(ext)s --write-thumbnail -o thumbnail:%%(title)s[.]%%(uploader)s.%%(ext)s %s`, url),
         " ",
     );
 
     if strings.Contains(url, "watch?v=") {
         command = strings.Split (
-            fmt.Sprintf(`yt-dlp -x --audio-format mp3 -f 140 -o %%(title)s[.]%%(uploader)s[.]%%(id)s.%%(ext)s --write-thumbnail -o thumbnail:%%(title)s[.]%%(uploader)s[.]%%(id)s.%%(ext)s %s`, url),
+            fmt.Sprintf(`yt-dlp -x --audio-format mp3 --audio-quality 128K -o %%(title)s[.]%%(uploader)s[.]%%(id)s.%%(ext)s --write-thumbnail -o thumbnail:%%(title)s[.]%%(uploader)s[.]%%(id)s.%%(ext)s %s`, url),
             " ",
         );
     }

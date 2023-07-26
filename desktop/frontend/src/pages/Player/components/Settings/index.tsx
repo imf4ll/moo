@@ -123,6 +123,8 @@ export const Settings = ({ setSettingsModalOpened }: {
         if (window.localStorage.getItem('searchhistory') !== null) {
             window.localStorage.setItem('searchhistory', '[]');
 
+            window.location.reload();
+
             notificate('success', 'Search history cleared.');
         }
     }
