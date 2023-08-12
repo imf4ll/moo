@@ -2,7 +2,7 @@ package main
 
 import (
     "github.com/imf4ll/moo/backend/routes"
-    
+
     "github.com/gin-contrib/cors"
     "github.com/gin-gonic/gin"
 )

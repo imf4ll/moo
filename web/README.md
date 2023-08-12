@@ -1,5 +1,18 @@
 ## ❗️ Install:
 
+## Fully automated install
+
+```sh
+# Installing Docker image on Linux and MacOS
+$ ./install-docker.sh
+
+# Install Docker image on Windows
+$ docker build -t moo .
+
+# Installing pure build
+$ ./install.sh
+```
+
 #### 🐧 Linux
 1. Move to web/ directory
 

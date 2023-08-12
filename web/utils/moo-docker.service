@@ -1,0 +1,6 @@
+[Service]
+Type=simple
+ExecStart=docker run -p 4546:80 -p 3001:3001 moo
+
+[Install]
+WantedBy=multi-user.target

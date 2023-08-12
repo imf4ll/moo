@@ -1,0 +1,28 @@
+*::-webkit-scrollbar {
+    background-color: rgb(12, 12, 12);
+    width: 5px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: rgb(35, 35, 35);
+}
+
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
+html, body {
+    background-color: #000;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    overflow-x: auto;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.Toastify__toast-container {
+    font-size: 11pt;
+    font-weight: 500;
+    color: white;
+}
