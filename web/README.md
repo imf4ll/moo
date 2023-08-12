@@ -13,6 +13,10 @@ $ docker build -t moo .
 $ ./install.sh
 ```
 
+<br />
+
+## Manual install
+
 #### 🐧 Linux
 1. Move to web/ directory
 
