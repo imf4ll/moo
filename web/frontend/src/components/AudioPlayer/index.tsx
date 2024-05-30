@@ -61,16 +61,22 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                             setCurrentStats(songQueue[0]);
                         })
 
-                        .catch(() => {
-                            notificate('error', 'Failed to get audio, maybe caused by age restriction.');
+                        .catch((e) => {
+                            if (e.code === 'ECONNABORTED') {
+                                notificate('info', 'Data fetching timeout.');
 
-                            songQueue.shift();
+                                if (audioRef.current!.ended) {
+                                    handleSkip({ detail: 1 }, 'next');
+                                    
+                                } else {
+                                    audioRef.current!.play();
 
-                            window.localStorage.setItem('songqueue', JSON.stringify(songQueue));
-
-                            window.dispatchEvent(new Event('musicended'));
-
-                            handleMusic();
+                                }
+                            
+                            } else {
+                                notificate('error', 'Failed to get audio, maybe caused by age restriction.');
+                            
+                            }
                         });
                         
                     setSongQueue(songQueue);
@@ -92,7 +98,23 @@ export const AudioPlayer = ({ currentAudio, currentStats, setCurrentStats }: {
                 audioRef.current!.play();
             })
 
-            .catch(() => notificate('error', 'Failed to get audio, maybe caused by age restriction.'));
+            .catch((e) => {
+                if (e.code !== 'ECONNABORTED') {
+                    notificate('info', 'Data fetching timeout.');
+
+                    if (audioRef.current!.ended) {
+                        handleSkip({ detail: 1 }, 'next');
+                        
+                    } else {
+                        audioRef.current!.play();
+
+                    }
+                
+                } else {
+                    notificate('error', 'Failed to get audio, maybe caused by age restriction.');
+
+                }
+            });
     }
 
     useEffect(() => {
