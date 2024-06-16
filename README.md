@@ -1,3 +1,5 @@
+# V2 coming soon with a new UI and new features
+
 <div>
   <div align="center">
   <img src="./mockup.png" width="100%" />
