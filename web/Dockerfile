@@ -1,5 +1,5 @@
 # Setup backend
-FROM golang:1.20-alpine as backend
+FROM golang:1.22-alpine as backend
 LABEL moo=builder
 
 RUN apk add build-base

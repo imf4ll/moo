@@ -1,10 +1,10 @@
 package services
 
 import (
-    "errors"
-    "net/http"
+	"errors"
+	"net/http"
 
-    "github.com/kkdai/youtube/v2"
+	"github.com/kkdai/youtube/v2"
 )
 
 func GetAudioService(id string) (string, error) {
@@ -17,7 +17,7 @@ func GetAudioService(id string) (string, error) {
     }
 
     for {
-        audio, err := client.GetStreamURL(video, video.Formats.FindByItag(140));
+        audio, err := client.GetStreamURL(video, &video.Formats.Itag(140)[0]);
         if err != nil { continue }
 
         data, _ := http.Get(audio);
